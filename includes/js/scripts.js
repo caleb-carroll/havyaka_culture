@@ -1,0 +1,1 @@
+/* This file contains jquery/javascript scripts for the Havyaka culture website */
