@@ -1,5 +1,6 @@
 <?php
-
+ini_set('display_errors', 'On');
+error_reporting(E_ALL | E_STRICT);
 /* This file contains variables defining the database for the Havyaka culture site and functions to manipulate the database. */
 
 //information about the SQL database -- make sure the database on your end matches the dataase name, the user and the password
