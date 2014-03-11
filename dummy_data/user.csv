@@ -1,0 +1,2 @@
+user_id,md5_id,first_name,last_name,profile_picture,e_loc_id,email,phone,username,user_password,user_level,registration_date,user_ip,approved,activation_code,ckey,ctime,num_logins,last_login
+NULL,',Caleb,Carroll,pictures/calebc_profile.jpg,NULL,calebc@iastate.edu,515-451-7842,calebc,calebc1,4,2014-03-10,127.0.0.1,Y,0,1,1,0,NOW()
