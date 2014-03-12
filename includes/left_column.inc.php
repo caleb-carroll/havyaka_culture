@@ -1,3 +1,4 @@
+<!-- This column contains the food categories and search options which will be present on each page.  -->
 <!-- Column 1 start -->
 <div id = "left_column">	
     <div class="category_heading">

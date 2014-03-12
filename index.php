@@ -19,13 +19,13 @@
         
       <div class="colright">
 		<div class="col1">
-			<!-- Column 1 start -->
+			<!-- Left Column start -->
 			<?php include('includes/left_column.inc.php'); ?>			
 			
-			<!-- Column 1 end -->
+			<!-- Left Column end -->
 		</div>
 		<div class="col2">
-                    <!-- Column 2 start -->
+                    <!-- Middle Column start -->
                         <div id="carousal">
                           <p>random images goes here</p>
                
@@ -52,9 +52,9 @@
                                  <p>Contents for card5 goes here</p>
                         </div> 
 
-                                <!-- Column 2 end -->
+                                <!-- Middle Column end -->
                  </div>
-               <!-- for future reference 
+               <!-- for future reference Right column start 
                <div class="col3"> 
                    
                 </div>

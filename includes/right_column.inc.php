@@ -1,3 +1,4 @@
+<!-- This column contains advertisements for the site, which will be on the right side of the page -->
 <!-- Column 3 start -->
 			
 			<div class="ad_heading">
