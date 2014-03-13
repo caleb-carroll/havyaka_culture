@@ -8,13 +8,16 @@ $install_sql = "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
+DROP SCHEMA IF EXISTS `hci573` ;
+CREATE SCHEMA IF NOT EXISTS `hci573` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `hci573` ;
 
 -- -----------------------------------------------------
--- Table `hci573`.`Location`
+-- Table `hci573`.`location`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `hci573`.`Location` ;
+DROP TABLE IF EXISTS `hci573`.`location` ;
 
-CREATE  TABLE IF NOT EXISTS `hci573`.`Location` (
+CREATE  TABLE IF NOT EXISTS `hci573`.`location` (
   `e_loc_id` BIGINT NOT NULL AUTO_INCREMENT ,
   `city` VARCHAR(100) NOT NULL DEFAULT '' ,
   `zipcode` VARCHAR(45) NOT NULL DEFAULT '' ,
@@ -24,11 +27,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `hci573`.`User`
+-- Table `hci573`.`user`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `hci573`.`User` ;
+DROP TABLE IF EXISTS `hci573`.`user` ;
 
-CREATE  TABLE IF NOT EXISTS `hci573`.`User` (
+CREATE  TABLE IF NOT EXISTS `hci573`.`user` (
   `user_id` BIGINT NOT NULL AUTO_INCREMENT ,
   `md5_id` VARCHAR(200) NOT NULL ,
   `first_name` VARCHAR(50) NULL ,
@@ -51,22 +54,20 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`User` (
   PRIMARY KEY (`user_id`) ,
   CONSTRAINT `e_loc_id`
     FOREIGN KEY (`e_loc_id` )
-    REFERENCES `hci573`.`Location` (`e_loc_id` )
+    REFERENCES `hci573`.`location` (`e_loc_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `username_UNIQUE` ON `hci573`.`User` (`username` ASC) ;
-
-CREATE INDEX `e_loc_id_idx` ON `hci573`.`User` (`e_loc_id` ASC) ;
+CREATE INDEX `e_loc_id_idx` ON `hci573`.`user` (`e_loc_id` ASC) ;
 
 
 -- -----------------------------------------------------
--- Table `hci573`.`Venue`
+-- Table `hci573`.`venue`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `hci573`.`Venue` ;
+DROP TABLE IF EXISTS `hci573`.`venue` ;
 
-CREATE  TABLE IF NOT EXISTS `hci573`.`Venue` (
+CREATE  TABLE IF NOT EXISTS `hci573`.`venue` (
   `venue_id` BIGINT NOT NULL AUTO_INCREMENT ,
   `venue_name` VARCHAR(45) NOT NULL DEFAULT '' ,
   `venue_address` VARCHAR(200) NOT NULL DEFAULT '' ,
@@ -77,13 +78,13 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`Venue` (
   PRIMARY KEY (`venue_id`) ,
   CONSTRAINT `fk_venue_location`
     FOREIGN KEY (`fk_venue_location` )
-    REFERENCES `hci573`.`Location` (`e_loc_id` )
+    REFERENCES `hci573`.`location` (`e_loc_id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 COMMENT = '				';
 
-CREATE INDEX `fk_venue_location_idx` ON `hci573`.`Venue` (`fk_venue_location` ASC) ;
+CREATE INDEX `fk_venue_location_idx` ON `hci573`.`venue` (`fk_venue_location` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -92,36 +93,36 @@ CREATE INDEX `fk_venue_location_idx` ON `hci573`.`Venue` (`fk_venue_location` AS
 DROP TABLE IF EXISTS `hci573`.`event_type` ;
 
 CREATE  TABLE IF NOT EXISTS `hci573`.`event_type` (
-  `e_type_id` BIGINT NOT NULL ,
+  `e_type_id` BIGINT NOT NULL AUTO_INCREMENT ,
   `event_type` VARCHAR(256) NOT NULL DEFAULT '' ,
   PRIMARY KEY (`e_type_id`) )
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `hci573`.`Event`
+-- Table `hci573`.`event`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `hci573`.`Event` ;
+DROP TABLE IF EXISTS `hci573`.`event` ;
 
-CREATE  TABLE IF NOT EXISTS `hci573`.`Event` (
+CREATE  TABLE IF NOT EXISTS `hci573`.`event` (
   `event_id` BIGINT NOT NULL AUTO_INCREMENT ,
   `event_name` VARCHAR(200) NOT NULL DEFAULT '' ,
   `event_date` DATE NOT NULL ,
   `event_desc` VARCHAR(256) NOT NULL DEFAULT '' ,
-  `e_type_id` BIGINT NULL ,
-  `user_id` BIGINT NULL ,
-  `venue_id` BIGINT NULL ,
+  `e_type_id` BIGINT NOT NULL ,
+  `fk_user_id` BIGINT NOT NULL ,
+  `venue_id` BIGINT NOT NULL ,
   `event_status` TINYINT NOT NULL DEFAULT '0' ,
   `event_scope` VARCHAR(200) NOT NULL DEFAULT 'public' ,
   PRIMARY KEY (`event_id`) ,
   CONSTRAINT `fk_event_user`
-    FOREIGN KEY (`user_id` )
-    REFERENCES `hci573`.`User` (`user_id` )
+    FOREIGN KEY (`fk_user_id` )
+    REFERENCES `hci573`.`user` (`user_id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_event_venue`
     FOREIGN KEY (`venue_id` )
-    REFERENCES `hci573`.`Venue` (`venue_id` )
+    REFERENCES `hci573`.`venue` (`venue_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_type`
@@ -131,11 +132,11 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`Event` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `user_id_idx` ON `hci573`.`Event` (`user_id` ASC) ;
+CREATE INDEX `user_id_idx` ON `hci573`.`event` (`fk_user_id` ASC) ;
 
-CREATE INDEX `venue_id_idx` ON `hci573`.`Event` (`venue_id` ASC) ;
+CREATE INDEX `venue_id_idx` ON `hci573`.`event` (`venue_id` ASC) ;
 
-CREATE INDEX `e_type_id_idx` ON `hci573`.`Event` (`e_type_id` ASC) ;
+CREATE INDEX `e_type_id_idx` ON `hci573`.`event` (`e_type_id` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -152,7 +153,7 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`event_recurrence` (
   PRIMARY KEY (`e_recurring_id`) ,
   CONSTRAINT `fk_event_recurrence_event`
     FOREIGN KEY (`event_id` )
-    REFERENCES `hci573`.`Event` (`event_id` )
+    REFERENCES `hci573`.`event` (`event_id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -166,20 +167,23 @@ CREATE INDEX `event_id_idx` ON `hci573`.`event_recurrence` (`event_id` ASC) ;
 DROP TABLE IF EXISTS `hci573`.`chef` ;
 
 CREATE  TABLE IF NOT EXISTS `hci573`.`chef` (
-  `chef_id` BIGINT NOT NULL ,
+  `chef_id` BIGINT NOT NULL AUTO_INCREMENT ,
   `about_chef` VARCHAR(45) NULL ,
   `contact_time_preference` VARCHAR(45) NULL ,
   `payments_accepted` VARCHAR(45) NULL ,
   `delivery_available` VARCHAR(45) NULL ,
   `pickup_available` VARCHAR(45) NULL ,
   `taking_offline_order` VARCHAR(45) NULL ,
+  `fk_user_id` BIGINT NOT NULL ,
   PRIMARY KEY (`chef_id`) ,
-  CONSTRAINT `fk_chef_user`
-    FOREIGN KEY (`chef_id` )
-    REFERENCES `hci573`.`User` (`user_id` )
+  CONSTRAINT `fk_user_id`
+    FOREIGN KEY (`fk_user_id` )
+    REFERENCES `hci573`.`user` (`user_id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
+
+CREATE INDEX `fk_chef_user_idx` ON `hci573`.`chef` (`fk_user_id` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -237,7 +241,7 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`event_picture` (
   PRIMARY KEY (`e_pic_id`) ,
   CONSTRAINT `fk_event_picture_event`
     FOREIGN KEY (`event_id` )
-    REFERENCES `hci573`.`Event` (`event_id` )
+    REFERENCES `hci573`.`event` (`event_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -251,7 +255,7 @@ CREATE INDEX `event_id_idx` ON `hci573`.`event_picture` (`event_id` ASC) ;
 DROP TABLE IF EXISTS `hci573`.`user_saved_info` ;
 
 CREATE  TABLE IF NOT EXISTS `hci573`.`user_saved_info` (
-  `saved_info` INT NOT NULL ,
+  `saved_info` BIGINT NOT NULL AUTO_INCREMENT ,
   `user_id` BIGINT NOT NULL ,
   `event_id` BIGINT NULL ,
   `chef_id` BIGINT NULL ,
@@ -259,12 +263,12 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`user_saved_info` (
   PRIMARY KEY (`saved_info`) ,
   CONSTRAINT `fk_user_saved_info_user`
     FOREIGN KEY (`user_id` )
-    REFERENCES `hci573`.`User` (`user_id` )
+    REFERENCES `hci573`.`user` (`user_id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_user_saved_info_event`
     FOREIGN KEY (`event_id` )
-    REFERENCES `hci573`.`Event` (`event_id` )
+    REFERENCES `hci573`.`event` (`event_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_saved_info_chef`
@@ -274,7 +278,7 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`user_saved_info` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_saved_info_contact`
     FOREIGN KEY (`contact_id` )
-    REFERENCES `hci573`.`User` (`user_id` )
+    REFERENCES `hci573`.`user` (`user_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -289,11 +293,11 @@ CREATE INDEX `contact_id_idx` ON `hci573`.`user_saved_info` (`contact_id` ASC) ;
 
 
 -- -----------------------------------------------------
--- Table `hci573`.`Community_type`
+-- Table `hci573`.`community_type`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `hci573`.`Community_type` ;
+DROP TABLE IF EXISTS `hci573`.`community_type` ;
 
-CREATE  TABLE IF NOT EXISTS `hci573`.`Community_type` (
+CREATE  TABLE IF NOT EXISTS `hci573`.`community_type` (
   `community_id` BIGINT NOT NULL AUTO_INCREMENT ,
   `community_name` VARCHAR(200) NOT NULL DEFAULT '' ,
   `Community_desc` VARCHAR(256) NULL ,
@@ -304,7 +308,7 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`Community_type` (
   PRIMARY KEY (`community_id`) ,
   CONSTRAINT `fk_community_type_user`
     FOREIGN KEY (`user_id` )
-    REFERENCES `hci573`.`User` (`user_id` )
+    REFERENCES `hci573`.`user` (`user_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_type_food`
@@ -319,19 +323,20 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`Community_type` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_community_type_event`
     FOREIGN KEY (`event_id` )
-    REFERENCES `hci573`.`Event` (`event_id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    REFERENCES `hci573`.`event` (`event_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `user_id_idx` ON `hci573`.`Community_type` (`user_id` ASC) ;
+CREATE INDEX `user_id_idx` ON `hci573`.`community_type` (`user_id` ASC) ;
 
-CREATE INDEX `food_id_idx` ON `hci573`.`Community_type` (`food_id` ASC) ;
+CREATE INDEX `food_id_idx` ON `hci573`.`community_type` (`food_id` ASC) ;
 
-CREATE INDEX `chef_id_idx` ON `hci573`.`Community_type` (`chef_id` ASC) ;
+CREATE INDEX `chef_id_idx` ON `hci573`.`community_type` (`chef_id` ASC) ;
 
-CREATE INDEX `event_id_idx` ON `hci573`.`Community_type` (`event_id` ASC) ;
+CREATE INDEX `event_id_idx` ON `hci573`.`community_type` (`event_id` ASC) ;
 
+USE `hci573` ;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
@@ -357,7 +362,7 @@ if($_GET){
 	
 	/* Adds dummy data to our database for testing purposes. */
 	if ($_GET['cmd'] == 'dummy_data'){
-		$table = array("location", "user", "chef", "event_type", "food", "event", "venue", "event_picture", "event_recurrence", "food_chef_details", "user_saved_info", "community_type");
+		$table = array("location", "user", "chef", "event_type", "food", "venue", "event", "event_recurrence", "food_chef_details", "community_type", "user_saved_info"/*, "event_picture"*/);
 		
 		$select = mysqli_select_db($link, DB_NAME);
 		
@@ -372,15 +377,16 @@ if($_GET){
 			$dummy_sql = "LOAD DATA INFILE 'C:/wamp/www/havyaka_culture/dummy_data/$name.txt'
 			INTO TABLE $name;";
 			
-			echo "<p>";
-			echo $dummy_sql;
-			echo "</p>";
+
 			
-			$install = mysqli_query($link, $dummy_sql);
+			$install = mysqli_query($link, $dummy_sql) or die(mysql_error());
 			if($install){
 				echo "<p>Dummy data inserted successfully<p>";
 			}
 			else{
+				echo "<p>";
+				echo $dummy_sql;
+				echo "</p>";
 				echo "<p>Dummy data install failed.<p>";
 			}
 			

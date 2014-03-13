@@ -1,1 +1,5 @@
-"e_type_id","event_type"
+e_type_id,event_type
+NULL,Luncheon
+NULL,Party
+NULL,Dance
+NULL,Dinner

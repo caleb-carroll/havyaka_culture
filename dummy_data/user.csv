@@ -1,2 +1,4 @@
 user_id,md5_id,first_name,last_name,profile_picture,e_loc_id,email,phone,username,user_password,user_level,registration_date,user_ip,approved,activation_code,ckey,ctime,num_logins,last_login
-NULL,',Caleb,Carroll,pictures/calebc_profile.jpg,NULL,calebc@iastate.edu,515-451-7842,calebc,calebc1,4,2014-03-10,127.0.0.1,Y,0,1,1,0,NOW()
+NULL,NULL,Caleb,Carroll,pictures/calebc_profile.jpg,1,calebc@iastate.edu,515-451-7842,calebc,calebc1,4,3/10/2014,127.0.0.1,Y,0,1,1,0,NOW()
+NULL,NULL,Nivedita,Bhat,pictures/nivi_profile.jpg,1,nivi@iastate.edu,555-555-5555,nivi,nivi,4,3/10/2014,127.0.0.1,Y,0,1,1,0,NOW()
+NULL,NULL,Jivko,Sinapov,pictures/jivko_profile.jpg,1,jsinapov@iastate.edu,555-555-5555,jivko,jivko,1,3/10/2014,127.0.0.1,Y,0,1,1,0,NOW()

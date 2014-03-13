@@ -1,1 +1,4 @@
-"chef_id","about_chef","contact_time_preference","payments_accepted","delivery_available","pickup_available","taking_offline_order"
+chef_id,about_chef,contact_time_preference,payments_accepted,delivery_available,pickup_available,taking_offline_order,fk_chef_id
+NULL,He makes tasty food,Any time after noon.,Cash,No,Yes,No,1
+NULL,She knows all the best foods.,Between 9-6pm,Check or Cash,Yes,No,Yes,2
+NULL,She can make delicious breakfast foods,From 5am-10am,Cash,No,No,No,3

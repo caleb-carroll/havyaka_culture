@@ -1,1 +1,3 @@
-"event_id","event_name","event_date","event_desc","e_type_id","user_id","venue_id","event_status","event_scope"
+event_id,event_name,event_date,event_desc,e_type_id,user_id,venue_id,event_status,event_scope
+NULL,Havyaka party,2014-05-05,This event is a celebration of the Havyaka Community,1,1,1,NULL,public
+NULL,Community Lunch,2014-06-06,Join together to eat lunch!,1,1,1,NULL,public

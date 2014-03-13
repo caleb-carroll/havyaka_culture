@@ -1,0 +1,3 @@
+NULL	Rice	Tasty and filling		
+NULL	Beans	Musical and bland		
+NULL	Lentils	Lentily		

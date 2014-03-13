@@ -1,1 +1,2 @@
-"venue_id","venue_name","venue_address","venue_phone","venue_email","venue_owner","fk_venue_location"
+venue_id,venue_name,venue_address,venue_phone,venue_email,venue_owner,fk_venue_location
+NULL,Community Center,123 Fake St,555-555-5555,ccenter@havyaka.com,Nivi,1
