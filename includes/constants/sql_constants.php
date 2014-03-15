@@ -41,8 +41,7 @@ global $password_store_key;
 
 
 /*Function to super sanitize anything going near our DBs*/
-function filter($data)
-{
+function filter($data){
 	$data = trim(htmlentities(strip_tags($data)));
 
 	if (get_magic_quotes_gpc())
@@ -55,8 +54,7 @@ function filter($data)
 }
 
 /*Function to easily output all our css, js, etc...*/
-function return_meta($title = NULL, $keywords = NULL, $description = NULL)
-{
+function return_meta($title = NULL, $keywords = NULL, $description = NULL){
 	if(is_null($title))
 	{
 		$title = "Community Connect - Havyaka Community";
@@ -86,15 +84,12 @@ function return_meta($title = NULL, $keywords = NULL, $description = NULL)
 }
 
 /*Function to validate email addresses*/
-function check_email($email)
-{
+function check_email($email){
 		return preg_match('/^\S+@[\w\d.-]{2,}\.[\w]{2,6}$/iU', $email) ? TRUE : FALSE;
 }
 
-
 /*Function to update user details*/
-function hash_pass($pass)
-{
+function hash_pass($pass){
 	global $passsalt;
 	$hashed = md5(sha1($pass));
 	$hashed = crypt($hashed, $passsalt);
@@ -102,8 +97,7 @@ function hash_pass($pass)
 	return $hashed;
 }
 
-function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$state,$zipcode,$date,$user_ip,$activation_code)
-{
+function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$state,$zipcode,$date,$user_ip,$activation_code){
   $msg = NULL;
   $err = array();
   global $salt;
@@ -197,8 +191,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$sta
     return $err;
 }
 
-function send_message($firstname, $username, $email, $activation_code,$msg_subject, $message)
-{
+function send_message($firstname, $username, $email, $activation_code,$msg_subject, $message){
        global $password_store_key;
 
        $key = $password_store_key;
@@ -223,5 +216,42 @@ function send_message($firstname, $username, $email, $activation_code,$msg_subje
 
 		$result = $mailer->send($message);
         return $result;
+}
+
+/*Function to secure pages and check users*/
+function secure_page(){
+	session_start();
+	global $db;
+
+	//Secure against Session Hijacking by checking user agent
+	if(isset($_SESSION['HTTP_USER_AGENT']))
+	{
+		//Make sure values match!
+		if($_SESSION['HTTP_USER_AGENT'] != md5($_SERVER['HTTP_USER_AGENT']) or $_SESSION['logged'] != true)
+		{
+			logout();
+			exit;
+		}
+
+		//We can only check the DB IF the session has specified a user id
+		if(isset($_SESSION['user_id']))
+		{
+			$details = mysql_query("SELECT ckey, ctime FROM ".USERS." WHERE id ='".$_SESSION['user_id']."'") or die(mysql_error());
+			list($ckey, $ctime) = mysql_fetch_row($details);
+
+			//We know that we've declared the variables below, so if they aren't set, or don't match the DB values, force exit
+			if(!isset($_SESSION['stamp']) && $_SESSION['stamp'] != $ctime || !isset($_SESSION['key']) && $_SESSION['key'] != $ckey)
+			{
+				logout();
+				exit;
+			}
+		}
+	}
+	//if we get to this, then the $_SESSION['HTTP_USER_AGENT'] was not set and the user cannot be validated
+	else
+	{
+		logout();
+		exit;
+	}
 }
 ?>

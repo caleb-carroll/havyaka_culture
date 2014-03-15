@@ -1,3 +1,3 @@
-NULL	Rice	Tasty and filling		
-NULL	Beans	Musical and bland		
-NULL	Lentils	Lentily		
+NULL	Rice	Tasty and filling	always	insert picture here	1
+NULL	Beans	Musical and bland	always	insert picture here	1
+NULL	Lentils	Lentily	always	insert picture here	1

@@ -1,6 +1,6 @@
 <?php
 /*Secured user only page*/
-include '../includes/constant/config.inc.php';
+include '../includes/constants/sql_constants.php';
 secure_page();
 return_meta("Edit your profile " .$_SESSION['fullname'] . "!");
 $msg = NULL;
@@ -34,9 +34,9 @@ $(document).ready(function(){
 <body>
 <div id="container">
 
-	<?php include '../includes/constant/nav.inc.php'; ?>
+	<?php include '../includes/navigation.inc.php'; ?>
 
-	<h1>Hey <?php echo $_SESSION['fullname']; ?>!  Update your profile!</h1>
+<!--	<h1>Hey <?php echo $_SESSION['fullname']; ?>!  Update your profile!</h1> -->
 
 	<?php
 	if(isset($msg))
@@ -44,9 +44,9 @@ $(document).ready(function(){
 		echo '<div class="success">'.$msg.'</div>';
 	}
 
-	$in = mysql_query("SELECT *, AES_DECRYPT(usr_email, '$salt') AS email FROM ".USERS." WHERE id = '".$_SESSION['user_id']."'") or die("Unable to get your info!");
+/* 	$in = mysql_query("SELECT *, AES_DECRYPT(usr_email, '$salt') AS email FROM ".USERS." WHERE id = '".$_SESSION['user_id']."'") or die("Unable to get your info!");
 	while($r = mysql_fetch_array($in))
-	{
+	{ */
 	?>
 
 	<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="profile_form">
@@ -80,7 +80,7 @@ $(document).ready(function(){
 	</form>
 
 	<?php
-	}
+	// }
 	?>
 </div>
 </body>

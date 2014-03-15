@@ -20,6 +20,19 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `hci573`.`community`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hci573`.`community` ;
+
+CREATE  TABLE IF NOT EXISTS `hci573`.`community` (
+  `community_id` BIGINT NOT NULL AUTO_INCREMENT ,
+  `community_name` VARCHAR(200) NOT NULL DEFAULT '' ,
+  `Community_desc` VARCHAR(256) NULL ,
+  PRIMARY KEY (`community_id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `hci573`.`user`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `hci573`.`user` ;
@@ -30,7 +43,6 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`user` (
   `first_name` VARCHAR(50) NULL ,
   `last_name` VARCHAR(50) NULL ,
   `profile_picture` VARCHAR(256) NULL ,
-  `e_loc_id` BIGINT NULL ,
   `email` VARCHAR(45) NOT NULL ,
   `phone` VARCHAR(220) NULL ,
   `username` VARCHAR(45) NOT NULL ,
@@ -44,15 +56,24 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`user` (
   `ctime` VARCHAR(250) NOT NULL ,
   `num_logins` INT(11) NOT NULL DEFAULT '0' ,
   `last_login` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+  `e_loc_id` BIGINT NULL ,
+  `community_id` BIGINT NOT NULL ,
   PRIMARY KEY (`user_id`) ,
-  CONSTRAINT `e_loc_id`
+  CONSTRAINT `fk_user_location`
     FOREIGN KEY (`e_loc_id` )
     REFERENCES `hci573`.`location` (`e_loc_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_community`
+    FOREIGN KEY (`community_id` )
+    REFERENCES `hci573`.`community` (`community_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `e_loc_id_idx` ON `hci573`.`user` (`e_loc_id` ASC) ;
+
+CREATE INDEX `fk_community_id_idx` ON `hci573`.`user` (`community_id` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -93,6 +114,20 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `hci573`.`event_recurrence`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hci573`.`event_recurrence` ;
+
+CREATE  TABLE IF NOT EXISTS `hci573`.`event_recurrence` (
+  `e_recurring_id` BIGINT NOT NULL AUTO_INCREMENT ,
+  `event_frequency` VARCHAR(45) NULL ,
+  `recurrence_end` VARCHAR(45) NULL ,
+  `day_of_week` VARCHAR(45) NULL ,
+  PRIMARY KEY (`e_recurring_id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `hci573`.`event`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `hci573`.`event` ;
@@ -102,14 +137,16 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`event` (
   `event_name` VARCHAR(200) NOT NULL DEFAULT '' ,
   `event_date` DATE NOT NULL ,
   `event_desc` VARCHAR(256) NOT NULL DEFAULT '' ,
-  `e_type_id` BIGINT NOT NULL ,
-  `fk_user_id` BIGINT NOT NULL ,
-  `venue_id` BIGINT NOT NULL ,
   `event_status` TINYINT NOT NULL DEFAULT '0' ,
   `event_scope` VARCHAR(200) NOT NULL DEFAULT 'public' ,
+  `e_type_id` BIGINT NOT NULL ,
+  `user_id` BIGINT NOT NULL ,
+  `venue_id` BIGINT NOT NULL ,
+  `community_id` BIGINT NOT NULL ,
+  `e_recurring_id` BIGINT NULL ,
   PRIMARY KEY (`event_id`) ,
   CONSTRAINT `fk_event_user`
-    FOREIGN KEY (`fk_user_id` )
+    FOREIGN KEY (`user_id` )
     REFERENCES `hci573`.`user` (`user_id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
@@ -122,36 +159,28 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`event` (
     FOREIGN KEY (`e_type_id` )
     REFERENCES `hci573`.`event_type` (`e_type_id` )
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_event_community`
+    FOREIGN KEY (`community_id` )
+    REFERENCES `hci573`.`community` (`community_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_event_recurrence_id`
+    FOREIGN KEY (`e_recurring_id` )
+    REFERENCES `hci573`.`event_recurrence` (`e_recurring_id` )
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `user_id_idx` ON `hci573`.`event` (`fk_user_id` ASC) ;
+CREATE INDEX `user_id_idx` ON `hci573`.`event` (`user_id` ASC) ;
 
 CREATE INDEX `venue_id_idx` ON `hci573`.`event` (`venue_id` ASC) ;
 
 CREATE INDEX `e_type_id_idx` ON `hci573`.`event` (`e_type_id` ASC) ;
 
+CREATE INDEX `fk_community_id_idx` ON `hci573`.`event` (`community_id` ASC) ;
 
--- -----------------------------------------------------
--- Table `hci573`.`event_recurrence`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `hci573`.`event_recurrence` ;
-
-CREATE  TABLE IF NOT EXISTS `hci573`.`event_recurrence` (
-  `e_recurring_id` BIGINT NOT NULL AUTO_INCREMENT ,
-  `event_id` BIGINT NULL COMMENT 'We might need to normalize this table further. We could provide several event recurrence options that the user has to pick from this table.' ,
-  `event_frequency` VARCHAR(45) NULL ,
-  `recurrence_end` VARCHAR(45) NULL ,
-  `day_of_week` VARCHAR(45) NULL ,
-  PRIMARY KEY (`e_recurring_id`) ,
-  CONSTRAINT `fk_event_recurrence_event`
-    FOREIGN KEY (`event_id` )
-    REFERENCES `hci573`.`event` (`event_id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
-CREATE INDEX `event_id_idx` ON `hci573`.`event_recurrence` (`event_id` ASC) ;
+CREATE INDEX `fk_event_recurrence_id_idx` ON `hci573`.`event` (`e_recurring_id` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -167,16 +196,24 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`chef` (
   `delivery_available` VARCHAR(45) NULL ,
   `pickup_available` VARCHAR(45) NULL ,
   `taking_offline_order` VARCHAR(45) NULL ,
-  `fk_user_id` BIGINT NOT NULL ,
+  `user_id` BIGINT NOT NULL ,
+  `community_id` BIGINT NOT NULL ,
   PRIMARY KEY (`chef_id`) ,
-  CONSTRAINT `fk_user_id`
-    FOREIGN KEY (`fk_user_id` )
+  CONSTRAINT `fk_chef_user`
+    FOREIGN KEY (`user_id` )
     REFERENCES `hci573`.`user` (`user_id` )
     ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_chef_community`
+    FOREIGN KEY (`community_id` )
+    REFERENCES `hci573`.`community` (`community_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_chef_user_idx` ON `hci573`.`chef` (`fk_user_id` ASC) ;
+CREATE INDEX `fk_chef_user_idx` ON `hci573`.`chef` (`user_id` ASC) ;
+
+CREATE INDEX `fk_community_id_idx` ON `hci573`.`chef` (`community_id` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -190,8 +227,16 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`food` (
   `food_description` VARCHAR(256) NOT NULL DEFAULT '' ,
   `availability` VARCHAR(45) NULL ,
   `food_picture` VARCHAR(256) NULL ,
-  PRIMARY KEY (`food_id`) )
+  `community_id` BIGINT NOT NULL ,
+  PRIMARY KEY (`food_id`) ,
+  CONSTRAINT `fk_food_community`
+    FOREIGN KEY (`community_id` )
+    REFERENCES `hci573`.`community` (`community_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+CREATE INDEX `fk_community_type_id_idx` ON `hci573`.`food` (`community_id` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -283,51 +328,6 @@ CREATE INDEX `event_id_idx` ON `hci573`.`user_saved_info` (`event_id` ASC) ;
 CREATE INDEX `chef_id_idx` ON `hci573`.`user_saved_info` (`chef_id` ASC) ;
 
 CREATE INDEX `contact_id_idx` ON `hci573`.`user_saved_info` (`contact_id` ASC) ;
-
-
--- -----------------------------------------------------
--- Table `hci573`.`community_type`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `hci573`.`community_type` ;
-
-CREATE  TABLE IF NOT EXISTS `hci573`.`community_type` (
-  `community_id` BIGINT NOT NULL AUTO_INCREMENT ,
-  `community_name` VARCHAR(200) NOT NULL DEFAULT '' ,
-  `Community_desc` VARCHAR(256) NULL ,
-  `user_id` BIGINT NULL ,
-  `event_id` BIGINT NULL ,
-  `chef_id` BIGINT NULL ,
-  `food_id` BIGINT NULL ,
-  PRIMARY KEY (`community_id`) ,
-  CONSTRAINT `fk_community_type_user`
-    FOREIGN KEY (`user_id` )
-    REFERENCES `hci573`.`user` (`user_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_type_food`
-    FOREIGN KEY (`food_id` )
-    REFERENCES `hci573`.`food` (`food_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_type_chef`
-    FOREIGN KEY (`chef_id` )
-    REFERENCES `hci573`.`chef` (`chef_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_community_type_event`
-    FOREIGN KEY (`event_id` )
-    REFERENCES `hci573`.`event` (`event_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-CREATE INDEX `user_id_idx` ON `hci573`.`community_type` (`user_id` ASC) ;
-
-CREATE INDEX `food_id_idx` ON `hci573`.`community_type` (`food_id` ASC) ;
-
-CREATE INDEX `chef_id_idx` ON `hci573`.`community_type` (`chef_id` ASC) ;
-
-CREATE INDEX `event_id_idx` ON `hci573`.`community_type` (`event_id` ASC) ;
 
 USE `hci573` ;
 
