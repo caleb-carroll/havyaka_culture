@@ -36,7 +36,7 @@ if($_GET){
 	
 	/* Adds dummy data to our database for testing purposes. */
 	if ($_GET['cmd'] == 'dummy_data'){
-		$table = array("location", "community", "user", "chef", "event_type", "food", "venue", "event_recurrence","event", "food_chef_details", "user_saved_info"/*, "event_picture"*/);
+		$table = array("location", "community", "user", "chef", "event_type", "food", "venue", "event_recurrence","event", "food_chef_details", "user_saved_info", "event_attendance"/*, "event_picture"*/);
 		
 		$select = mysqli_select_db($link, DB_NAME);
 		

@@ -329,6 +329,33 @@ CREATE INDEX `chef_id_idx` ON `hci573`.`user_saved_info` (`chef_id` ASC) ;
 
 CREATE INDEX `contact_id_idx` ON `hci573`.`user_saved_info` (`contact_id` ASC) ;
 
+
+-- -----------------------------------------------------
+-- Table `hci573`.`event_attendance`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hci573`.`event_attendance` ;
+
+CREATE  TABLE IF NOT EXISTS `hci573`.`event_attendance` (
+  `event_attendance_id` BIGINT NOT NULL ,
+  `user_id` BIGINT NOT NULL ,
+  `event_id` BIGINT NOT NULL ,
+  PRIMARY KEY (`event_attendance_id`) ,
+  CONSTRAINT `fk_event_attendance_event`
+    FOREIGN KEY (`event_id` )
+    REFERENCES `hci573`.`event` (`event_id` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_event_attendance_user`
+    FOREIGN KEY (`user_id` )
+    REFERENCES `hci573`.`user` (`user_id` )
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_event_attendance_event_idx` ON `hci573`.`event_attendance` (`event_id` ASC) ;
+
+CREATE INDEX `fk_event_attendance_user_idx` ON `hci573`.`event_attendance` (`user_id` ASC) ;
+
 USE `hci573` ;
 
 
