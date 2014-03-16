@@ -1,5 +1,5 @@
 <script src="includes/js/jquery-1.10.2.js"></script>
-<link rel="stylesheet" href="includes/styles/style.css"/>
+<link rel="stylesheet" href="includes/styles/styles.css"/>
 
 <?php
 require_once 'includes/constants/sql_constants.php';

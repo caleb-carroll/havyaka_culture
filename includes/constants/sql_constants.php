@@ -22,7 +22,7 @@ define ("PSTORE_TABLE","pstore_nivi");
 define ("USERS", "user");
 
 define ("LOCATION", "location");
-define("COMMUNITY_TYPE", "community_type");
+define("COMMUNITY_TYPE", "community");
 
 define ("GLOBAL_EMAIL", "connect.community.culture@gmail.com");
 define("REQUIRE_ACTIVIATION","1");
@@ -46,8 +46,7 @@ global $password_store_key;
 function filter($data){
 	$data = trim(htmlentities(strip_tags($data)));
 
-	if (get_magic_quotes_gpc())
-	{
+	if (get_magic_quotes_gpc()) {
 		$data = stripslashes($data);
 	}
 
@@ -57,14 +56,13 @@ function filter($data){
 
 /*Function to easily output all our css, js, etc...*/
 function return_meta($title = NULL, $keywords = NULL, $description = NULL){
-	if(is_null($title))
-	{
+	if(is_null($title)) {
 		$title = "Community Connect - Havyaka Community";
 	}
 
 	$meta = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-                 <html xmlns="http://www.w3.org/1999/xhtml">
-        <head>
+	<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
 	<title>'.$title.'</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="keywords" content="'.$keywords.'" />
@@ -86,12 +84,12 @@ function return_meta($title = NULL, $keywords = NULL, $description = NULL){
 }
 
 /*Function to validate email addresses*/
-function check_email($email){
+function check_email($email) {
 		return preg_match('/^\S+@[\w\d.-]{2,}\.[\w]{2,6}$/iU', $email) ? TRUE : FALSE;
 }
 
 /*Function to update user details*/
-function hash_pass($pass){
+function hash_pass($pass) {
 	global $passsalt;
 	$hashed = md5(sha1($pass));
 	$hashed = crypt($hashed, $passsalt);
@@ -100,164 +98,162 @@ function hash_pass($pass){
 }
 
 
-function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$state,$zipcode,$date,$user_ip,$activation_code,$community_type)
-{
+function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$state,$zipcode,$date,$user_ip,$activation_code,$community_type) {
 
-  $msg = NULL;
-  $err = array();
-  global $salt;
-  global $link;
+	$msg = NULL;
+	$err = array();
+	global $salt;
+	global $link;
 
-         if(empty($firstname))
-	{
+	if(empty($firstname)) {
 		$err[] = "You must enter your name";
-	} 
-        if(strlen($firstname) < 2) $err[] = "You must enter your real name";
-	if(empty($username))
-	{
+	}
+	
+	if(strlen($firstname) < 2) {
+		$err[] = "You must enter your real name";
+	}
+	
+	if(empty($username)) {
 		$err[] = "You must enter a username";
 	}
-        if(strlen($username) < 4) $err[] = "username must be minimum of 4 letters";
-	if(empty($password) || strlen($password) < 4)
-	{
+
+	if(strlen($username) < 4) {
+		$err[] = "username must be minimum of 4 letters";
+	}
+	
+	if(empty($password) || strlen($password) < 4) {
 		$err[] = "You must enter a password";
 	}
-	if(empty($email) || !check_email($email))
-	{
+	
+	if(empty($email) || !check_email($email)) {
 		$err[] = "Please enter a valid email address.";
 	}
-        if($password != $confirm_pass)
-        {
-            $err[] = "Password and confirm password do not match!";
-        }
 
-	if($stmt = mysqli_prepare($link, "SELECT username, email FROM ".USERS." WHERE username = '$username' OR email = AES_ENCRYPT('$email', '$salt')") or die(mysqli_error($link)))
-        {
-             
-         //execute the query
-            mysqli_stmt_execute($stmt);
-            //store the result
-            mysqli_stmt_store_result($stmt);
-            if(mysqli_stmt_num_rows($stmt) > 0)
-            {
-                    $err[] = "User already exists";
-            }
-              mysqli_stmt_close($stmt);
-        }
+	if($password != $confirm_pass) {
+		$err[] = "Password and confirm password do not match!";
+	}
 
-	if(empty($err))
-	{
-            
-                //First insert the city, zipcode,state into location table.
-                $q_loc = mysqli_query($link, "INSERT INTO ".LOCATION. " (city,zipcode,state) VALUES ('$city','$zipcode','$state')") or die(mysqli_error($link));
-               //get the last inserted id from the location table
-                $e_loc_id = mysqli_insert_id($link);
-                 
-                 //get the community id based on the community name
-                $q = "SELECT community_id from ".COMMUNITY_TYPE. " WHERE community_name = '".$community_type. "' LIMIT 1";
-               
-                $query = mysqli_query($link,$q) or (die(mysqli_error($link)));
-                $row = mysqli_fetch_assoc($query);
-                $community_id = $row['community_id'];
-                    
+	if($stmt = mysqli_prepare($link, "SELECT username, email FROM ".USERS." WHERE username = '$username' OR email = AES_ENCRYPT('$email', '$salt')") or die(mysqli_error($link))) {
+		//execute the query
+		mysqli_stmt_execute($stmt);
+		//store the result
+		mysqli_stmt_store_result($stmt);
+		
+		if(mysqli_stmt_num_rows($stmt) > 0) {
+			$err[] = "User already exists";
+		}
+		
+		mysqli_stmt_close($stmt);
+	}
+
+	if(empty($err)) {
+		//First insert the city, zipcode,state into location table.
+		$q_loc = mysqli_query($link, "INSERT INTO ".LOCATION. " (city,zipcode,state) VALUES ('$city','$zipcode','$state')") or die(mysqli_error($link));
+		
+		//get the last inserted id from the location table
+		$e_loc_id = mysqli_insert_id($link);
+
+		//get the community id based on the community name
+		$q = "SELECT community_id from ".COMMUNITY_TYPE. " WHERE community_name = '".$community_type. "' LIMIT 1";
+
+		$query = mysqli_query($link,$q) or (die(mysqli_error($link)));
+		$row = mysqli_fetch_assoc($query);
+		$community_id = $row['community_id'];
+
 		$password = hash_pass($password);
 
 		$query = "INSERT INTO ".USERS." (first_name, username, e_loc_id, user_password, email, registration_date, user_ip, activation_code,community_id) VALUES ('$firstname', '$username', $e_loc_id, '$password', AES_ENCRYPT('$email', '$salt'), '$date', '$user_ip', '$activation_code',$community_id)";
- 
-                if ($q1 = mysqli_query($link,$query))
-                {
-                
-                    //Generate rough hash based on user id from above insertion statement
-                    $user_id = mysqli_insert_id($link); //get the id of the last inserted item
 
-                    $md5_id = md5($user_id);
-                    mysqli_query($link, "UPDATE ".USERS." SET md5_id='$md5_id' WHERE id='$user_id'");
+		if ($q1 = mysqli_query($link,$query)) {
+			//Generate rough hash based on user id from above insertion statement
+			$user_id = mysqli_insert_id($link); //get the id of the last inserted item
 
-                } else 
-                {
-                    $err[] ="Something happened!, please try again!";
-                }
+			$md5_id = md5($user_id);
+			mysqli_query($link, "UPDATE ".USERS." SET md5_id='$md5_id' WHERE id='$user_id'");
+		}
+		else {
+			$err[] ="Something happened!, please try again!";
+		}
 
-		if(REQUIRE_ACTIVIATION != 1)
-                {
-                    echo "activation " .REQUIRE_ACTIVIATION;
-                    //Build a message to email for confirmation
-                     $message = "<p>Hi ".$firstname."!</p>
-                                     <p>Thank you for registering with us. Here are your login details...<br />
+		if(REQUIRE_ACTIVIATION != 1) {
+			echo "activation " .REQUIRE_ACTIVIATION;
+			
+			//Build a message to email for confirmation
+			$message = "<p>Hi ".$firstname."!</p>
+				<p>Thank you for registering with us. Here are your login details...<br />
 
-                                     User ID: ".$username."<br />
-                                     Email: ".$email."<br />
-                                     Password: ".$_POST['password']."</p>
+				User ID: ".$username."<br />
+				Email: ".$email."<br />
+				Password: ".$_POST['password']."</p>
 
-                                     <p>You must activate your account before you can actually do anything:<br />
-                                     ".BASE."/users/activate.php?user=".$md5_id."&activ_code=".$activation_code."</p>
+				<p>You must activate your account before you can actually do anything:<br />
+				".BASE."/users/activate.php?user=".$md5_id."&activ_code=".$activation_code."</p>
 
-                                     <p>Thank You<br />
+				<p>Thank You<br />
 
-                                     Administrator<br />
-                                     ".BASE."</p>";
+				Administrator<br />
+				".BASE."</p>";
 
-                     //activate user by only through activation
-                     // set the approved field to 0 to activate the account
+			//activate user by only through activation
+			// set the approved field to 0 to activate the account
 
-                     $rs_activ = mysqli_query($link, "UPDATE ".USERS." SET approved='0' WHERE
-                     md5_id='". $md5_id. "' AND activation_code = '" . $activation_code ."' ") or die(mysql_error());
+			$rs_activ = mysqli_query($link, "UPDATE ".USERS." SET approved='0' WHERE
+			md5_id='". $md5_id. "' AND activation_code = '" . $activation_code ."' ") or die(mysql_error());
 
-            $result = send_message($firstname,$username,$email,$activation_code,$msg,$message);
-            if($result)
-            {
-              echo "message sent";
-            } else {
-               echo "message is not sent";
-            }
-         } else {
-                     //activate user by default
-                     // set the approved field to 1 to activate the account
-                 echo "activation " .REQUIRE_ACTIVIATION;
-            $rs_activ = mysqli_query($link, "UPDATE ".USERS." SET approved='1' WHERE
-            user_id='". $user_id. "'") or die(mysqli_error($link));
-            
-         }
-    }
-    return $err;
+			$result = send_message($firstname,$username,$email,$activation_code,$msg,$message);
+			if($result) {
+				echo "message sent";
+			}
+			else {
+				echo "message is not sent";
+			}
+		}
+		else {
+			//activate user by default
+			// set the approved field to 1 to activate the account
+			echo "activation " .REQUIRE_ACTIVIATION;
+			$rs_activ = mysqli_query($link, "UPDATE ".USERS." SET approved='1' WHERE
+			user_id='". $user_id. "'") or die(mysqli_error($link));
+		}
+	}
+	return $err;
 }
 
-function send_message($firstname, $username, $email, $activation_code,$msg_subject, $message){
-       global $password_store_key;
+function send_message($firstname, $username, $email, $activation_code,$msg_subject, $message) {
+	global $password_store_key;
 
-       $key = $password_store_key;
+	$key = $password_store_key;
 
-		$result = mysql_query("SELECT AES_DECRYPT(p_pass,'$key') AS password FROM pstore_nivi WHERE p_email=AES_ENCRYPT('".GLOBAL_EMAIL."',connectcommunity1, '$key')") or die(mysql_error());
-		$row = mysql_fetch_assoc($result);
+	$result = mysql_query("SELECT AES_DECRYPT(p_pass,'$key') AS password FROM pstore_nivi WHERE p_email=AES_ENCRYPT('".GLOBAL_EMAIL."',connectcommunity1, '$key')") or die(mysql_error());
+	$row = mysql_fetch_assoc($result);
 
-		$pw = $row['password'];
+	$pw = $row['password'];
 
-		//instead, we use swift's email function
-		$email_to = $email; $email_from=GLOBAL_EMAIL;$password = $pw; $subj = $msg_subject;
-		$transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, "ssl")
-		  ->setUsername($email_from)
-		  ->setPassword($password);
+	//instead, we use swift's email function
+	$email_to = $email; $email_from=GLOBAL_EMAIL;$password = $pw; $subj = $msg_subject;
+	$transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, "ssl")
+	->setUsername($email_from)
+	->setPassword($password);
 
-		$mailer = Swift_Mailer::newInstance($transport);
+	$mailer = Swift_Mailer::newInstance($transport);
 
-		$message = Swift_Message::newInstance($subj)
-		  ->setFrom(array($email_from => 'Nivedita'))
-		  ->setTo(array($email_to))
-		  ->setBody($message);
+	$message = Swift_Message::newInstance($subj)
+	->setFrom(array($email_from => 'Nivedita'))
+	->setTo(array($email_to))
+	->setBody($message);
 
-		$result = $mailer->send($message);
-        return $result;
+	$result = $mailer->send($message);
+	return $result;
 }
 
 
 /*Function to secure pages and check users*/
-function secure_page(){
+function secure_page() {
 	session_start();
 	global $db;
 
 	//Secure against Session Hijacking by checking user agent
-	if(isset($_SESSION['HTTP_USER_AGENT']))
-	{
+	if(isset($_SESSION['HTTP_USER_AGENT'])) {
 		//Make sure values match!
 		if($_SESSION['HTTP_USER_AGENT'] != md5($_SERVER['HTTP_USER_AGENT']) or $_SESSION['logged'] != true)
 		{
@@ -266,43 +262,38 @@ function secure_page(){
 		}
 
 		//We can only check the DB IF the session has specified a user id
-		if(isset($_SESSION['user_id']))
-		{
+		if(isset($_SESSION['user_id'])) {
 			$details = mysql_query("SELECT ckey, ctime FROM ".USERS." WHERE id ='".$_SESSION['user_id']."'") or die(mysql_error());
 			list($ckey, $ctime) = mysql_fetch_row($details);
 
 			//We know that we've declared the variables below, so if they aren't set, or don't match the DB values, force exit
-			if(!isset($_SESSION['stamp']) && $_SESSION['stamp'] != $ctime || !isset($_SESSION['key']) && $_SESSION['key'] != $ckey)
-			{
+			if(!isset($_SESSION['stamp']) && $_SESSION['stamp'] != $ctime || !isset($_SESSION['key']) && $_SESSION['key'] != $ckey) {
 				logout();
 				exit;
 			}
 		}
 	}
 	//if we get to this, then the $_SESSION['HTTP_USER_AGENT'] was not set and the user cannot be validated
-	else
-	{
+	else {
 		logout();
 		exit;
 	}
 }
 
 /*Function to generate key for login.php*/
-function generate_key($length = 7)
-{
+function generate_key($length = 7) {
 	$password = "";
 	$possible = "0123456789abcdefghijkmnopqrstuvwxyz";
 
 	$i = 0;
-	while ($i < $length)
-	{
+	while ($i < $length) {
 		$char = substr($possible, mt_rand(0, strlen($possible)-1), 1);
-		if (!strstr($password, $char))
-		{
+		if (!strstr($password, $char)) {
 			$password .= $char;
 			$i++;
 		}
 	}
+	
 	return $password;
 }
 ?>
