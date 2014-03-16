@@ -5,7 +5,19 @@
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="home" content="index, follow" />
         <link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
-</head>
+        <script src="includes/js/jquery-1.10.2.js"></script>
+        
+        <script>
+        $(document).ready(function(){
+           $('#username').focus();
+        });
+        function refresh_content() 
+        {
+            $("#eventcol").fadeIn(450).show().load('public_event.php');
+        }
+        setInterval( refresh_content, 6000 );
+        </script>
+      
   <?php 
   
   require 'includes/constants/sql_constants.php';
@@ -28,6 +40,7 @@ $err = array();
 //Check if the user signed up, add user to the user table.
 if(isset($_POST['Signup']))
 {
+    
 	$firstname = filter($_POST['firstname']);
 	$username = filter($_POST['username']);
 	$password = filter($_POST['pass1']);
@@ -39,10 +52,12 @@ if(isset($_POST['Signup']))
 	$date = date('Y-m-d');
 	$user_ip = $_SERVER['REMOTE_ADDR'];
 	$activation_code = rand(1000,9999);
+        $community_type = $_POST['community_type'];
+        echo "community type selected is: ".$community_type;
 
           $err = array();
            //defined in config.inc.php
-           $err = add_user($firstname,$username,$password,$confirm_pass,$email,$city,$state,$zipcode,$date,$user_ip,$activation_code);
+           $err = add_user($firstname,$username,$password,$confirm_pass,$email,$city,$state,$zipcode,$date,$user_ip,$activation_code,$community_type );
 
          if ( count($err) == 0){
 		$msg = "Registration successful!";
@@ -56,8 +71,7 @@ return_meta($meta_title);
 
    <link rel="stylesheet" href="includes/styles/style.css"/>
     </head>
-    <title> My Account -Sign Up </title>
-    <body>
+   
         <div class = "login_event_section">
           
         <?php
@@ -84,20 +98,18 @@ return_meta($meta_title);
     <body id = "register_body">
            <h1>Community Connect</h1> 
          <div class="login_event_section" id="logincol">
-             <h1>Login!</h1>
-            <?php if(!isset($msg)) // if the user already registered, ask him to login.
-             {
+             <h1>Login to your account</h1>
+            <?php
                  
                  include_once 'login.php';
-             } ?>
+              ?>
            </div>
            
            <div class="login_event_section" id = "eventcol">
                  <div class="public_event_display_header">
-                        <p>Happening Events! </p>
-                       <?php  include_once 'public_event.php' ?>
-                 </div>
-                     display events randomly
+                                
+                 </div> 
+                   <?php include_once 'public_event.php'; ?>                            
            </div>          
            <div class="login_event_section" id="infocol">
                information
@@ -111,7 +123,7 @@ return_meta($meta_title);
                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="register_form">
                     <ul>
                         <li>
-                            <label> Username: </label> <input class="account" type="text" name="username" placeholder="John123" value ="<?php echo stripslashes($username); ?>"  required="required">
+                            <label> Username: </label> <input class="account" id="username" type="text" name="username" placeholder="John123" value ="<?php echo stripslashes($username); ?>"   required="required">
 
                         </li>
                         <li>
@@ -136,6 +148,24 @@ return_meta($meta_title);
                         </li>
                         <li>
                             <label> Zip Code:</label> <input class="account" type="number" name="zipcode" value="<?php echo stripslashes($zipcode); ?>" placeholder="52403">   
+                        </li>
+                        <li>
+                            <label> Community Type:</label> <select name='community_type' class='account' id='c_type'>
+                                <option value="" selected></option>
+                                <?php 
+                                    $val = $_POST['community_type']?:'';
+                                    $q = "SELECT community_name,community_id from ".COMMUNITY_TYPE. " WHERE 1";
+                                    echo $q;
+                                    $query = mysqli_query($link,$q);
+                                   
+                                       while ($row = mysqli_fetch_assoc($query))
+                                       {
+                                           $selected = ($val == $row['community_name'] ? 'selected="selected"' : '');
+                                           echo '<option value ="' . $row['community_name'] . '" '. $selected .'>' . $row['community_name'] . '</option>';
+                                       }
+                                ?>
+                            </select>
+                           
                         </li>
                         <li>
                             <p><button id ="signup" type="submit" name="Signup">Sign Up</button> </p>
