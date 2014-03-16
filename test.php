@@ -4,10 +4,10 @@ ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
 
 // information about the SQL database -- make sure the database on your end matches the dataase name, the user and the password
-define('DB_HOST', "localhost");
-define('DB_USER', "hci573");
-define('DB_PASS', "hci573");
-define('DB_NAME', "hci573");
+define('DB_HOST', "nivi");
+define('DB_USER', "nivi");
+define('DB_PASS', "nivi");
+define('DB_NAME', "nivi");
 
 include_once 'includes/constants/dbc.php';
 //base in operating system
@@ -34,7 +34,8 @@ define ("VENUE", "venue");
 define ("GLOBAL_EMAIL", "connect.community.culture@gmail.com");
 define("REQUIRE_ACTIVIATION","1");
 
-
+$file_location = "../pictures";
+global $file_location;
 
 // connect to the SQL server and select the database - we can now use $link and $db in pages that include this page
 $link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die("Couldn't make connection:" . mysqli_error() );
