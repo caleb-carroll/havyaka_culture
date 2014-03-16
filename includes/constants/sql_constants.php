@@ -1,8 +1,7 @@
 <?php
-
+/* This file contains variables defining the database for the Havyaka culture site and functions to manipulate the database. */
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
-/* This file contains variables defining the database for the Havyaka culture site and functions to manipulate the database. */
 
 // information about the SQL database -- make sure the database on your end matches the dataase name, the user and the password
 define('DB_HOST', "localhost");
@@ -19,13 +18,24 @@ define ("SITE_BASE", "http://".$_SERVER['HTTP_HOST']."/Havyaka_community_project
 
 //tables
 define ("PSTORE_TABLE","pstore_nivi");
-define ("USERS", "user");
 
+define ("CHEF", "chef");
+define ("COMMUNITY_TYPE", "community");
+define ("EVENT", "event");
+define ("EVENT_PICTURE", "event_picture");
+define ("EVENT_TYPE", "event_type");
+define ("FOOD", "food");
+define ("FOOD_CHEF_DETAILS", "food_chef_details");
 define ("LOCATION", "location");
-define("COMMUNITY_TYPE", "community");
+define ("USERS", "user");
+define ("USER_SAVED_INFO", "user_saved_info");
+define ("VENUE", "venue");
 
 define ("GLOBAL_EMAIL", "connect.community.culture@gmail.com");
 define("REQUIRE_ACTIVIATION","1");
+
+
+
 // connect to the SQL server and select the database - we can now use $link and $db in pages that include this page
 $link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die("Couldn't make connection:" . mysqli_error() );
 $db = mysqli_select_db($link, DB_NAME) or die("Couldn't select database:" . mysqli_error() );
@@ -97,7 +107,7 @@ function hash_pass($pass) {
 	return $hashed;
 }
 
-
+/* Function to add new users to the database */
 function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$state,$zipcode,$date,$user_ip,$activation_code,$community_type) {
 
 	$msg = NULL;
@@ -219,6 +229,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$sta
 	return $err;
 }
 
+/* Function to send an email message to a user */
 function send_message($firstname, $username, $email, $activation_code,$msg_subject, $message) {
 	global $password_store_key;
 
@@ -245,7 +256,6 @@ function send_message($firstname, $username, $email, $activation_code,$msg_subje
 	$result = $mailer->send($message);
 	return $result;
 }
-
 
 /*Function to secure pages and check users*/
 function secure_page() {
@@ -296,4 +306,41 @@ function generate_key($length = 7) {
 	
 	return $password;
 }
+
+/* Function to create an event */
+function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_id, $e_recurring_id, $event_id){
+	// INSERT INTO 'event'('event_id', 'event_name', 'event_date', 'event_desc', 'event_status', 'event_scope', 'e_type_id', 'user_id', 'venue_id', 'community_id', 'e_recurring_id') VALUES ([value-1],[value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8],[value-9],[value-10],[value-11])
+	
+}
+
+/* Function to update events */
+function update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_id, $e_recurring_id, $event_id){
+	global $link;
+	
+	$q = "UPDATE " . EVENT . " SET event_name='" . $event_name . "', event_date='" . $event_date . "', event_desc='" . $event_desc . "', event_scope='" . $event_scope . "', e_type_id='" . $e_type_id . "', venue_id='" . $venue_id . "', e_recurring_id='" . $e_recurring_id . "' WHERE event_id = " . $event_id;
+	
+	echo $q;
+	echo "<br>";
+	
+	if (mysqli_query($link,$q)){
+		echo "Event updated successfully";
+	}
+	else {
+		echo "Event update failed";
+	}
+}
+
+/* Function to delete events */
+function delete_event($event_id) {
+	global $link;
+	$q = "DELETE FROM 'event' WHERE event_id = " . $event_id;
+	
+	if (mysqli_query($link,$q)){
+		echo "Event deleted successfully";
+	}
+	else {
+		echo "Event deletion failed";
+	}
+}
+
 ?>

@@ -88,17 +88,17 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`venue` (
   `venue_phone` VARCHAR(45) NOT NULL DEFAULT '' ,
   `venue_email` LONGBLOB NULL ,
   `venue_owner` VARCHAR(45) NULL ,
-  `fk_venue_location` BIGINT NOT NULL ,
+  `e_loc_id` BIGINT NOT NULL ,
   PRIMARY KEY (`venue_id`) ,
   CONSTRAINT `fk_venue_location`
-    FOREIGN KEY (`fk_venue_location` )
+    FOREIGN KEY (`e_loc_id` )
     REFERENCES `hci573`.`location` (`e_loc_id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
 COMMENT = '				';
 
-CREATE INDEX `fk_venue_location_idx` ON `hci573`.`venue` (`fk_venue_location` ASC) ;
+CREATE INDEX `fk_venue_location_idx` ON `hci573`.`venue` (`e_loc_id` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -307,17 +307,17 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`user_saved_info` (
   CONSTRAINT `fk_user_saved_info_event`
     FOREIGN KEY (`event_id` )
     REFERENCES `hci573`.`event` (`event_id` )
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_saved_info_chef`
     FOREIGN KEY (`chef_id` )
     REFERENCES `hci573`.`chef` (`chef_id` )
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_saved_info_contact`
     FOREIGN KEY (`contact_id` )
     REFERENCES `hci573`.`user` (`user_id` )
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 

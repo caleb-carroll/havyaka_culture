@@ -4,7 +4,7 @@
 	<title>Community Resource</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="home" content="index, follow" />
-        <link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="includes/styles/styles.css" media="screen" />
 </head>
     <body>
         <div id ="header">

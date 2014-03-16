@@ -14,32 +14,25 @@ $results = array();
 //query the public events and display them randomly in the public_event section at the registration page
 
 $q = "SELECT event_name,event_desc,event_date from event where event_status=1 and event_scope = 'public' ORDER BY RAND() LIMIT 1";
- if($event_query = mysqli_query($link,$q))
- {
-
-    while ($row = mysqli_fetch_assoc($event_query))
-    {
-        $results[] =$row;
-    }   
+if($event_query = mysqli_query($link,$q)) {
+	while ($row = mysqli_fetch_assoc($event_query)) {
+		$results[] =$row;
+	}
 }
 
 ?>
 <h1> Happening Events!</h1>
-  <table>
-     
-    <?php 
-      
-      foreach ($results as $r) { 
-      
-        ?>
-            <tr><th> Event Name: </th>
-                <td><?php echo $r['event_name']; ?> </td></tr>
-            <tr><th>  Event Details: </th><td> <?php echo $r['event_desc']; ?></td></tr>
-               <tr> <th> Date:</th>
-              <td> <?php echo $r['event_date']; ?> </td></tr>           
-  </table>
- <?php } ?>
+<table>
 
-           
-
-
+<?php
+foreach ($results as $r) {
+	?>
+	<tr><th> Event Name: </th>
+	<td><?php echo $r['event_name']; ?> </td></tr>
+	<tr><th>  Event Details: </th><td> <?php echo $r['event_desc']; ?></td></tr>
+	<tr> <th> Date:</th>
+	<td> <?php echo $r['event_date']; ?> </td></tr>
+	
+	</table>
+	<?php 
+} ?>

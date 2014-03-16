@@ -5,6 +5,7 @@
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="robots" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/profile_styles.css"/>
+	<?php require_once 'includes/constants/sql_constants.php'; ?>
 </head>
 <body>
 
@@ -66,17 +67,37 @@
 			</div>
 
 			<div id="event_holder">
+				<?php
+				// To do: add in event picture
+				// To do: get the user's ID to see if they can edit it?
+				// Query to get event name, location, type, date, and details
+				$q = "SELECT event_name, t3.venue_name, t3.venue_address, t4.city, t4.state, t4.zipcode, t2.event_type, event_date, event_desc 
+				FROM " . EVENT . " as t1 
+				LEFT JOIN " . EVENT_TYPE . " as t2 ON t1.e_type_id = t2.e_type_id
+				LEFT JOIN " . VENUE . " as t3 ON t1.venue_id = t3.venue_id
+				LEFT JOIN " . LOCATION . " as t4 ON t3.e_loc_id = t4.e_loc_id
+				where event_status=1 and event_scope = 'public'";
+				
+				if($event_query = mysqli_query($link,$q)) {
+					while ($row = mysqli_fetch_assoc($event_query)) {
+						$results[] =$row;
+					}
+				}
+					
+				foreach ($results as $r) {
+				?>
 				<div class="event">
 					<table>
-						<tr><td width="25%">Event Name</td><td>Example Event Name</td></tr>
-						<tr><td>Event Location</td><td>Example Event Location</td></tr>
+						<tr><td width="25%">Event Name</td><td><?php echo $r['event_name']; ?></td></tr>
+						<tr><td>Event Location</td><td><?php echo $r['venue_name'] . "<br>" . $r['venue_address'] . "<br>" . $r['city'] . ", " . $r['state'] . " " . $r['zipcode']?></td></tr>
 						<tr><td>Event Type</td><td>Example Event Type</td></tr>
-						<tr><td>Event Date</td><td>Example Event Date</td></tr>
-						<tr><td>Event Details</td><td>Example Event Details which are quite a bit longer than the other fields so we should make sure there is enough room.</td></tr>
+						<tr><td>Event Date</td><td><?php echo $r['event_date']; ?></td></tr>
+						<tr><td>Event Details</td><td><?php echo $r['event_desc']; ?><td></tr>
 					</table>
 					
 					<img class="event_picture" src="pictures/event.jpg" />
 				</div>
+				<?php } ?>
 			</div>
 			<!-- Center column end -->
 			
@@ -91,4 +112,13 @@
 <?php include('includes/footer.inc.php'); ?>
 
 </body>
+<?php
+	//function to delete an event 
+	// delete_event($event_id);
+?>
+
+<?php 
+	// funciton to update an event 
+	// update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_id, $e_recurring_id, $event_id);
+?>
 </html>
