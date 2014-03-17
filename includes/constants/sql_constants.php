@@ -309,8 +309,17 @@ function generate_key($length = 7) {
 }
 
 /* Function to create an event */
-function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_id, $e_recurring_id, $event_id){
-	// INSERT INTO 'event'('event_id', 'event_name', 'event_date', 'event_desc', 'event_status', 'event_scope', 'e_type_id', 'user_id', 'venue_id', 'community_id', 'e_recurring_id') VALUES ([value-1],[value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8],[value-9],[value-10],[value-11])
+function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $user_id, $venue_id, $community_id, $e_recurring_id){
+	global $link;
+	
+	$q = "INSERT INTO " . EVENT . "(event_name, event_date, event_desc, event_scope, e_type_id, user_id, venue_id, community_id, e_recurring_id) VALUES ('" . $event_name . "', '" . $event_date . "', '" . $event_desc . "', '" . $event_scope . "', '" . $e_type_id . "', '" . $user_id . "', '" . $venue_id . "', '" . $community_id . "', '" . $e_recurring_id . "')";
+	
+	if (mysqli_query($link,$q)){
+		echo "Event added successfully";
+	}
+	else {
+		echo "Event failed to add";
+	}
 	
 }
 
@@ -342,6 +351,47 @@ function delete_event($event_id) {
 	else {
 		echo "Event deletion failed";
 	}
+}
+
+/* Function to retrieve events information. Accepts arguments for visibility and user_id */
+function get_events($user_id = NULL, $visibility = NULL){
+	global $link;
+	
+	// to do: return picture
+	// to do: return if the event is editable by the current user
+	// set up query with all of the tables tied together 
+	$select = "SELECT event_name, t3.venue_name, t3.venue_address, t4.city, t4.state, t4.zipcode, t2.event_type, event_date, event_desc, t1.user_id";
+	
+	$from = " FROM " . EVENT . " as t1 
+	LEFT JOIN " . EVENT_TYPE . " as t2 ON t1.e_type_id = t2.e_type_id
+	LEFT JOIN " . VENUE . " as t3 ON t1.venue_id = t3.venue_id
+	LEFT JOIN " . LOCATION . " as t4 ON t3.e_loc_id = t4.e_loc_id 
+	LEFT JOIN " . USERS . " as t5 ON t1.user_id = t5.user_id ";
+	
+	// will always return events that are active
+	$where = " where event_status=1";
+	
+	// if visibility is specified, add it to the query
+	if (!is_null($visibility)){
+		$where .= " and event_scope = '" . $visibility . "'";
+	}
+	
+	// if user is provided, add it to the query
+	if (!is_null($user_id)){
+		$where .= " and t5.user_id = " . $user_id;
+	}
+	
+	// build the query
+	$q = $select . $from . $where . ";";
+	
+	// execute the query
+	if($event_query = mysqli_query($link,$q)) {
+		while ($row = mysqli_fetch_assoc($event_query)) {
+			$results[] =$row;
+		}
+	}
+	
+	return $results;
 }
 
 ?>
