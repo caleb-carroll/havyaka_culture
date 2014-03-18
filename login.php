@@ -27,7 +27,6 @@ if(isset($_POST['login']))
 	}
 
        $sql = "SELECT user_password, user_id, approved FROM ".USERS." WHERE username = '$username' OR email = AES_ENCRYPT('$email', '$salt');";
-     echo $sql;
 
    //Select only ONE password from the db table if the username = username, or the user input email (after being encrypted) matches an encrypted email in the db
 	
@@ -45,7 +44,7 @@ if(isset($_POST['login']))
             }
             if(empty($err))
             {
-                echo "empty of error";
+
                     //If someone was found, check to see if passwords match
                     if(mysqli_num_rows($results) > 0)
                     {
@@ -54,7 +53,7 @@ if(isset($_POST['login']))
 
                                     $user_info = mysqli_query($link,"SELECT user_id, first_name, username, user_level FROM ".USERS." WHERE user_id = '$userid' LIMIT 1") or die("Unable to get user info");
                                     list($id, $firstname, $username, $level) = mysqli_fetch_row($user_info);
-                                     echo "Firstname: ".$firstname;
+                                    
                                     session_start();
                                     //REALLY start new session (wipes all prior data)
                                     session_regenerate_id(true);
@@ -86,7 +85,6 @@ if(isset($_POST['login']))
 				//Passwords don't match, issue an error
 				$err[] = "Invalid User";
 			}
-                         mysqli_stmt_close($stmt);
                 }
      } 	else
         {

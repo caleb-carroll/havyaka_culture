@@ -43,7 +43,7 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`user` (
   `first_name` VARCHAR(50) NULL ,
   `last_name` VARCHAR(50) NULL ,
   `profile_picture` VARCHAR(256) NULL ,
-  `email` VARCHAR(45) NOT NULL ,
+  `email` LONGBLOB NOT NULL ,
   `phone` VARCHAR(220) NULL ,
   `username` VARCHAR(45) NOT NULL ,
   `user_password` VARCHAR(45) NOT NULL ,
@@ -336,7 +336,7 @@ CREATE INDEX `contact_id_idx` ON `hci573`.`user_saved_info` (`contact_id` ASC) ;
 DROP TABLE IF EXISTS `hci573`.`event_attendance` ;
 
 CREATE  TABLE IF NOT EXISTS `hci573`.`event_attendance` (
-  `event_attendance_id` BIGINT NOT NULL ,
+  `event_attendance_id` BIGINT NOT NULL AUTO_INCREMENT ,
   `user_id` BIGINT NOT NULL ,
   `event_id` BIGINT NOT NULL ,
   PRIMARY KEY (`event_attendance_id`) ,

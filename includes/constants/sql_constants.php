@@ -11,10 +11,6 @@ define('DB_NAME', "hci573");
 
 include_once 'includes/constants/dbc.php';
 //base in operating system
-define ("SITE_ROOT", $_SERVER['DOCUMENT_ROOT'] . "/Havyaka_community_project/havyaka_culture");
-
-//base URL of site
-define ("SITE_BASE", "http://".$_SERVER['HTTP_HOST']."/Havyaka_community_project/havyaka_culture");
 
 //tables
 define ("PSTORE_TABLE","pstore_nivi");
@@ -30,6 +26,7 @@ define ("LOCATION", "location");
 define ("USERS", "user");
 define ("USER_SAVED_INFO", "user_saved_info");
 define ("VENUE", "venue");
+define ("ATTENDENCE","event_attendance");
 
 define ("GLOBAL_EMAIL", "connect.community.culture@gmail.com");
 define("REQUIRE_ACTIVIATION","1");
@@ -108,14 +105,45 @@ function hash_pass($pass) {
 	return $hashed;
 }
 
-/* Function to add new users to the database */
-function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$state,$zipcode,$date,$user_ip,$activation_code,$community_type) {
+/*Function to logout users securely*/
+function logout($lm = NULL)
+{
+    global $link;
+    
+	if(!isset($_SESSION))
+	{
+		session_start();
+	}
 
-	$msg = NULL;
-	$err = array();
-	global $salt;
-	global $link;
+	//If the user is 'partially' set for some reason, we'll want to unset the db session vars
+	if(isset($_SESSION['user_id']))
+	{
+		global $db;
+		mysqli_query($link,"UPDATE ".USERS." SET ckey= '', ctime= '' WHERE user_id='".$_SESSION['user_id']."'") or die(mysqli_error($link));
+		unset($_SESSION['user_id']);
+	}
+		unset($_SESSION['user_name']);
+		unset($_SESSION['user_level']);
+		unset($_SESSION['HTTP_USER_AGENT']);
+		unset($_SESSION['stamp']);
+		unset($_SESSION['key']);
+		unset($_SESSION['fullname']);
+		unset($_SESSION['logged']);
+		session_unset();
+		session_destroy();
 
+	if(isset($lm))
+	{
+		header("Location: ".BASE."/register.php?msg=".$lm);
+	}
+	else
+	{
+		header("Location: ".BASE."/register.php");
+	}
+}
+
+ function error_check($firstname,$username,$password,$confirm_pass,$email)
+ {
 	if(empty($firstname)) {
 		$err[] = "You must enter your name";
 	}
@@ -143,6 +171,18 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$sta
 	if($password != $confirm_pass) {
 		$err[] = "Password and confirm password do not match!";
 	}
+        return $err;
+}
+
+/* Function to add new users to the database */
+function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$state,$zipcode,$date,$user_ip,$activation_code,$community_type) {
+
+	$msg = NULL;
+	$err = array();
+	global $salt;
+	global $link;
+          
+        $erro =error_check($firstname,$username,$password,$confirm_pass,$email);
 
 	if($stmt = mysqli_prepare($link, "SELECT username, email FROM ".USERS." WHERE username = '$username' OR email = AES_ENCRYPT('$email', '$salt')") or die(mysqli_error($link))) {
 		//execute the query
@@ -158,7 +198,9 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$sta
 	}
 
 	if(empty($err)) {
-		//First insert the city, zipcode,state into location table.
+		//check if that city, zipcode already exists, if not insert the city, zipcode,state into location table.
+               // query to check if the city, zip code,  and state exists in the table.
+                // select city, zipcode,
 		$q_loc = mysqli_query($link, "INSERT INTO ".LOCATION. " (city,zipcode,state) VALUES ('$city','$zipcode','$state')") or die(mysqli_error($link));
 		
 		//get the last inserted id from the location table
@@ -180,6 +222,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$sta
 			$user_id = mysqli_insert_id($link); //get the id of the last inserted item
 
 			$md5_id = md5($user_id);
+                        echo $md5_id;
 			mysqli_query($link, "UPDATE ".USERS." SET md5_id='$md5_id' WHERE id='$user_id'");
 		}
 		else {
@@ -222,7 +265,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$sta
 		else {
 			//activate user by default
 			// set the approved field to 1 to activate the account
-			echo "activation " .REQUIRE_ACTIVIATION;
+			
 			$rs_activ = mysqli_query($link, "UPDATE ".USERS." SET approved='1' WHERE
 			user_id='". $user_id. "'") or die(mysqli_error($link));
 		}
@@ -262,8 +305,9 @@ function send_message($firstname, $username, $email, $activation_code,$msg_subje
 function secure_page() {
 	session_start();
 	global $db;
+        global $link;
 
-	//Secure against Session Hijacking by checking user agent
+        //Secure against Session Hijacking by checking user agent
 	if(isset($_SESSION['HTTP_USER_AGENT'])) {
 		//Make sure values match!
 		if($_SESSION['HTTP_USER_AGENT'] != md5($_SERVER['HTTP_USER_AGENT']) or $_SESSION['logged'] != true)
@@ -271,11 +315,10 @@ function secure_page() {
 			logout();
 			exit;
 		}
-
 		//We can only check the DB IF the session has specified a user id
 		if(isset($_SESSION['user_id'])) {
-			$details = mysql_query("SELECT ckey, ctime FROM ".USERS." WHERE id ='".$_SESSION['user_id']."'") or die(mysql_error());
-			list($ckey, $ctime) = mysql_fetch_row($details);
+			$details = mysqli_query($link,"SELECT ckey, ctime FROM ".USERS." WHERE user_id ='".$_SESSION['user_id']."'") or die(mysqli_error($link));
+			list($ckey, $ctime) = mysqli_fetch_row($details);
 
 			//We know that we've declared the variables below, so if they aren't set, or don't match the DB values, force exit
 			if(!isset($_SESSION['stamp']) && $_SESSION['stamp'] != $ctime || !isset($_SESSION['key']) && $_SESSION['key'] != $ckey) {
@@ -342,6 +385,41 @@ function delete_event($event_id) {
 	else {
 		echo "Event deletion failed";
 	}
+}
+//retrieve event based on user's loction.
+function retrieve_event($user_id) 
+{
+    global $link;
+    /* 
+            * step 1: Get the logged in user's location , city, zip code or state
+            * step 2: based on the location id, get the venue details
+            * step 3: fetch the events based on venue- location
+            * select * from event where venue_id in (select venue_id from venue where 
+                fk_venue_location = 1);
+            * if no events are found in his location, display all events.
+
+            *             */
+            $q1 = "SELECT e_loc_id FROM ".USERS. " WHERE user_id = ".$user_id;
+            $query = mysqli_query($link,$q1) or (die(mysqli_error($link)));
+            $row = mysqli_fetch_assoc($query);
+            $location_id = $row['e_loc_id'];
+
+
+            $q2 = "SELECT * FROM event as t1 
+                    LEFT JOIN event_type as t2 ON t1.e_type_id = t2.e_type_id
+                    LEFT JOIN venue as t3 ON t1.venue_id = t3.venue_id
+                    LEFT JOIN location as t4 ON t3.e_loc_id = t4.e_loc_id
+                    where event_status=1 and t3.e_loc_id=".$location_id;
+
+              if($event_query = mysqli_query($link,$q2))
+              {
+                   while ($row = mysqli_fetch_assoc($event_query))
+                     {
+                            $results[] =$row;
+
+                     }   
+                 } 
+                 return $results;
 }
 
 ?>
