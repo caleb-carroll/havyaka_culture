@@ -5,6 +5,7 @@
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="robots" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/profile_styles.css"/>
+	<link rel="stylesheet" type="text/css" href="includes/styles/styles.css"/>
 	<?php require_once 'includes/constants/sql_constants.php'; ?>
 </head>
 <body>
@@ -22,8 +23,8 @@
 	<div class="colleft">
 		<div class="col1">
 			<!-- Center column start -->
-			<div id="editProfile">
-				<p class="card_title">User Profile</p>
+			<div id="editProfile" class="card">
+				<h1>User Profile</h1>
 				<div id="profile_left">
 					<div id="profile_info">
 						First name: <input type="text" class="input_box" name="fname"><br><br>
@@ -40,8 +41,8 @@
 				</div>
 			</div>
 
-			<div id="editChef">
-				<p class="card_title">Chef Profile</p>
+			<div id="editChef" class="card">
+				<h1>Chef Profile</h1>
 				<div class="left_chef">
 					Phone: <input type="text" class="input_box" name="phone"><br><br>
 					Email: <input type="text" class="input_box" name="email"><br><br>
@@ -68,22 +69,11 @@
 
 			<div id="event_holder">
 				<?php
-				// To do: add in event picture
-				// To do: get the user's ID to see if they can edit it?
-				// Query to get event name, location, type, date, and details
-				$q = "SELECT event_name, t3.venue_name, t3.venue_address, t4.city, t4.state, t4.zipcode, t2.event_type, event_date, event_desc 
-				FROM " . EVENT . " as t1 
-				LEFT JOIN " . EVENT_TYPE . " as t2 ON t1.e_type_id = t2.e_type_id
-				LEFT JOIN " . VENUE . " as t3 ON t1.venue_id = t3.venue_id
-				LEFT JOIN " . LOCATION . " as t4 ON t3.e_loc_id = t4.e_loc_id
-				where event_status=1 and event_scope = 'public'";
 				
-				if($event_query = mysqli_query($link,$q)) {
-					while ($row = mysqli_fetch_assoc($event_query)) {
-						$results[] =$row;
-					}
-				}
-					
+				// get_events function defined in sql_constants.php
+				$results = get_events(1);
+				
+				// add each event returned to an event card
 				foreach ($results as $r) {
 				?>
 				<div class="event">
@@ -95,6 +85,7 @@
 						<tr><td>Event Details</td><td><?php echo $r['event_desc']; ?><td></tr>
 					</table>
 					
+					<!-- To do: get event picture from query results -->
 					<img class="event_picture" src="pictures/event.jpg" />
 				</div>
 				<?php } ?>
@@ -118,7 +109,14 @@
 ?>
 
 <?php 
-	// funciton to update an event 
+	// function to update an event 
 	// update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_id, $e_recurring_id, $event_id);
+?>
+
+<?php 
+	// function to add an event 
+	// add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $user_id, $venue_id, $community_id, $e_recurring_id)
+	// testing adding event
+	// add_event("new event", "2014-04-04", "This is a newly added event description", "public", 1, 1, 1, 1, 1)
 ?>
 </html>
