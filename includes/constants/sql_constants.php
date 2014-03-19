@@ -395,10 +395,12 @@ function delete_event($event_id) {
 		echo "Event deletion failed";
 	}
 }
-//retrieve event based on user's loction.
-function retrieve_event($user_id) 
+//retrieve event based on user's location.
+function retrieve_future_event($user_id) 
 {
     global $link;
+    $err = array();
+    $results = NULL;
     /* 
             * step 1: Get the logged in user's location , city, zip code or state
             * step 2: based on the location id, get the venue details
@@ -408,7 +410,7 @@ function retrieve_event($user_id)
             * if no events are found in his location, display all events.
 
             *             */
-            $q1 = "SELECT e_loc_id FROM ".USERS. " WHERE user_id = ".$user_id;
+            $q1 = "SELECT e_loc_id FROM ".USERS. " WHERE  user_id = ".$user_id;
             $query = mysqli_query($link,$q1) or (die(mysqli_error($link)));
             $row = mysqli_fetch_assoc($query);
             $location_id = $row['e_loc_id'];
@@ -418,16 +420,19 @@ function retrieve_event($user_id)
                     LEFT JOIN event_type as t2 ON t1.e_type_id = t2.e_type_id
                     LEFT JOIN venue as t3 ON t1.venue_id = t3.venue_id
                     LEFT JOIN location as t4 ON t3.e_loc_id = t4.e_loc_id
-                    where event_status=1 and t3.e_loc_id=".$location_id;
+                    where event_status=1 and t1.event_date > CURDATE() and t3.e_loc_id=".$location_id;
 
               if($event_query = mysqli_query($link,$q2))
               {
+                  if(mysqli_num_rows($event_query) > 0)
+                  {
                    while ($row = mysqli_fetch_assoc($event_query))
                      {
                             $results[] =$row;
 
                      }   
-                 } 
+                  }
+              }
                  return $results;
 }
 

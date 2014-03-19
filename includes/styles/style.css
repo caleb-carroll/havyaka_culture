@@ -135,7 +135,8 @@ img {
        padding:1em;
        float: left;
        position:relative;
-       top: 0px;      
+       top: 0px;  
+       height: auto;
     
 }
 .leftmenu .col3 {
@@ -158,18 +159,45 @@ img {
     width: 95%;
     border-radius: 10px;
 }
-.leftmenu .card {
-    float:left;
-    background:#FFF;
-    border:1px solid brown;
-    border-bottom:3px solid blue;
-    padding:15px;
-    margin:15px;
-    width:auto;
-    height: auto;
-    overflow:hidden;
-    background-position: top right;
-    border-radius: 25px;
+.leftmenu .card {   
+    
+    position: relative;
+    float:left;    
+    width: 500px;
+    height: 400px;
+    
+}
+
+.card_front {
+      position:relative;
+	cursor:pointer;
+        float:left; 
+	width:100%;
+	height:100%;
+	border:1px solid #ddd;	
+	background:url("img_css/background.jpg") no-repeat center center #f9f9f9;
+}
+.card_front:hover {
+       border:1px solid #999;
+	
+	/* CSS3 inset shadow: */
+      -moz-box-shadow:0 0 30px #999 inset;
+      -webkit-box-shadow:0 0 30px #999 inset;
+      box-shadow:0 0 30px #999 inset;
+}
+.card_back {
+         position:relative;
+	cursor:pointer;
+    float:left; 
+    width:100%;
+        
+	height:100%;
+	border:1px solid #ddd;	
+	background:url("img_css/background.jpg") no-repeat center center #f9f9f9;
+       
+}
+.clear {
+    clear:both;
 }
 .card h1 {
     margin:0px;
@@ -180,11 +208,6 @@ img {
 .card p {
     margin:0px;
     padding:10px;
-}
-.card-image {
-    position: relative;
-    background-position: center;
-    background-repeat: no-repeat;    
 }
 
 
@@ -409,33 +432,31 @@ div.ad_heading {
 /*public event table css*/
 table {
      display:  table;
-     border: solid 1px #D4D4D3;
      width:  100%;
       border-collapse:  collapse;
 
 }
 thead {
     font-family:  sans-serif;
-    font-size: 130%;
+    font-size: 100%;
     color: blanchedalmond;
     
 }
 table th {
     
      background-color:  activecaption;
-     width: 40px;
+     width: auto;
       margin-right: 2px;
      text-align:  left;
      font-family: cursive;
      font-weight: bold;
-     font-size: 14px;
+     font-size: 12px;
      border: solid 1px  #D4D4D3  ;
 
 
 }
 table tr {
      border:  darkblue thin inset;
-     border-bottom-style:  dashed;
      border-right: solid;
      border: solid 1px  #D4D4D3  ;
 }
@@ -450,7 +471,7 @@ table td {
      border-bottom-left-radius:  1px;
     font-family: sans-serif;
      font-weight: normal;
-     font-size: 20px;
+     font-size: 14px;
      border: solid 1px #D4D4D3;
 }
 table td last {

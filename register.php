@@ -6,11 +6,14 @@
 	<meta name="home" content="index, follow" />
         <link rel="stylesheet" type="text/css" href="includes/styles/styles.css" media="screen" />
         <script src="includes/js/jquery-1.10.2.js"></script>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
         
         <script>
-        $(document).ready(function(){
+$(document).ready(function(){
            $('#username').focus();
-        });
+           
+           
+});
         function refresh_content() 
         {
             $("#eventcol").fadeIn(450).show().load('public_event.php');
@@ -139,15 +142,9 @@ return_meta($meta_title);
                         </li> 
                          <li>
                              <label> Email: </label><input class="account" type="email" name="email" value="<?php echo stripslashes($email); ?>" placeholder="jobhnm@aol.com" required="required">
-                        </li>
-                         <li>
-                            <label> City: </label><input class="account" type="text" name="city" value="<?php echo stripslashes($city); ?>" placeholder="Cedar rapids">
-                        </li>
-                         <li>
-                            <label> State: </label><input class="account" type="text" name="state" value="" placeholder="Iowa">
-                        </li>
+                        </li>                         
                         <li>
-                            <label> Zip Code:</label> <input class="account" type="number" name="zipcode" value="<?php echo stripslashes($zipcode); ?>" placeholder="52403">   
+                            <label> Zip Code:</label> <input class="account" id ="zipcode" type="number" name="zipcode" value="<?php echo stripslashes($zipcode); ?>" placeholder="52403">   
                         </li>
                         <li>
                             <label> Community Type:</label> <select name='community_type' class='account' id='c_type'>

@@ -78,7 +78,7 @@ if(isset($_POST['login']))
                                     $msg = "Logged in successfully!";
 
 
-                                    header("Location: ".BASE."/index.php");
+                                    header("Location: ".BASE."/home.php");
                         } //end passwords matched
 			else
 			{
