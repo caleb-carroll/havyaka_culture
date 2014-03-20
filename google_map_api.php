@@ -11,7 +11,7 @@
        
         ?>
     <style>
-      html, body, #map-canvas {
+    #map-canvas {
         height: 100%;
         margin: 0px;
         padding: 0px

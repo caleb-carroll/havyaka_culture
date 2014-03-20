@@ -134,55 +134,61 @@ function logout($lm = NULL)
 
 	if(isset($lm))
 	{
-		header("Location: ".BASE."/register.php?msg=".$lm);
+		header("Location: ".BASE."/index.php?msg=".$lm);
 	}
 	else
 	{
-		header("Location: ".BASE."/register.php");
+		header("Location: ".BASE."/index.php");
 	}
 }
 
- function error_check($firstname,$username,$password,$confirm_pass,$email)
+ function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcode)
  {
+     $error= array();
 	if(empty($firstname)) {
-		$err[] = "You must enter your name";
+		$error[] = "You must enter your name";
 	}
 	
 	if(strlen($firstname) < 2) {
-		$err[] = "You must enter your real name";
+		$error[] = "You must enter your real name";
 	}
 	
 	if(empty($username)) {
-		$err[] = "You must enter a username";
+		$error[] = "You must enter a username";
 	}
 
 	if(strlen($username) < 4) {
-		$err[] = "username must be minimum of 4 letters";
+		$error[] = "username must be minimum of 4 letters";
 	}
 	
 	if(empty($password) || strlen($password) < 4) {
-		$err[] = "You must enter a password";
+		$error[] = "You must enter a password";
 	}
 	
 	if(empty($email) || !check_email($email)) {
-		$err[] = "Please enter a valid email address.";
+		$error[] = "Please enter a valid email address.";
 	}
 
 	if($password != $confirm_pass) {
-		$err[] = "Password and confirm password do not match!";
+		$error[] = "Password and confirm password do not match!";
 	}
-        return $err;
+        if(strlen($zipcode)<5)
+        {
+            $error[] = "Please enter the right zipcode";
+        }
+        return $error;
 }
 
 /* Function to add new users to the database */
-function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$state,$zipcode,$date,$user_ip,$activation_code,$community_type) {
-
+function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type) {
+ 
 	$msg = NULL;
 	$err = array();
 	global $salt;
 	global $link;
-          
-        $erro =error_check($firstname,$username,$password,$confirm_pass,$email);
+      
+           
+        $err =error_check($firstname,$username,$password,$confirm_pass,$email,$zipcode);
 
 	if($stmt = mysqli_prepare($link, "SELECT username, email FROM ".USERS." WHERE username = '$username' OR email = AES_ENCRYPT('$email', '$salt')") or die(mysqli_error($link))) {
 		//execute the query
@@ -198,14 +204,21 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$sta
 	}
 
 	if(empty($err)) {
-		//check if that city, zipcode already exists, if not insert the city, zipcode,state into location table.
-               // query to check if the city, zip code,  and state exists in the table.
-                // select city, zipcode,
-		$q_loc = mysqli_query($link, "INSERT INTO ".LOCATION. " (city,zipcode,state) VALUES ('$city','$zipcode','$state')") or die(mysqli_error($link));
-		
-		//get the last inserted id from the location table
-		$e_loc_id = mysqli_insert_id($link);
-
+              //check if the zipcode is already in the table, if not insert into the table.
+                if($loc_query = mysqli_query($link,"SELECT e_loc_id from ".LOCATION. " WHERE zipcode = ".$zipcode. " LIMIT 1") or die(mysqli_error($link)))
+                {
+                      if(mysqli_num_rows($loc_query) == 0)
+                      {
+                        $q_loc = mysqli_query($link, "INSERT INTO ".LOCATION. " (zipcode) VALUES ('$zipcode')") or die(mysqli_error($link));		
+                         //get the last inserted id from the location table
+                        $e_loc_id = mysqli_insert_id($link);
+                      } else
+                      {
+                          $row = mysqli_fetch_assoc($loc_query);
+                            $e_loc_id = $row['e_loc_id'];
+                      }
+                 } 
+                 
 		//get the community id based on the community name
 		$q = "SELECT community_id from ".COMMUNITY_TYPE. " WHERE community_name = '".$community_type. "' LIMIT 1";
 
@@ -215,19 +228,16 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$sta
 
 		$password = hash_pass($password);
 
-		$query = "INSERT INTO ".USERS." (first_name, username, e_loc_id, user_password, email, registration_date, user_ip, activation_code,community_id) VALUES ('$firstname', '$username', $e_loc_id, '$password', AES_ENCRYPT('$email', '$salt'), '$date', '$user_ip', '$activation_code',$community_id)";
+		$query = "INSERT INTO ".USERS." (first_name, username, e_loc_id, user_password, email, registration_date, user_ip, activation_code,community_id) VALUES ('$firstname', '$username', '$e_loc_id', '$password', AES_ENCRYPT('$email', '$salt'), '$date', '$user_ip', '$activation_code',$community_id)";
 
 		if ($q1 = mysqli_query($link,$query)) {
 			//Generate rough hash based on user id from above insertion statement
 			$user_id = mysqli_insert_id($link); //get the id of the last inserted item
 
 			$md5_id = md5($user_id);
-                        echo $md5_id;
+                       
 			mysqli_query($link, "UPDATE ".USERS." SET md5_id='$md5_id' WHERE id='$user_id'");
-		}
-		else {
-			$err[] ="Something happened!, please try again!";
-		}
+		
 
 		if(REQUIRE_ACTIVIATION != 1) {
 			echo "activation " .REQUIRE_ACTIVIATION;
@@ -269,6 +279,10 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$city,$sta
 			$rs_activ = mysqli_query($link, "UPDATE ".USERS." SET approved='1' WHERE
 			user_id='". $user_id. "'") or die(mysqli_error($link));
 		}
+             }
+             else {
+			$err[] ="Something happened!, please try again!";
+                }
 	}
 	return $err;
 }
