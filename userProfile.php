@@ -4,8 +4,9 @@
 	<title>Website Title</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="robots" content="index, follow" />
-	<link rel="stylesheet" type="text/css" href="includes/styles/profile_styles.css"/>
-	<link rel="stylesheet" type="text/css" href="includes/styles/styles.css"/>
+	<link rel="stylesheet" type="text/css" href="includes/styles/profile_style.css"/>
+	<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
+	<script type="text/javascript" src="\includes\js\scripts.js"></script>
 	<?php require_once 'includes/constants/sql_constants.php'; ?>
 </head>
 <body>

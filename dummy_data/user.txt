@@ -1,3 +1,3 @@
-NULL	insert MD5 here	Caleb	Carroll	pictures/calebc_profile.jpg	calebc@iastate.edu	515-451-7842	calebc	ada2f0b03a7bc74547cf656d7d4bf395484c6603	4	3/10/2014	127.0.0.1	1	1	1	1	0	NOW()	1	1
+NULL	insert MD5 here	Caleb	Carroll	pictures/calebc_profile.jpg	AES_ENCRYPT('calebc@iastate.edu','ae4bca65f3283fe26a6d3b10b85c3a308')	515-451-7842	calebc	ada2f0b03a7bc74547cf656d7d4bf395484c6603	4	3/10/2014	127.0.0.1	1	1	1	1	0	NOW()	1	1
 NULL	insert MD5 here	Nivedita	Bhat	pictures/nivi_profile.jpg	nivi@iastate.edu	555-555-5555	nivi	163cc9c789516e9655314640d99dab22eaf2babe	4	3/10/2014	127.0.0.1	1	0	1	1	0	NOW()	1	1
 NULL	insert MD5 here	Jivko	Sinapov	pictures/jivko_profile.jpg	jsinapov@iastate.edu	555-555-5555	jivko	5334a9320fe9040de3c2d2e6a94f43088809687e	1	3/10/2014	127.0.0.1	1	0	1	1	0	NOW()	1	1
