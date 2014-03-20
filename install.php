@@ -56,9 +56,7 @@ if($_GET){
 				echo "<p>Dummy data inserted into " . $table[$i] . " successfully<p>";
 			}
 			else{
-				echo "<p>";
-				echo $dummy_sql;
-				echo "</p>";
+				echo "<p>" . $dummy_sql "</p>";
 				echo "<p>Dummy data install failed.<p>";
 			}
 			
