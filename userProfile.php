@@ -23,6 +23,8 @@
 <div class="colmask rightmenu">
 	<!-- to do: get user ID from session data and add it to function call below -->
 	<?php 
+	// testing of user info update function
+	// update_user_info(1, 'calebtest', 'carrolltest', 'calebc@iastate.edutest', '5154517842test');
 	$user_info = get_user_info(1);
 	$chef_info = get_chef_info(1);
 	?>

@@ -302,6 +302,35 @@ function get_user_info($user_id) {
 	return $results;
 }
 
+/* Function to update user info */
+function update_user_info($user_id, $first_name, $last_name, /* $profile_picture,  */$email, $phone/* , $e_loc_id */){
+	/* Basic query below:
+	UPDATE user SET 
+	first_name = '$first_name',
+	last_name = '$last_name',
+	profile_picture = '$profile_picture',
+	email = '$email',
+	phone = '$phone',
+	e_loc_id = '$e_loc_id'
+	WHERE user_id=$user_id */
+	
+	global $link;
+	global $salt;
+	
+	/* To Do: Add in profile pic and location? */
+	$q = "UPDATE " . USERS . " SET first_name = '$first_name', last_name = '$last_name', email = AES_ENCRYPT('$email', '$salt'), phone = '$phone' WHERE user_id=$user_id";
+	
+	echo $q;
+	echo "<br>";
+	
+	if (mysqli_query($link,$q)) {
+		echo "Event updated successfully";
+	}
+	else {
+		echo "Event update failed";
+	}
+}
+
 /* Function to retrieve a user's information */
 function get_chef_info($user_id) {
 	// select * from user where user_id = 1;
