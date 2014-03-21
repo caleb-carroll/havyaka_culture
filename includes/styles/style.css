@@ -186,7 +186,7 @@ img {
       box-shadow:0 0 30px #999 inset;
 }
 .card_back {
-         position:relative;
+	position:relative;
 	cursor:pointer;
     float:left; 
     width:100%;

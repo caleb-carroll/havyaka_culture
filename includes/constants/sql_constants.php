@@ -84,7 +84,7 @@ function return_meta($title = NULL, $keywords = NULL, $description = NULL) {
 	<meta name="copyright" content="Copyright '.date("Y").' Community Connect. All rights reserved." />
 	<meta name="author" content="Your site name here" />
 	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
-	<link rel="stylesheet" type="text/css" media="all" href="'.BASE.'/includes/styles/styles.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="'.BASE.'/includes/styles/style.css" />
 	
 	';
 
