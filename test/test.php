@@ -26,8 +26,8 @@ http://home.jejaju.com/play/flipCards/simple
 		.toggleClass('no-transform',!doesCSS('transform'))
 	
 	$(function(){
-		$('.flipper.manual').click(function(){
-			$(this).toggleClass('flipped')
+		$('.flip').click(function(){
+			$(this).parent().closest('.flipper').toggleClass('flipped');
 		})
 	})
 	
@@ -37,16 +37,18 @@ http://home.jejaju.com/play/flipCards/simple
 </head>
 <body>
 
-	<div class="love flipper manual">
+	<div class="love flipper">
 		<div class="face">
+			<button class="flip">Test</button>
 			Face
 		</div>
 		<div class="back">
+			<button class="flip">Test</button>
 			Back
 		</div>
 	</div>
 	
-	<div class="love flipper manual">
+	<div class="love flipper">
 		<div class="face">
 			Face
 		</div>

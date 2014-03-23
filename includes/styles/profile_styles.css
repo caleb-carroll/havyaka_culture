@@ -78,6 +78,8 @@
 	bottom: 0;
 }
 
+
+
 .dropdown {
 	position: absolute;
 	top: .5em;
@@ -111,6 +113,11 @@
 	overflow:hidden;
 	background-position: top right;
 	border-radius: 25px;
+}
+
+.event table td textarea, .event table td input {
+   width: 95%;
+   height: 100%;
 }
 
 .event_picture {
