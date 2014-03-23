@@ -10,6 +10,9 @@
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
         <script type="text/javascript" src="includes/js/jquery.flip.min.js"></script>
         <script type="text/javascript" src="includes/js/scripts.js"></script>
+        <script type=text/javascript src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'></script>
+    <meta charset="utf-8">
+    
   <?php
                        
 
@@ -21,18 +24,20 @@
   ?>
 <script>
 
+//onload = setTimeout('initialize()',2000);
 $(function()
 {
     $(".card_back").hide();
-     $("#attending_radio1").change(function() {
+     $(".attending_radio").change(function() {
         
                  alert('!!');
                  if(this.checked)
                  {                   
                             
-                    var event_id = $('#event_id').val();
+                    var event_id = $(this).attr('rel');
+                    
                     var datastring = "attending=yes&event_id="+event_id;
-                        alert ('!');
+                        alert (datastring);
                        $.ajax(
                                {
                                        type: "POST",
@@ -54,10 +59,11 @@ $(function()
                  }
              });
              
-         $("#save_event").click(function() 
+         $(".save_event").click(function() 
          {
-              
-               var event_id = $('#event_id').val();
+              alert('!');
+               var event_id = $(this).attr('rel');
+               alert(event_id);
                var datastring = "event_id="+event_id;
 
                $.ajax(
@@ -77,6 +83,55 @@ $(function()
             
          });         
 });
+
+function initialize() {
+     var lat = '';
+            var lng = '';
+            var zip = document.getElementById('zipcode').value;
+            var country = "USA";
+             var geocoder = new google.maps.Geocoder();
+               geocoder.geocode( { 'address':zip+ ','+country}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                       
+                       lat = results[0].geometry.location.lat();
+                        alert (lat);
+                       lng = results[0].geometry.location.lng();
+                       alert(lng);
+                       var mapOptions = {
+                                    zoom: 9,
+                                    center: new google.maps.LatLng(lat,lng)
+                      };
+                      
+                     var map = new google.maps.Map(document.getElementById('map-canvas'),
+                     mapOptions);
+                      
+                       
+                     map.setCenter(results[0].geometry.location);
+                     var center = map.getCenter();
+                     google.maps.event.trigger(map, 'resize');
+                     map.setCenter(center);
+                     var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                     });
+                    
+                    } else {
+                      alert("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+                
+}
+
+function loadScript() {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&' +
+      'callback=initialize';
+  document.body.appendChild(script);
+}
+
+//window.onload = loadScript;
+//$(".flip").click(setTimeout('initialize()',2000));
  </script>
             
 </head>
@@ -167,17 +222,26 @@ $(function()
             <!-- Middle Column start -->
             <style>img {width: 160px;}</style> 
        
-            
+            <h2>Upcoming events in your area!</h2>
                 <form class= "event" action="localEvents.php" method="POST" id = "local_events" name="localevents">      
            <?php
                     
                if(($results))
                 {
-                   
+                   $i =0;
                      foreach ($results as $r) 
                       {
-                         //get the picture of the event
-                            $event_id = $r['event_id'];
+                        //generate individual ids                          
+                        //get the picture of the event
+                         //  
+                            $zipcode = "zipcode_".$i;
+                            $event_id = "eventid_".$i;
+                            $save_event = "saveevent_".$i;
+                            $flip = "flip_".$i;
+                            $attending_radio = "attending_radio_".$i;
+                            $map_canvas = "map_canvas_".$i;
+                            
+                           $event_id = $r['event_id'];
                             $q3 = "SELECT image_location FROM event_picture WHERE event_id = ".$event_id. " LIMIT 1";
                             $query = mysqli_query($link,$q3) or (die(mysqli_error($link)));
                              $row_image = mysqli_fetch_row($query);
@@ -194,43 +258,38 @@ $(function()
                            While($row = mysqli_fetch_assoc($query1))
                            {
                                $user_list[]=$row;
-                           }
-                            
+                           }                            
 
              ?>
                  <div class ="card">
                          <div class="card_front">
                                   
                                 <table>
-                                          <input type="hidden" id='event_id' name ='event_id' value=<?php echo $r['event_id']; ?> ></input>
-                                          <input type="hidden" id='zipcode' name="zipcode" value=<?php echo $r['zipcode']; ?>></input>
+                                          <input type="hidden" class='event_id' id= "<?php echo $event_id;?>" name ='event_id' value=<?php echo $r['event_id']; ?> ></input>
+                                          <input type="hidden" class="zipcode" id= "<?php echo $zipcode;?>" rel="<?php echo $r['zipcode']; ?>"  name="zipcode" value=<?php echo $r['zipcode']; ?>></input>
 
 
                                              <tr><td>Event Name: </td><td><?php echo $r['event_name']; ?> </td></tr>
                                              <tr><td>Event Details: </td><td> <?php echo $r['event_desc']; ?></td>
-                                                 <td><img class=\"gridimg2\" src="<?php echo $media_loc;?>" /></td>
+                                                 <td><img class="gridimg2" src="<?php echo $media_loc;?>" /></td>
                                              </tr>
                                              <tr> <td>Date:</td>
                                                 <td> <?php echo $r['event_date']; ?> </td></tr>   
 
                                              <tr><td>Event Address: </td><td><?php echo $r['venue_name']; ?> <br> <?php echo $r['venue_address']; ?> <br> <?php echo $r['city']; ?> : <span><?php echo $r['state']; ?> - </span><?php echo $r['zipcode']; ?> </td></tr>
-                                             <tr><td>Event contact details: </td><td><?php echo $r['venue_email']; ?> <br> <?php echo $r['venue_phone']; ?> </td></tr>
+                                             <tr><td>Event contact details: </td><td><?php echo $r['first_name']; ?><?php echo $r['last_name']; ?> <br><?php echo $r['email']; ?> <br> <?php echo $r['phone']; ?> </td></tr>
                                              <tr>
                                                  <td>                                           
-                                                     <input type="radio"  id="attending_radio1" name="attending" value="attending" >I am attending!</input>                                               
+                                                     <input type="radio"  class="attending_radio" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $attending_radio;?>" name="attending" value="attending" >I am attending!</input>                                               
                                                  </td>
                                                  <td>
-                                                     <button id ="save_event" type="submit" name="save_event">Save</button>                                      
+                                                     <button class = "save_event" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $save_event;?>" type="submit" name="save_event">Save</button>                                      
                                                  </td>
                                                  <td>
-                                                        <button name="flip" class="flip" >Flip</button> 
+                                                        <button name="flip" class="flip" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $flip;?>" >Flip</button> 
                                                  </td>
 
-                                         </tr>                     
-                                         <p>
-                                             <span class="success" style="display:none;"></span>
-                                             <span class="error" style="display:none;">Please enter some text</span>
-                                         </p>
+                                         </tr>  
                                 </table>             
                             </div>                           
                                                                
@@ -243,23 +302,27 @@ $(function()
                                               {
                                                   $username = $user['username'];                                        
                                         ?>
-
+                                        
                                         <div><?php echo $username; ?><br></div>
                                         <?php
+                                                
                                               }
                                         } else { ?>
-                                        <h3>No attendances</h3>                                      
-                                        <?php }
-                                        
-                                       include 'google_map_api.php';
-                                       ?>   
-                                        <button name="flip" class="flip">Flip</button> 
-                            </div>
-                                                    
+                                        <h3>No attendances</h3>  
+                                        <?php } ?>
+                                        <div id="<?php echo $map_canvas;?>" rel="<?php echo $r['event_id']; ?>" class = "map-canvas" style="width:100%; height: 100%; margin-left:0px;" >
+                                         <?php 
+                                         include 'google_map_api.php';
+                                         ?>
+                                      </div>   
+                                       <button name="flip" class="flip" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $flip;?>">Flip again</button> 
+                                       
+                            </div>                                                   
                             
                       </div>
                      <?php
-                 }
+                     $i++;
+                 } // end of foreach
               } else
               { ?>
                         <div class="card_front">
@@ -268,8 +331,12 @@ $(function()
                         </div>
         <?php }   ?>
                                       
-        </form>                
-      </div>                      
+        </form> 
+                <p>
+                     <span class="success" style="display:none;"></span>
+                     <span class="error" style="display:none;">Please enter some text</span>
+                </p>
+      </div>   <!-- end of col2-->                   
     </div>  
                               
  </div>
