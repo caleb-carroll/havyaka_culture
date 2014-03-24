@@ -24,11 +24,28 @@
   ?>
 <script>
 
-//onload = setTimeout('initialize()',2000);
+function doesCSS(p){
+		var s = ( document.body || document.documentElement).style;
+		return !!$.grep(['','-moz-', '-webkit-'],function(v){
+			return  typeof s[v+p] === 'string'
+		}).length
+	}
+
+	$('html')
+		.toggleClass('transform',doesCSS('transform'))
+		.toggleClass('no-transform',!doesCSS('transform'))
+
+	$(function(){
+		$('.flip').click(function(){
+			console.log("clicked");
+			$(this).parent().closest('.flipper').toggleClass('flipped');
+		})
+	})
+        
+        
 $(function()
 {
-    $(".card_back").hide();
-     
+      
          $(".save_chef").click(function() 
          {
               alert('!');
@@ -153,9 +170,9 @@ $(function()
                            
                            
              ?>
-                 <div class ="card">
+                 <div class="card flipper">
                     
-                    <div class="card_front">
+                    <div class="back">
                              <input type="hidden" class='chef_id' id= "<?php echo $chef_id;?>" name ='chef_id' value=<?php echo $r['chef_id']; ?> ></input>
                              <table>
                                  <tr><td>Chef: </td><td> <?php echo $r['first_name']; ?>&nbsp;<?php echo $r['last_name']; ?><br><br></br><?php echo $r['about_chef']; ?></br></td>
@@ -165,15 +182,14 @@ $(function()
                                  <tr><td>Good at preparing:</td><td><?php echo $r['food_name']; ?></td><td><?php echo $r['food_description']; ?></td></tr>
                                 
                                  <tr><td><button class = "save_chef" rel="<?php echo $r['chef_id']; ?>" id= "<?php echo $save_chef;?>" type="submit" name="save_chef">Save</button></td>
-                                     <td><button name="flip" class="flip" id= "<?php echo $flip;?>" >Flip</button></td>
+                                     <td><button class="flip" >Flip</button></td>
                                  </tr>
                              </table>
                                  
                        </div>                           
                                                                
-                       <div class="card_back">
-                                <table>
-                                    
+                       <div class="front">
+                                <table>                                    
                                     <tr><td><?php echo $r['first_name']; ?> &nbsp;<?php echo $r['last_name']; ?> <br><br><?php echo $r['about_chef']; ?></br></td><td><img class="gridimg2" src="<?php echo $media_loc_profile;?>" /></td></tr>
                                     
                                     <tr>
@@ -183,7 +199,7 @@ $(function()
                                     <tr><td><th>takes offline order?:</th> </td><td><?php echo $r['taking_offline_order']; ?></td></tr>                               
                                    </tr>
                                    <tr>
-                                     <td><button name="flip" class="flip" id= "<?php echo $flip;?>" >Flip</button></td>
+                                     <td><button class="flip">Flip</button></td>
                                  </tr>
                                     
                                 </table>
