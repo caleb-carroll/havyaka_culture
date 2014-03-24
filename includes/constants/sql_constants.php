@@ -367,7 +367,6 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 	return $err;
 }
 
-
 /* Function to send an email message to a user */
 function send_message($firstname, $username, $email, $activation_code,$msg_subject, $message) {
 	global $password_store_key;
@@ -467,14 +466,17 @@ function update_event($event_name, $event_date, $event_desc, $event_scope, $e_ty
 	
 	$q = "UPDATE " . EVENT . " SET event_name='" . $event_name . "', event_date='" . $event_date . "', event_desc='" . $event_desc . "', event_scope='" . $event_scope . "', e_type_id='" . $e_type_id . "', venue_id='" . $venue_id . "', e_recurring_id='" . $e_recurring_id . "' WHERE event_id = " . $event_id;
 	
-	echo $q;
-	echo "<br>";
+	// Uncomment below to debug query
+	// echo $q;
+	// echo "<br>";
 	
 	if (mysqli_query($link,$q)){
-		echo "Event updated successfully";
+		return true;
+		// echo "Event updated successfully";
 	}
 	else {
-		echo "Event update failed";
+		return false;
+		// echo "Event update failed";
 	}
 }
 
@@ -490,9 +492,9 @@ function delete_event($event_id) {
 		echo "Event deletion failed";
 	}
 }
+
 //retrieve event based on user's location.
-function retrieve_future_event($user_id) 
-{
+function retrieve_future_event($user_id) {
     global $link;
     global $salt;
     $err = array();
@@ -516,7 +518,7 @@ function retrieve_future_event($user_id)
                     LEFT JOIN user AS t5 ON t1.user_id = t5.user_id
                     WHERE event_status =1
                     AND t1.event_date > CURDATE( )
-                    AND t3.e_loc_id =".$location_id;
+                    AND t3.e_loc_id =".$e_loc_id;
             
               if($event_query = mysqli_query($link,$q2))
               {
@@ -539,7 +541,7 @@ function get_events($user_id = NULL, $visibility = NULL){
 	// to do: return picture
 	// to do: return if the event is editable by the current user
 	// set up query with all of the tables tied together 
-	$select = "SELECT event_name, t3.venue_name, t3.venue_address, t4.city, t4.state, t4.zipcode, t2.event_type, event_date, event_desc, t1.user_id";
+	$select = "SELECT t1.event_id, event_name, t3.venue_name, t3.venue_address, t4.city, t4.state, t4.zipcode, t2.event_type, event_date, event_desc, t1.user_id";
 	
 	$from = " FROM " . EVENT . " as t1 
 	LEFT JOIN " . EVENT_TYPE . " as t2 ON t1.e_type_id = t2.e_type_id
@@ -572,8 +574,8 @@ function get_events($user_id = NULL, $visibility = NULL){
 	
 	return $results;
 }
-function get_loggedin_user_location($user_id)
-{
+
+function get_loggedin_user_location($user_id) {
     global $link;
     $q1 = "SELECT e_loc_id FROM ".USERS. " WHERE  user_id = ".$user_id;
             $query = mysqli_query($link,$q1) or (die(mysqli_error($link)));

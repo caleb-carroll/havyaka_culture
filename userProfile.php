@@ -22,14 +22,62 @@
 	})
 </script>
 
+<?php
+require_once 'includes/constants/sql_constants.php';
+secure_page();
+
+if($_POST and $_GET){
+	if ($_GET['cmd'] == 'update_event'){
+		
+		$event_name = $_POST['event_name'];
+		$event_date = $_POST['event_date'];
+		$event_desc = $_POST['event_desc'];
+		$event_scope = 'public';
+		$e_type_id = 1; /* $_POST['event_type']; */
+		$venue_id = 1; /* $_POST['event_venue']; */
+		$e_recurring_id = 1;
+		$event_id = $_POST['event_id'];
+		
+		// function to update an event 
+		if (update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_id, $e_recurring_id, $event_id)) {
+			// add something here to display success/failure?
+			// echo "Update successful";
+		}
+		else {
+			// echo "Update failed";
+		}
+	}
+
+	if ($_GET['cmd'] == 'update_user'){
+		
+		$first_name = $_POST['first_name'];
+		$last_name = $_POST['last_name'];
+		$phone = $_POST['phone'];
+		$email = $_POST['email'];
+		$user_id = $_SESSION['user_id']; // need to update this to pull from session data
+		
+		// testing of user info update function
+		update_user_info($user_id, $first_name, $last_name, $email, $phone);
+		
+		// function to update an event 
+		if (update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_id, $e_recurring_id, $event_id)) {
+			// add something here to display success/failure?
+			// echo "Update successful";
+		}
+		else {
+			// echo "Update failed";
+		}
+	}
+}
+?>
+
+
 <head>
 	<title>Website Title</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="robots" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/profile_styles.css"/>
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
-	
-	<?php require_once 'includes/constants/sql_constants.php'; ?>
 </head>
 <body>
 
@@ -45,26 +93,25 @@
 <div class="colmask rightmenu">
 	<!-- to do: get user ID from session data and add it to function call below -->
 	<?php 
-	// testing of user info update function
-	// update_user_info(1, 'calebtest', 'carrolltest', 'calebc@iastate.edutest', '5154517842test');
 	$user_info = get_user_info(1);
 	$chef_info = get_chef_info(1);
 	?>
 	<div class="colleft">
-		<div class="col1">
+		<div class="col1"> <!-- To do: move to column 2 -->
 			<!-- Center column start -->
 			<div id="editProfile" class="card">
 				<h1>User Profile</h1>
 				<div id="profile_left">
 					<div id="profile_info">
-						
-						First name: <input type="text" class="input_box" name="fname" value="<?php echo $user_info[0]['first_name'];?>"><br><br>
-						Last name: <input type="text" class="input_box" name="lname" value="<?php echo $user_info[0]['last_name'];?>"><br><br>
+						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=update_user" method="post">
+						First name: <input type="text" class="input_box" name="first_name" value="<?php echo $user_info[0]['first_name'];?>"><br><br>
+						Last name: <input type="text" class="input_box" name="last_name" value="<?php echo $user_info[0]['last_name'];?>"><br><br>
 						Phone: <input type="text" class="input_box" name="phone" value="<?php echo $user_info[0]['phone'];?>"><br><br>
 						Email: <input type="text" class="input_box" name="email" value="<?php echo $user_info[0]['email'];?>"><br><br>    
 						<input type="checkbox" value="public_info">Allow others to see my contact info
 					</div>
-					<button type="button" id="update_info_button">Save Changes</button>
+					<button type="submit">Save Changes</button>
+					</form>
 				</div>
 				<div id="profile_right">
 					<img id="profile_picture" src="pictures/calebc_profile.jpg" />
@@ -83,8 +130,6 @@
 					<input type="checkbox" value="pickup" <?php if($chef_info[0]['pickup_available'] == "Yes") echo "checked"; else echo "unchecked";?>>Offer pickup?
 					<input type="checkbox" value="offline" <?php if($chef_info[0]['taking_offline_order'] == "Yes") echo "checked"; else echo "unchecked";?>>Take offline orders?
 					<input type="checkbox" value="delivery" <?php if($chef_info[0]['delivery_available'] == "Yes") echo "checked"; else echo "unchecked";?>>Offer delivery?
-
-
 					
 					<!-- not sure what we are doing with this dropdown  -->
 					<select class="dropdown">
@@ -111,6 +156,8 @@
 				<div class="card flipper">
 					<div class="front">
 						<button class="flip">Cancel</button>
+						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=update_event" method="post">
+						<input style="display:none" type="text" name="event_id" value="<?php echo $r['event_id']?>">
 						<table>
 							<tr><td width="25%">Event Name</td><td><input type="text" name="event_name" value="<?php echo $r['event_name']; ?>"></td></tr>
 							<tr><td>Event Location</td><td><input type="text" name="event_venue" value="<?php echo $r['venue_name']?>"></td></tr>
@@ -120,6 +167,8 @@
 						</table>
 						<!-- To do: get event picture from query results -->
 						<img class="event_picture" src="pictures/event.jpg" />
+						<button type="submit">Save Changes</button>
+						</form>
 					</div>
 					<div class="back">
 						<button class="flip">Edit Event</button>
@@ -130,6 +179,7 @@
 							<tr><td>Event Date</td><td><?php echo $r['event_date']; ?></td></tr>
 							<tr><td>Event Details</td><td><?php echo $r['event_desc']; ?><td></tr>
 						</table>
+						<img class="event_picture" src="pictures/event.jpg" />
 					</div>
 				</div>
 				<?php } ?>
@@ -150,11 +200,6 @@
 <?php
 	//function to delete an event 
 	// delete_event($event_id);
-?>
-
-<?php 
-	// function to update an event 
-	// update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_id, $e_recurring_id, $event_id);
 ?>
 
 <?php 

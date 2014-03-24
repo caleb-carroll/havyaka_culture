@@ -36,7 +36,7 @@ if($_GET){
 	
 	/* Adds dummy data to our database for testing purposes. */
 	if ($_GET['cmd'] == 'dummy_data'){
-		$table = array("location", "community", "user", "chef", "event_type", "food", "venue", "event_recurrence","event", "food_chef_details", "user_saved_info", "event_attendance"/*, "event_picture"*/);
+		$table = array("location", "community", "user", "chef", "event_type", "food", "venue", "event_recurrence","event", "food_chef_details", "user_saved_info", "event_attendance", "event_picture");
 		
 		$select = mysqli_select_db($link, DB_NAME);
 		
@@ -48,10 +48,10 @@ if($_GET){
 			INTO TABLE user 
 			*/
 			
-			$dummy_sql = "LOAD DATA INFILE 'C:/wamp/www/havyaka_culture/dummy_data/$name.txt'
+			$dummy_sql = "LOAD DATA INFILE '" . ROOT . "/dummy_data/$name.txt'
 			INTO TABLE $name;";
 						
-			$install = mysqli_query($link, $dummy_sql) or die(mysql_error());
+			$install = mysqli_query($link, $dummy_sql) /* or die(mysql_error()) */;
 			if($install){
 				echo "<p>Dummy data inserted into " . $table[$i] . " successfully<p>";
 			}
