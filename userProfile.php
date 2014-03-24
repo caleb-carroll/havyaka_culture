@@ -1,12 +1,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
+<script type="text/javascript" src="includes\js\jquery-1.10.2.js"></script>
+<script type="text/javascript" src="includes\js\scripts.js"></script>
+<script>
+	function doesCSS(p){
+		var s = ( document.body || document.documentElement).style;
+		return !!$.grep(['','-moz-', '-webkit-'],function(v){
+			return  typeof s[v+p] === 'string'
+		}).length
+	}
+
+	$('html')
+		.toggleClass('transform',doesCSS('transform'))
+		.toggleClass('no-transform',!doesCSS('transform'))
+
+	$(function(){
+		$('.flip').click(function(){
+			console.log("clicked");
+			$(this).parent().closest('.flipper').toggleClass('flipped');
+		})
+	})
+</script>
+
 <head>
 	<title>Website Title</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="robots" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/profile_styles.css"/>
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
-	<script type="text/javascript" src="\includes\js\scripts.js"></script>
+	
 	<?php require_once 'includes/constants/sql_constants.php'; ?>
 </head>
 <body>
@@ -86,17 +108,29 @@
 				// add each event returned to an event card
 				foreach ($results as $r) {
 				?>
-				<div class="event">
-					<table>
-						<tr><td width="25%">Event Name</td><td><?php echo $r['event_name']; ?></td></tr>
-						<tr><td>Event Location</td><td><?php echo $r['venue_name'] . "<br>" . $r['venue_address'] . "<br>" . $r['city'] . ", " . $r['state'] . " " . $r['zipcode']?></td></tr>
-						<tr><td>Event Type</td><td>Example Event Type</td></tr>
-						<tr><td>Event Date</td><td><?php echo $r['event_date']; ?></td></tr>
-						<tr><td>Event Details</td><td><?php echo $r['event_desc']; ?><td></tr>
-					</table>
-					
-					<!-- To do: get event picture from query results -->
-					<img class="event_picture" src="pictures/event.jpg" />
+				<div class="card flipper">
+					<div class="front">
+						<button class="flip">Cancel</button>
+						<table>
+							<tr><td width="25%">Event Name</td><td><input type="text" name="event_name" value="<?php echo $r['event_name']; ?>"></td></tr>
+							<tr><td>Event Location</td><td><input type="text" name="event_venue" value="<?php echo $r['venue_name']?>"></td></tr>
+							<tr><td>Event Type</td><td><input type="text" name="event_type" value="<?php echo $r['event_type']?>"></td></tr>
+							<tr><td>Event Date</td><td><input type="text" name="event_date" value="<?php echo $r['event_date']?>"></td></tr>
+							<tr><td>Event Details</td><td><textarea name="event_desc"><?php echo $r['event_desc']?></textarea><td></tr>
+						</table>
+						<!-- To do: get event picture from query results -->
+						<img class="event_picture" src="pictures/event.jpg" />
+					</div>
+					<div class="back">
+						<button class="flip">Edit Event</button>
+						<table>
+							<tr><td width="25%">Event Name</td><td><?php echo $r['event_name']; ?></td></tr>
+							<tr><td>Event Location</td><td><?php echo $r['venue_name'] . "<br>" . $r['venue_address'] . "<br>" . $r['city'] . ", " . $r['state'] . " " . $r['zipcode']?></td></tr>
+							<tr><td>Event Type</td><td>Example Event Type</td></tr>
+							<tr><td>Event Date</td><td><?php echo $r['event_date']; ?></td></tr>
+							<tr><td>Event Details</td><td><?php echo $r['event_desc']; ?><td></tr>
+						</table>
+					</div>
 				</div>
 				<?php } ?>
 			</div>
