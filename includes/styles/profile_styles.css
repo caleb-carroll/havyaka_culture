@@ -1,96 +1,14 @@
-#editProfile {
-	display:inline-block;
-	width: 50%;
-	height: 20em;
-	background-color:lightgrey;
-}
-
-#profile_left {
-	display:block;
-	float:left;
-	width:55%;
-	height:85%;
-	position:relative;
-}
-
-#profile_right {
-	float:right;
-	display:block;
-	width:45%;
-	align-content: right;
-}
-
 #profile_picture {
 	height:9em;
-	width:auto;
-	float:right;
-	margin-right: .75em;
+/* 	float:right; */
 }
 
-#change_profile_picture_button {
-	float:right;
-	margin-right: .75em;
-	margin-top: .5em;
-}
-
-#profile_info {
-	margin:.5em;
-	line-height:1em;
-}
-
-#update_info_button {
-	position: absolute;
-	left: .5em;
-	bottom: .5em;
-}
-
-#editChef {
-	display:inline-block;
-	width: 49.6%;
-	height: 20em;
-	background-color:lightgrey;
-	position:relative;
-}
-
-.left_chef {
-	float:left;
-	width:100%;
-	position: relative;
-}
-
-.right_chef {
-	float: right;
-	width:50%;
-	height:60%;
-	background-color:green;
-}
-
-.bottom_chef {
-	display:block;
-	background-color: brown;
-	height: 40%;
-	width: 100%;
-	position: absolute;
-	bottom: 0;
-}
-
-.dropdown {
-	position: absolute;
-	top: .5em;
-	right: .5em;
-}
-
-#food_request {
-	position: absolute;
-	top: 2.5em;
-	right: .5em;
+.event_picture {
+	height:9em;
 }
 
 #event_holder {
 	display:inline-block;
-	width: 100%; 
-	background-color:lightgrey;
-	position:relative;
 	margin-top: .5em;
 }
 
@@ -101,21 +19,6 @@ table {
 
 table td {
 	vertical-align: text-top;
-}
-
-.card table td textarea, .card table td input {
-   width: 95%;
-   height: 100%;
-}
-
-.event_picture {
-	height:9em;
-	width:auto;
-	float:right;
-	margin-right: .75em;
-/* 	position: absolute;
-	top: .5em;
-	right: .5em; */
 }
 
 input, textarea {

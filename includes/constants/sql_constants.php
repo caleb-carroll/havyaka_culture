@@ -179,29 +179,6 @@ function logout($lm = NULL)
         return $error;
 }
 
-/* Function to retrieve a user's information */
-function get_user_info($user_id) {
-	// select * from user where user_id = 1;
-	global $link;
-	global $salt;
-	
-	// to do: return user profile picture
-	$select = "SELECT first_name, last_name, AES_DECRYPT(email,'$salt') as email, phone";
-	
-	$from = " FROM " . USERS;
-	
-	$where = " where user_id=" . $user_id;
-	
-	// build the query
-	$q = $select . $from . $where . ";";
-	
-	// execute the query
-	if($event_query = mysqli_query($link,$q)) {
-		$results[] = mysqli_fetch_assoc($event_query);
-	}
-	
-	return $results;
-}
 /* ---------- functions related to local chef----------------------*/
 /* Function to retrieve a user's information */
 function get_chef_info($user_id) {
@@ -257,6 +234,31 @@ function get_localchef_details($user_id)
     }
     return $results;
     
+}
+
+/* Function to retrieve a user's information */
+function get_user_info($user_id) {
+	// select * from user where user_id = 1;
+	global $link;
+	global $salt;
+	
+	// to do: return user profile picture
+	$select = "SELECT first_name, last_name, AES_DECRYPT(email,'$salt') as email, phone";
+	// $select = "SELECT first_name, last_name, email as email, phone";
+	
+	$from = " FROM " . USERS;
+	
+	$where = " where user_id=" . $user_id;
+	
+	// build the query
+	$q = $select . $from . $where . ";";
+	
+	// execute the query
+	if($event_query = mysqli_query($link,$q)) {
+		$results[] = mysqli_fetch_assoc($event_query);
+	}
+	
+	return $results;
 }
 
 /* Function to add new users to the database */
@@ -365,6 +367,27 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
                 }
 	}
 	return $err;
+}
+
+/* Function to update users */
+function update_user_info($user_id, $first_name, $last_name, $email, $phone) {
+	global $link;
+	global $salt;
+	
+	$q = "UPDATE " . USERS . " SET first_name='" . $first_name . "', last_name='" . $last_name . "', email=AES_ENCRYPT('" . $email . "','" . $salt . "'), phone='" . $phone . "' WHERE user_id = " . $user_id;
+	
+	// Uncomment below to debug query
+	// echo $q;
+	// echo "<br>";
+	
+	if (mysqli_query($link,$q)){
+		return true;
+		// echo "User updated successfully";
+	}
+	else {
+		return false;
+		// echo "User update failed";
+	}
 }
 
 /* Function to send an email message to a user */
@@ -483,13 +506,16 @@ function update_event($event_name, $event_date, $event_desc, $event_scope, $e_ty
 /* Function to delete events */
 function delete_event($event_id) {
 	global $link;
-	$q = "DELETE FROM 'event' WHERE event_id = " . $event_id;
+	$q = "DELETE FROM " . EVENT . " WHERE event_id = " . $event_id;
+	
+	// uncomment below to debug
+	// echo $q; 
 	
 	if (mysqli_query($link,$q)){
-		echo "Event deleted successfully";
+		// echo "Event deleted successfully";
 	}
 	else {
-		echo "Event deletion failed";
+		// echo "Event deletion failed";
 	}
 }
 

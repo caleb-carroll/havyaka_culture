@@ -280,7 +280,7 @@ CREATE  TABLE IF NOT EXISTS `hci573`.`event_picture` (
   CONSTRAINT `fk_event_picture_event`
     FOREIGN KEY (`event_id` )
     REFERENCES `hci573`.`event` (`event_id` )
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
