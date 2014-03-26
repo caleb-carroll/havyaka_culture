@@ -33,6 +33,9 @@ define("REQUIRE_ACTIVIATION","1");
 
 $file_location = "../pictures";
 global $file_location;
+$max_file_size = 5000000;
+global $max_file_size;
+
 
 // connect to the SQL server and select the database - we can now use $link and $db in pages that include this page
 $link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die("Couldn't make connection:" . mysqli_error() );
@@ -287,7 +290,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 
 	if(empty($err)) {
               //check if the zipcode is already in the table, if not insert into the table.
-                if($loc_query = mysqli_query($link,"SELECT e_loc_id from ".LOCATION. " WHERE zipcode = ".$zipcode. " LIMIT 1") or die(mysqli_error($link)))
+                if($loc_query = mysqli_query($link,"SELECT e_loc_id from ".LOCATION. " WHERE zipcode = $zipcode LIMIT 1") or die(mysqli_error($link)))
                 {
                       if(mysqli_num_rows($loc_query) == 0)
                       {
@@ -302,7 +305,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
                  } 
                  
 		//get the community id based on the community name
-		$q = "SELECT community_id from ".COMMUNITY_TYPE. " WHERE community_name = '".$community_type. "' LIMIT 1";
+		$q = "SELECT community_id from ".COMMUNITY_TYPE. " WHERE community_name = '$community_type' LIMIT 1";
 
 		$query = mysqli_query($link,$q) or (die(mysqli_error($link)));
 		$row = mysqli_fetch_assoc($query);
@@ -374,7 +377,7 @@ function update_user_info($user_id, $first_name, $last_name, $email, $phone) {
 	global $link;
 	global $salt;
 	
-	$q = "UPDATE " . USERS . " SET first_name='" . $first_name . "', last_name='" . $last_name . "', email=AES_ENCRYPT('" . $email . "','" . $salt . "'), phone='" . $phone . "' WHERE user_id = " . $user_id;
+	$q = "UPDATE " . USERS . " SET first_name='$first_name', last_name='$last_name', email=AES_ENCRYPT('$email','$salt'), phone='$phone' WHERE user_id = $user_id";
 	
 	// Uncomment below to debug query
 	// echo $q;
@@ -472,7 +475,7 @@ function generate_key($length = 7) {
 function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $user_id, $venue_id, $community_id, $e_recurring_id){
 	global $link;
 	
-	$q = "INSERT INTO " . EVENT . "(event_name, event_date, event_desc, event_scope, e_type_id, user_id, venue_id, community_id, e_recurring_id) VALUES ('" . $event_name . "', '" . $event_date . "', '" . $event_desc . "', '" . $event_scope . "', '" . $e_type_id . "', '" . $user_id . "', '" . $venue_id . "', '" . $community_id . "', '" . $e_recurring_id . "')";
+	$q = "INSERT INTO " . EVENT . "(event_name, event_date, event_desc, event_scope, e_type_id, user_id, venue_id, community_id, e_recurring_id) VALUES ('$event_name', '$event_date', '$event_desc', '$event_scope', '$e_type_id', '$user_id', '$venue_id', '$community_id', '$e_recurring_id')";
 	
 	if (mysqli_query($link,$q)){
 		echo "Event added successfully";
@@ -487,7 +490,7 @@ function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_
 function update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_id, $e_recurring_id, $event_id){
 	global $link;
 	
-	$q = "UPDATE " . EVENT . " SET event_name='" . $event_name . "', event_date='" . $event_date . "', event_desc='" . $event_desc . "', event_scope='" . $event_scope . "', e_type_id='" . $e_type_id . "', venue_id='" . $venue_id . "', e_recurring_id='" . $e_recurring_id . "' WHERE event_id = " . $event_id;
+	$q = "UPDATE " . EVENT . " SET event_name='$event_name', event_date='$event_date', event_desc='$event_desc', event_scope='$event_scope', e_type_id='$e_type_id', venue_id='$venue_id', e_recurring_id='$e_recurring_id' WHERE event_id = $event_id";
 	
 	// Uncomment below to debug query
 	// echo $q;
@@ -506,7 +509,7 @@ function update_event($event_name, $event_date, $event_desc, $event_scope, $e_ty
 /* Function to delete events */
 function delete_event($event_id) {
 	global $link;
-	$q = "DELETE FROM " . EVENT . " WHERE event_id = " . $event_id;
+	$q = "DELETE FROM " . EVENT . " WHERE event_id = $event_id";
 	
 	// uncomment below to debug
 	// echo $q; 
@@ -601,6 +604,7 @@ function get_events($user_id = NULL, $visibility = NULL){
 	return $results;
 }
 
+/*  */
 function get_loggedin_user_location($user_id) {
     global $link;
     $q1 = "SELECT e_loc_id FROM ".USERS. " WHERE  user_id = ".$user_id;
@@ -611,7 +615,6 @@ function get_loggedin_user_location($user_id) {
             
         return $location_id;
 }
-
 
 /* Function to save things to user profiles. Function can specify event, chef, or contact to save */
 function save_info($info_type, $user_id, $info_id){
@@ -641,6 +644,49 @@ function save_info($info_type, $user_id, $info_id){
 	else {
 		echo $q . "<br>";
 		echo $info_type . " failed to add";
+	}
+}
+
+/* Function to store images in the database */
+function store_image($file_handler){
+	global $link;
+	global $max_file_size;
+	
+	$allowedExts = array("gif", "jpeg", "jpg", "png");
+
+	$temp = explode(".", $file_handler["name"]);
+
+	$extension = end($temp);
+
+	if ((($file_handler["type"] == "image/gif")
+		|| ($file_handler["type"] == "image/jpeg")
+		|| ($file_handler["type"] == "image/jpg")
+		|| ($file_handler["type"] == "image/pjpeg")
+		|| ($file_handler["type"] == "image/x-png")
+		|| ($file_handler["type"] == "image/png"))
+		&& ($file_handler["size"] < $max_file_size)
+		&& in_array($extension, $allowedExts)) {
+		if ($file_handler["error"] > 0) {
+			echo "Return Code: " . $file_handler["error"] . "<br>";
+		}
+		else {
+/*			Uncomment to debug
+			echo "Upload: " . $file_handler["name"] . "<br>";
+			echo "Type: " . $file_handler["type"] . "<br>";
+			echo "Size: " . ($file_handler["size"] / 1024) . " kB<br>";
+			echo "Temp file: " . $file_handler["tmp_name"] . "<br>"; */
+
+			if (file_exists("pictures/" . $file_handler["name"])) {
+				echo $file_handler["name"] . " already exists. ";
+			}
+			else {
+				move_uploaded_file($file_handler["tmp_name"], "pictures/" . $file_handler["name"]);
+				// echo "Stored in: " . "pictures/" . $file_handler["name"];
+			}
+		}
+	}
+	else {
+		echo "Invalid file";
 	}
 }
 

@@ -103,12 +103,21 @@ if($_POST and $_GET){
 			// echo "Update failed";
 		}
 	}
+	
+	if ($_GET['cmd'] == 'add_picture'){
+		if ($_FILES["file"]["error"] > 0) {
+			echo "Error: " . $_FILES["file"]["error"] . "<br>";
+		}
+		else {
+			$file_handler = $_FILES["file"];
+			
+			store_image($file_handler);
+		}
+	}
 }
 
 
 ?>
-
-
 <head>
 	<title>Website Title</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
@@ -150,6 +159,13 @@ if($_POST and $_GET){
 						Email: <input type="text" class="input_box" name="email" value="<?php echo $user_info[0]['email'];?>"><br><br>    
 						<input type="checkbox" value="public_info">Allow others to see my contact info
 						<button type="submit">Save Changes</button>
+					</form>
+					
+					<p>Upload Picture</p>
+					<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_picture" method="post" enctype="multipart/form-data">
+						<label for="file">Filename:</label>
+						<input type="file" name="file" id="file"><br>
+						<input type="submit" name="submit" value="Submit">
 					</form>
 				
 			</div>
@@ -209,6 +225,14 @@ if($_POST and $_GET){
 							<input style="display:none" type="text" name="event_id" value="<?php echo $r['event_id']?>">
 							<button type="submit">Delete Event</button>
 						</form>
+						
+						<p>Upload Picture</p>
+						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>cmd=add_picture" method="post" enctype="multipart/form-data">
+							<label for="file">Filename:</label>
+							<input type="file"><br>
+							<input type="submit">
+						</form>
+						
 					</div>
 					<div class="back">
 						<button class="flip">Edit Event</button>
@@ -237,10 +261,6 @@ if($_POST and $_GET){
 <?php include('includes/footer.inc.php'); ?>
 
 </body>
-<?php
-	//function to delete an event 
-	// delete_event($event_id);
-?>
 
 <?php 
 	// function to add an event 
