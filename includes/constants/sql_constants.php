@@ -612,4 +612,36 @@ function get_loggedin_user_location($user_id) {
         return $location_id;
 }
 
+
+/* Function to save things to user profiles. Function can specify event, chef, or contact to save */
+function save_info($info_type, $user_id, $info_id){
+	global $link;
+	
+	$q = "INSERT INTO " . USER_SAVED_INFO . " (user_id, event_id, chef_id, contact_id) VALUES ('" . $user_id . "', ";
+	
+	// builds the query based on the info type supplied
+	switch ($info_type) {
+	case "event":
+		$q .= "'" . $info_id . "', NULL, NULL)";
+		break;
+	case "chef":
+		$q .= "NULL, '" . $info_id . "', NULL)";
+		break;
+	case "contact":
+		$q .= "NULL, NULL, '" . $info_id . "')";
+		break;
+	default:
+		echo "Error, please supply valid info type to update";
+		break;
+	}
+	
+	if (mysqli_query($link,$q)){
+		echo $info_type . " added successfully";
+	}
+	else {
+		echo $q . "<br>";
+		echo $info_type . " failed to add";
+	}
+}
+
 ?>
