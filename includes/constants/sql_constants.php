@@ -33,6 +33,9 @@ define("REQUIRE_ACTIVIATION","1");
 
 $file_location = "../pictures";
 global $file_location;
+$max_file_size = 5000000;
+global $max_file_size;
+
 
 // connect to the SQL server and select the database - we can now use $link and $db in pages that include this page
 $link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die("Couldn't make connection:" . mysqli_error() );
@@ -179,29 +182,6 @@ function logout($lm = NULL)
         return $error;
 }
 
-/* Function to retrieve a user's information */
-function get_user_info($user_id) {
-	// select * from user where user_id = 1;
-	global $link;
-	global $salt;
-	
-	// to do: return user profile picture
-	$select = "SELECT first_name, last_name, AES_DECRYPT(email,'$salt') as email, phone";
-	
-	$from = " FROM " . USERS;
-	
-	$where = " where user_id=" . $user_id;
-	
-	// build the query
-	$q = $select . $from . $where . ";";
-	
-	// execute the query
-	if($event_query = mysqli_query($link,$q)) {
-		$results[] = mysqli_fetch_assoc($event_query);
-	}
-	
-	return $results;
-}
 /* ---------- functions related to local chef----------------------*/
 /* Function to retrieve a user's information */
 function get_chef_info($user_id) {
@@ -259,6 +239,31 @@ function get_localchef_details($user_id)
     
 }
 
+/* Function to retrieve a user's information */
+function get_user_info($user_id) {
+	// select * from user where user_id = 1;
+	global $link;
+	global $salt;
+	
+	// to do: return user profile picture
+	$select = "SELECT first_name, last_name, AES_DECRYPT(email,'$salt') as email, phone";
+	// $select = "SELECT first_name, last_name, email as email, phone";
+	
+	$from = " FROM " . USERS;
+	
+	$where = " where user_id=" . $user_id;
+	
+	// build the query
+	$q = $select . $from . $where . ";";
+	
+	// execute the query
+	if($event_query = mysqli_query($link,$q)) {
+		$results[] = mysqli_fetch_assoc($event_query);
+	}
+	
+	return $results;
+}
+
 /* Function to add new users to the database */
 function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type) {
  
@@ -285,7 +290,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 
 	if(empty($err)) {
               //check if the zipcode is already in the table, if not insert into the table.
-                if($loc_query = mysqli_query($link,"SELECT e_loc_id from ".LOCATION. " WHERE zipcode = ".$zipcode. " LIMIT 1") or die(mysqli_error($link)))
+                if($loc_query = mysqli_query($link,"SELECT e_loc_id from ".LOCATION. " WHERE zipcode = $zipcode LIMIT 1") or die(mysqli_error($link)))
                 {
                       if(mysqli_num_rows($loc_query) == 0)
                       {
@@ -300,7 +305,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
                  } 
                  
 		//get the community id based on the community name
-		$q = "SELECT community_id from ".COMMUNITY_TYPE. " WHERE community_name = '".$community_type. "' LIMIT 1";
+		$q = "SELECT community_id from ".COMMUNITY_TYPE. " WHERE community_name = '$community_type' LIMIT 1";
 
 		$query = mysqli_query($link,$q) or (die(mysqli_error($link)));
 		$row = mysqli_fetch_assoc($query);
@@ -367,6 +372,26 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 	return $err;
 }
 
+/* Function to update users */
+function update_user_info($user_id, $first_name, $last_name, $email, $phone) {
+	global $link;
+	global $salt;
+	
+	$q = "UPDATE " . USERS . " SET first_name='$first_name', last_name='$last_name', email=AES_ENCRYPT('$email','$salt'), phone='$phone' WHERE user_id = $user_id";
+	
+	// Uncomment below to debug query
+	// echo $q;
+	// echo "<br>";
+	
+	if (mysqli_query($link,$q)){
+		return true;
+		// echo "User updated successfully";
+	}
+	else {
+		return false;
+		// echo "User update failed";
+	}
+}
 
 /* Function to send an email message to a user */
 function send_message($firstname, $username, $email, $activation_code,$msg_subject, $message) {
@@ -450,7 +475,7 @@ function generate_key($length = 7) {
 function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $user_id, $venue_id, $community_id, $e_recurring_id){
 	global $link;
 	
-	$q = "INSERT INTO " . EVENT . "(event_name, event_date, event_desc, event_scope, e_type_id, user_id, venue_id, community_id, e_recurring_id) VALUES ('" . $event_name . "', '" . $event_date . "', '" . $event_desc . "', '" . $event_scope . "', '" . $e_type_id . "', '" . $user_id . "', '" . $venue_id . "', '" . $community_id . "', '" . $e_recurring_id . "')";
+	$q = "INSERT INTO " . EVENT . "(event_name, event_date, event_desc, event_scope, e_type_id, user_id, venue_id, community_id, e_recurring_id) VALUES ('$event_name', '$event_date', '$event_desc', '$event_scope', '$e_type_id', '$user_id', '$venue_id', '$community_id', '$e_recurring_id')";
 	
 	if (mysqli_query($link,$q)){
 		echo "Event added successfully";
@@ -465,34 +490,40 @@ function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_
 function update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_id, $e_recurring_id, $event_id){
 	global $link;
 	
-	$q = "UPDATE " . EVENT . " SET event_name='" . $event_name . "', event_date='" . $event_date . "', event_desc='" . $event_desc . "', event_scope='" . $event_scope . "', e_type_id='" . $e_type_id . "', venue_id='" . $venue_id . "', e_recurring_id='" . $e_recurring_id . "' WHERE event_id = " . $event_id;
+	$q = "UPDATE " . EVENT . " SET event_name='$event_name', event_date='$event_date', event_desc='$event_desc', event_scope='$event_scope', e_type_id='$e_type_id', venue_id='$venue_id', e_recurring_id='$e_recurring_id' WHERE event_id = $event_id";
 	
-	echo $q;
-	echo "<br>";
+	// Uncomment below to debug query
+	// echo $q;
+	// echo "<br>";
 	
 	if (mysqli_query($link,$q)){
-		echo "Event updated successfully";
+		return true;
+		// echo "Event updated successfully";
 	}
 	else {
-		echo "Event update failed";
+		return false;
+		// echo "Event update failed";
 	}
 }
 
 /* Function to delete events */
 function delete_event($event_id) {
 	global $link;
-	$q = "DELETE FROM 'event' WHERE event_id = " . $event_id;
+	$q = "DELETE FROM " . EVENT . " WHERE event_id = $event_id";
+	
+	// uncomment below to debug
+	// echo $q; 
 	
 	if (mysqli_query($link,$q)){
-		echo "Event deleted successfully";
+		// echo "Event deleted successfully";
 	}
 	else {
-		echo "Event deletion failed";
+		// echo "Event deletion failed";
 	}
 }
+
 //retrieve event based on user's location.
-function retrieve_future_event($user_id) 
-{
+function retrieve_future_event($user_id) {
     global $link;
     global $salt;
     $err = array();
@@ -539,7 +570,7 @@ function get_events($user_id = NULL, $visibility = NULL){
 	// to do: return picture
 	// to do: return if the event is editable by the current user
 	// set up query with all of the tables tied together 
-	$select = "SELECT event_name, t3.venue_name, t3.venue_address, t4.city, t4.state, t4.zipcode, t2.event_type, event_date, event_desc, t1.user_id";
+	$select = "SELECT t1.event_id, event_name, t3.venue_name, t3.venue_address, t4.city, t4.state, t4.zipcode, t2.event_type, event_date, event_desc, t1.user_id";
 	
 	$from = " FROM " . EVENT . " as t1 
 	LEFT JOIN " . EVENT_TYPE . " as t2 ON t1.e_type_id = t2.e_type_id
@@ -572,8 +603,9 @@ function get_events($user_id = NULL, $visibility = NULL){
 	
 	return $results;
 }
-function get_loggedin_user_location($user_id)
-{
+
+/*  */
+function get_loggedin_user_location($user_id) {
     global $link;
     $q1 = "SELECT e_loc_id FROM ".USERS. " WHERE  user_id = ".$user_id;
             $query = mysqli_query($link,$q1) or (die(mysqli_error($link)));
@@ -582,6 +614,80 @@ function get_loggedin_user_location($user_id)
             $location_id = $row['e_loc_id'];
             
         return $location_id;
+}
+
+/* Function to save things to user profiles. Function can specify event, chef, or contact to save */
+function save_info($info_type, $user_id, $info_id){
+	global $link;
+	
+	$q = "INSERT INTO " . USER_SAVED_INFO . " (user_id, event_id, chef_id, contact_id) VALUES ('" . $user_id . "', ";
+	
+	// builds the query based on the info type supplied
+	switch ($info_type) {
+	case "event":
+		$q .= "'" . $info_id . "', NULL, NULL)";
+		break;
+	case "chef":
+		$q .= "NULL, '" . $info_id . "', NULL)";
+		break;
+	case "contact":
+		$q .= "NULL, NULL, '" . $info_id . "')";
+		break;
+	default:
+		echo "Error, please supply valid info type to update";
+		break;
+	}
+	
+	if (mysqli_query($link,$q)){
+		echo $info_type . " added successfully";
+	}
+	else {
+		echo $q . "<br>";
+		echo $info_type . " failed to add";
+	}
+}
+
+/* Function to store images in the database */
+function store_image($file_handler){
+	global $link;
+	global $max_file_size;
+	
+	$allowedExts = array("gif", "jpeg", "jpg", "png");
+
+	$temp = explode(".", $file_handler["name"]);
+
+	$extension = end($temp);
+
+	if ((($file_handler["type"] == "image/gif")
+		|| ($file_handler["type"] == "image/jpeg")
+		|| ($file_handler["type"] == "image/jpg")
+		|| ($file_handler["type"] == "image/pjpeg")
+		|| ($file_handler["type"] == "image/x-png")
+		|| ($file_handler["type"] == "image/png"))
+		&& ($file_handler["size"] < $max_file_size)
+		&& in_array($extension, $allowedExts)) {
+		if ($file_handler["error"] > 0) {
+			echo "Return Code: " . $file_handler["error"] . "<br>";
+		}
+		else {
+/*			Uncomment to debug
+			echo "Upload: " . $file_handler["name"] . "<br>";
+			echo "Type: " . $file_handler["type"] . "<br>";
+			echo "Size: " . ($file_handler["size"] / 1024) . " kB<br>";
+			echo "Temp file: " . $file_handler["tmp_name"] . "<br>"; */
+
+			if (file_exists("pictures/" . $file_handler["name"])) {
+				echo $file_handler["name"] . " already exists. ";
+			}
+			else {
+				move_uploaded_file($file_handler["tmp_name"], "pictures/" . $file_handler["name"]);
+				// echo "Stored in: " . "pictures/" . $file_handler["name"];
+			}
+		}
+	}
+	else {
+		echo "Invalid file";
+	}
 }
 
 ?>

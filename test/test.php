@@ -1,60 +1,64 @@
-<!-- 
-
-Testing code found here:
-http://forum.jquery.com/topic/jquery-flippy-plugin-reverse-issue
-http://home.jejaju.com/play/flipCards/simple
-
--->
-
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8" />
-	<title>Simple Card Flipper</title>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
-	<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-	<script>
-	function doesCSS(p){
-		var s = ( document.body || document.documentElement).style;
-		return !!$.grep(['','-moz-', '-webkit-'],function(v){
-			return  typeof s[v+p] === 'string'
-		}).length
+<?php
+if ($_POST){
+	if ($_FILES["file"]["error"] > 0) {
+		echo "Error: " . $_FILES["file"]["error"] . "<br>";
 	}
-	
-	$('html')
-		.toggleClass('transform',doesCSS('transform'))
-		.toggleClass('no-transform',!doesCSS('transform'))
-	
-	$(function(){
-		$('.flip').click(function(){
-			$(this).parent().closest('.flipper').toggleClass('flipped');
-		})
-	})
-	
-</script>
-	<link rel="stylesheet" type="text/css" href="test.css"/>
+	else {
+		echo "Upload: " . $_FILES["file"]["name"] . "<br>";
+		echo "Type: " . $_FILES["file"]["type"] . "<br>";
+		echo "Size: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
+		echo "Stored in: " . $_FILES["file"]["tmp_name"];
+	}
+}
+?>
 
-</head>
+<html>
 <body>
 
-	<div class="love flipper">
-		<div class="face">
-			<button class="flip">Test</button>
-			Face
-		</div>
-		<div class="back">
-			<button class="flip">Test</button>
-			Back
-		</div>
-	</div>
-	
-	<div class="love flipper">
-		<div class="face">
-			Face
-		</div>
-		<div class="back">
-			Back
-		</div>
-	</div>
+<form action="test.php" method="post" enctype="multipart/form-data">
+	<label for="file">Filename:</label>
+	<input type="file" name="file" id="file"><br>
+	<input type="submit" name="submit" value="Submit">
+</form>
+
 </body>
 </html>
+
+<?php
+$allowedExts = array("gif", "jpeg", "jpg", "png");
+$file_handler = $_FILES["file"];
+
+$temp = explode(".", $file_handler["name"]);
+
+$extension = end($temp);
+
+if ((($file_handler["type"] == "image/gif")
+	|| ($file_handler["type"] == "image/jpeg")
+	|| ($file_handler["type"] == "image/jpg")
+	|| ($file_handler["type"] == "image/pjpeg")
+	|| ($file_handler["type"] == "image/x-png")
+	|| ($file_handler["type"] == "image/png"))
+	&& ($file_handler["size"] < 500000)
+	&& in_array($extension, $allowedExts)) {
+	if ($file_handler["error"] > 0) {
+		echo "Return Code: " . $file_handler["error"] . "<br>";
+	}
+	else {
+		echo "Upload: " . $file_handler["name"] . "<br>";
+		echo "Type: " . $file_handler["type"] . "<br>";
+		echo "Size: " . ($file_handler["size"] / 1024) . " kB<br>";
+		echo "Temp file: " . $file_handler["tmp_name"] . "<br>";
+
+		if (file_exists("pictures/" . $file_handler["name"])) {
+			echo $file_handler["name"] . " already exists. ";
+		}
+		else {
+			move_uploaded_file($file_handler["tmp_name"], "pictures/" . $file_handler["name"]);
+			echo "Stored in: " . "pictures/" . $file_handler["name"];
+		}
+	}
+}
+else {
+	echo "Invalid file";
+}
+?>

@@ -166,8 +166,9 @@ img {
     position: relative;
     float:left;    
     width: 500px;
-    height: 400px;
+    height: 400px; 
      margin: 0 .5em .5em 0;
+<<<<<<< HEAD
      padding:.5em;    
 } */
 .flipper { position: relative; cursor:pointer; }
@@ -258,6 +259,11 @@ img {
 }
 
 
+=======
+     padding:.5em;
+}
+
+>>>>>>> fce1c9c4179a9bfa32ed36496259d20ef73bbc0d
 /*left column css */
 #left_column {
      border: 1px solid black; 
@@ -557,7 +563,8 @@ table td last {
 /* Flipping functionality modified from examples here:
 http://forum.jquery.com/topic/jquery-flippy-plugin-reverse-issue
 http://home.jejaju.com/play/flipCards/simple */
-.flipper { position: relative; cursor:pointer; }
+.flipper { position: relative;}
+
 .transform .flipper>*{
 	-webkit-transition: 1s ease-in-out;
 	-moz-transition: 1s ease-in-out;
@@ -607,15 +614,17 @@ http://home.jejaju.com/play/flipCards/simple */
 	border-radius:10px;
 }
 .card {
+	display:block;
 	position:relative;
 	float:left;
 	padding:0px;
-	margin:1em;
+	margin:2em;
 	width:35em;
 	height:30em;
+	/* added overflow auto until I figure out how we want to size these cards */
+	overflow:auto;
 	background-position: top right;
 	border-radius: 25px;
-	
 }
 .card >div {
  	box-sizing: border-box;
