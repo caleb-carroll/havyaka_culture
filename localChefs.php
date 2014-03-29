@@ -24,7 +24,7 @@
   ?>
 <script>
 
-function doesCSS(p){
+	function doesCSS(p){
 		var s = ( document.body || document.documentElement).style;
 		return !!$.grep(['','-moz-', '-webkit-'],function(v){
 			return  typeof s[v+p] === 'string'
@@ -41,11 +41,10 @@ function doesCSS(p){
 			$(this).parent().closest('.flipper').toggleClass('flipped');
 		})
 	})
-        
-        
 $(function()
 {
-      
+    $(".card_back").hide();
+     
          $(".save_chef").click(function() 
          {
               alert('!');
@@ -134,9 +133,9 @@ $(function()
         <div class="col2">
             <!-- Middle Column start -->
             <style>img {width: 160px;}</style> 
-       
+            <div id ="chef_holder">
             <h2>Local chef's in your area!</h2>
-                <form class= "chef" action="localChefs.php" method="POST" id = "local_chef" name="localchef">      
+            
            <?php
                     
                if(($results))
@@ -170,7 +169,9 @@ $(function()
                            
                            
              ?>
-                 <div class="card flipper">
+            
+                <form class= "chef" action="localChefs.php" method="POST" id = "local_chef" name="localchef">      
+                 <div class ="card flipper">
                     
                     <div class="back">
                              <input type="hidden" class='chef_id' id= "<?php echo $chef_id;?>" name ='chef_id' value=<?php echo $r['chef_id']; ?> ></input>
@@ -182,14 +183,15 @@ $(function()
                                  <tr><td>Good at preparing:</td><td><?php echo $r['food_name']; ?></td><td><?php echo $r['food_description']; ?></td></tr>
                                 
                                  <tr><td><button class = "save_chef" rel="<?php echo $r['chef_id']; ?>" id= "<?php echo $save_chef;?>" type="submit" name="save_chef">Save</button></td>
-                                     <td><button class="flip" >Flip</button></td>
+                                     <td><label name="flip" class="flip" id= "<?php echo $flip;?>" >Flip</label></td>
                                  </tr>
                              </table>
                                  
                        </div>                           
                                                                
                        <div class="front">
-                                <table>                                    
+                                <table>
+                                    
                                     <tr><td><?php echo $r['first_name']; ?> &nbsp;<?php echo $r['last_name']; ?> <br><br><?php echo $r['about_chef']; ?></br></td><td><img class="gridimg2" src="<?php echo $media_loc_profile;?>" /></td></tr>
                                     
                                     <tr>
@@ -199,16 +201,15 @@ $(function()
                                     <tr><td><th>takes offline order?:</th> </td><td><?php echo $r['taking_offline_order']; ?></td></tr>                               
                                    </tr>
                                    <tr>
-                                     <td><button class="flip">Flip</button></td>
+                                       <td><label name="flip" class="flip" id= "<?php echo $flip;?>" >Flip</label></td>
                                  </tr>
                                     
                                 </table>
                                 
-                       </div>   
-                               <p>
+                       </div> 
                                     <span class="success" id ='<?php echo $success_id;?>' style="display:none;"></span>
                                     <span class="error" id ='<?php echo $error_id; ?>' style="display:none;">Please enter some text</span>
-                                 </p>
+                                
                       </div>
                      <?php
                      $i++;
@@ -222,13 +223,11 @@ $(function()
         <?php }   ?>
                                       
         </form> 
-               
+      </div>         
       </div>   <!-- end of col2-->                   
     </div>  
                               
  </div>
-
-</div>
 
 <?php include('includes/footer.inc.php'); ?>
 

@@ -516,7 +516,7 @@ function retrieve_future_event($user_id)
                     LEFT JOIN user AS t5 ON t1.user_id = t5.user_id
                     WHERE event_status =1
                     AND t1.event_date > CURDATE( )
-                    AND t3.e_loc_id =".$location_id;
+                    AND t3.e_loc_id =".$e_loc_id;
             
               if($event_query = mysqli_query($link,$q2))
               {

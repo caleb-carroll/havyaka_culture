@@ -83,11 +83,13 @@ img {
 	background:#369;
 	color:#fff;
 }
-#header ul li a.active,
-#header ul li a.active:hover {
+
+#header ul li .active,
+#header ul li .active:hover {
 	color:#fff;
 	background:#000;
 }
+
 #header ul li a span {
 	display:block;
 }
@@ -159,7 +161,7 @@ img {
     width: 95%;
     border-radius: 10px;
 }
-.leftmenu .card {   
+/*.leftmenu .card {   
     
     position: relative;
     float:left;    
@@ -167,7 +169,7 @@ img {
     height: 400px;
      margin: 0 .5em .5em 0;
      padding:.5em;    
-}
+} */
 .flipper { position: relative; cursor:pointer; }
 .transform .flipper>*{
 	-webkit-transition: 1s ease-in-out;
@@ -253,11 +255,6 @@ img {
     margin:0px;
     padding:10px;
     padding-bottom:0px;
-}
-
-.card p {
-    margin:0px;
-    padding:10px;
 }
 
 
@@ -546,6 +543,16 @@ table td last {
 	color: #0000CC;
 	margin-top: 30px;
 }
+
+
+#chef_holder {
+	display:inline-block;
+	width: 100%; 
+	background-color:lightgrey;
+	position:relative;
+	margin-top: .5em;
+}
+
 
 /* Flipping functionality modified from examples here:
 http://forum.jquery.com/topic/jquery-flippy-plugin-reverse-issue
