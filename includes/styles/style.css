@@ -131,7 +131,7 @@ img {
         margin-top: 15px;
 }
  .leftmenu .col2 {
-      width:67%;
+      width:77%;
       left:31%;
        margin-left: 15px;
        padding:1em;
@@ -141,7 +141,7 @@ img {
        height: auto;
     
 }
-.leftmenu .col3 {
+/*.leftmenu .col3 {
       width:12%;
       left:30%;
        margin: 0;
@@ -151,7 +151,7 @@ img {
        top: 0px;
        border:1px solid black;
      margin-top: 15px;
-}
+}*/
 
 .leftmenu #carousal {
     
@@ -168,7 +168,7 @@ img {
     width: 500px;
     height: 400px; 
      margin: 0 .5em .5em 0;
-<<<<<<< HEAD
+
      padding:.5em;    
 } */
 .flipper { position: relative; cursor:pointer; }
@@ -259,11 +259,7 @@ img {
 }
 
 
-=======
-     padding:.5em;
-}
 
->>>>>>> fce1c9c4179a9bfa32ed36496259d20ef73bbc0d
 /*left column css */
 #left_column {
      border: 1px solid black; 

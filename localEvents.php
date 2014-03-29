@@ -24,20 +24,45 @@
   ?>
 <script>
 
-//onload = setTimeout('initialize()',2000);
+ //setTimeout('initialize()',2000);
+
+function doesCSS(p){
+		var s = ( document.body || document.documentElement).style;
+		return !!$.grep(['','-moz-', '-webkit-'],function(v){
+			return  typeof s[v+p] === 'string';
+		}).length;
+	}
+
+	$('html')
+		.toggleClass('transform',doesCSS('transform'))
+		.toggleClass('no-transform',!doesCSS('transform'));
+
+	$(function(){
+		$('.flip').click(function(){
+                        var event_id = $(this).attr('rel');
+                        alert(event_id);
+                        var zipcode=$(this).attr('rel1');
+                        alert(zipcode);
+			console.log("clicked");
+			$(this).parent().closest('.flipper').toggleClass('flipped');
+                        initialize(event_id,zipcode);
+		});
+	});
 $(function()
 {
-    $(".card_back").hide();
+    //$(".show_more").click =setTimeout('initialize()');
+        
+        // $(".front").hide();
      $(".attending_radio").change(function() {
         
-                 alert('!!');
+                
                  if(this.checked)
                  {                   
                             
                     var event_id = $(this).attr('rel');
-                    
+                    alert(event_id);
                     var datastring = "attending=yes&event_id="+event_id;
-                        alert (datastring);
+                        
                        $.ajax(
                                {
                                        type: "POST",
@@ -61,7 +86,7 @@ $(function()
              
          $(".save_event").click(function() 
          {
-              alert('!');
+             
                var event_id = $(this).attr('rel');
                alert(event_id);
                var datastring = "event_id="+event_id;
@@ -84,14 +109,18 @@ $(function()
          });         
 });
 
-function initialize() {
+function initialize(event_id,zipcode) {
      var lat = '';
             var lng = '';
-            var zip = document.getElementById('zipcode').value;
+            // var zip = $(".zipcode").attr('rel');
+             //var event_id = $(".event_id").attr('rel');
+             var map_canvas = "map_canvas_"+event_id;
+             alert(map_canvas);
+            alert ("zipcode inside google map" +zipcode);
             var country = "USA";
              var geocoder = new google.maps.Geocoder();
-               geocoder.geocode( { 'address':zip+ ','+country}, function(results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
+               geocoder.geocode( { 'address':zipcode+ ','+country}, function(results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
                        
                        lat = results[0].geometry.location.lat();
                         alert (lat);
@@ -102,7 +131,7 @@ function initialize() {
                                     center: new google.maps.LatLng(lat,lng)
                       };
                       
-                     var map = new google.maps.Map(document.getElementById('map-canvas'),
+                     var map = new google.maps.Map(document.getElementById(map_canvas),
                      mapOptions);
                       
                        
@@ -121,17 +150,6 @@ function initialize() {
                 });
                 
 }
-
-function loadScript() {
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&' +
-      'callback=initialize';
-  document.body.appendChild(script);
-}
-
-//window.onload = loadScript;
-//$(".flip").click(setTimeout('initialize()',2000));
  </script>
             
 </head>
@@ -234,14 +252,17 @@ function loadScript() {
                         //generate individual ids                          
                         //get the picture of the event
                          //  
-                            $zipcode = "zipcode_".$i;
-                            $event_id = "eventid_".$i;
-                            $save_event = "saveevent_".$i;
-                            $flip = "flip_".$i;
-                            $attending_radio = "attending_radio_".$i;
-                            $map_canvas = "map_canvas_".$i;
+                         $event_id = $r['event_id'];
+                            $zipcode = "zipcode_".$event_id;
+                            $event_id_div = "eventid_".$event_id;
+                            $save_event = "saveevent_".$event_id;
+                            $flip = "flip_".$event_id;
+                            $show_more = "show_more_".$event_id;
+                            $attending_radio = "attending_radio_".$event_id;
+                            $map_canvas = "map_canvas_".$event_id;
                             
-                           $event_id = $r['event_id'];
+                           
+                           echo $event_id;
                             $q3 = "SELECT image_location FROM event_picture WHERE event_id = ".$event_id. " LIMIT 1";
                             $query = mysqli_query($link,$q3) or (die(mysqli_error($link)));
                              $row_image = mysqli_fetch_row($query);
@@ -261,11 +282,11 @@ function loadScript() {
                            }                            
 
              ?>
-                 <div class ="card">
-                         <div class="card_front">
+                 <div class ="card flipper">
+                         <div class="back">
                                   
                                 <table>
-                                          <input type="hidden" class='event_id' id= "<?php echo $event_id;?>" name ='event_id' value=<?php echo $r['event_id']; ?> ></input>
+                                          <input type="hidden" class='event_id' id= "<?php echo $event_id_div;?>" rel="<?php echo $r['event_id']; ?>" name ='event_id' value=<?php echo $r['event_id']; ?> ></input>
                                           <input type="hidden" class="zipcode" id= "<?php echo $zipcode;?>" rel="<?php echo $r['zipcode']; ?>"  name="zipcode" value=<?php echo $r['zipcode']; ?>></input>
 
 
@@ -286,14 +307,15 @@ function loadScript() {
                                                      <button class = "save_event" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $save_event;?>" type="submit" name="save_event">Save</button>                                      
                                                  </td>
                                                  <td>
-                                                        <button name="flip" class="flip" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $flip;?>" >Flip</button> 
+                                                          <td><label name="flip" rel="<?php echo $r['event_id']; ?>" rel1="<?php echo $r['zipcode']; ?>" class="flip" id= "<?php echo $flip;?>" >Flip</label></td>
                                                  </td>
+                                                 
 
                                          </tr>  
                                 </table>             
                             </div>                           
                                                                
-                            <div class="card_back">
+                            <div class="front">
                                 <h3>Friends attending <b><?php echo $r['event_name']; ?></b> function:</h3>
                                         <?php
                                         if(!empty($user_list))
@@ -310,12 +332,12 @@ function loadScript() {
                                         } else { ?>
                                         <h3>No attendances</h3>  
                                         <?php } ?>
-                                        <div id="<?php echo $map_canvas;?>" rel="<?php echo $r['event_id']; ?>" class = "map-canvas" style="width:100%; height: 100%; margin-left:0px;" >
+                                        <div id="<?php echo $map_canvas;?>" rel="<?php echo $r['event_id']; ?>" class = "map_canvas" style="width:100%; height: 100%; margin-left:0px;" >
                                          <?php 
-                                         include 'google_map_api.php';
+                                       //  include 'google_map_api.php';
                                          ?>
                                       </div>   
-                                       <button name="flip" class="flip" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $flip;?>">Flip again</button> 
+                                        <label name="flip" class="flip" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $flip;?>" >Flip</label>
                                        
                             </div>                                                   
                             
@@ -325,18 +347,18 @@ function loadScript() {
                  } // end of foreach
               } else
               { ?>
-                        <div class="card_front">
+                        <div class="back">
                             <h2>No upcoming events found! </h2>
                             Add an event <a href="userProfile.php">here</a>
                         </div>
         <?php }   ?>
                                       
         </form> 
-                <p>
+                
                      <span class="success" style="display:none;"></span>
                      <span class="error" style="display:none;">Please enter some text</span>
-                </p>
-      </div>   <!-- end of col2-->                   
+                
+        </div>   <!-- end of col2-->                   
     </div>  
                               
  </div>

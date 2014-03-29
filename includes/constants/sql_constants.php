@@ -216,21 +216,24 @@ function get_localchef_details($user_id)
 
     //get the logged in user's location
      $e_loc_id= get_loggedin_user_location($user_id);
+     
+      $get_city_state = mysqli_query($link,"SELECT city,state from ".LOCATION. " WHERE e_loc_id= ".$e_loc_id. ";") or die(mysqli_error($link));
+            list($city,$state) = mysqli_fetch_row($get_city_state);
+
  
-    //build the query
-    $sql = "SELECT t1.chef_id,t1.about_chef,t1.contact_time_preference,t1.delivery_available,t1.payments_accepted,t1.pickup_available,t1.taking_offline_order,t2.first_name,t2.last_name,t2.user_id,t2.email,t2.phone,t2.profile_picture,t6.food_id,t6.food_name,t6.food_picture,t6.food_description,t4.city,t4.zipcode,t4.state FROM chef as t1
-              right join user as t2 on t2.user_id=t1.user_id 
-              right join location as t4 on t2.e_loc_id = t4.e_loc_id 
-              right join venue as t3 on t4.e_loc_id=t3.e_loc_id
-              right join food_chef_details as t5 on t5.chef_id=t1.chef_id
-              right join food as t6 on t5.food_id = t6.food_id
-              and t4.e_loc_id = 1";                
-              //$e_loc_id;
-    
-    if($chef_query = mysqli_query($link,$sql)) 
+     //query to get the chef details based on the logged in user's location
+     
+    $get_chef = "SELECT t1.chef_id,t1.about_chef,t1.contact_time_preference,t1.delivery_available,t1.payments_accepted,t1.pickup_available,t1.taking_offline_order,t2.first_name,t2.last_name,t2.user_id,t2.email,t2.phone,t2.profile_picture,t4.city,t4.zipcode,t4.state FROM chef as t1
+              left join user as t2 on t2.user_id=t1.user_id 
+              left join location as t4 on t2.e_loc_id = t4.e_loc_id 
+              left join venue as t3 on t4.e_loc_id=t3.e_loc_id
+              WHERE  (t4.city = '".$city."' OR t4.state = '".$state. "');";
+     
+    if($chef_query = mysqli_query($link,$get_chef)) 
     {
        while($row = mysqli_fetch_assoc($chef_query))
        {
+           
            $results[] = $row;
        }
         
@@ -538,7 +541,11 @@ function retrieve_future_event($user_id) {
 
             *             */
          $e_loc_id= get_loggedin_user_location($user_id);
+        
+        $get_city_state = mysqli_query($link,"SELECT city,state from ".LOCATION. " WHERE e_loc_id= ".$e_loc_id. ";") or die(mysqli_error($link));
+            list($city,$state) = mysqli_fetch_row($get_city_state);
 
+        
             $q2 = "SELECT t1.event_date, t1.event_desc, t1.event_id, t1.event_name, t5.first_name, AES_DECRYPT(t5.email, '$salt') as email, t5.phone, t5.last_name, t3.venue_address, t3.venue_name, t4.city, t4.zipcode, t4.state
                     FROM event AS t1
                     LEFT JOIN event_type AS t2 ON t1.e_type_id = t2.e_type_id
@@ -547,8 +554,8 @@ function retrieve_future_event($user_id) {
                     LEFT JOIN user AS t5 ON t1.user_id = t5.user_id
                     WHERE event_status =1
                     AND t1.event_date > CURDATE( )
-                    AND t3.e_loc_id =".$e_loc_id;
-            
+                    AND (t4.city = '".$city."' OR t4.state = '".$state. "');";
+      
               if($event_query = mysqli_query($link,$q2))
               {
                   if(mysqli_num_rows($event_query) > 0)
@@ -558,6 +565,9 @@ function retrieve_future_event($user_id) {
                             $results[] =$row;
 
                      }   
+                  } else { //if no events found at his exact location, extend the search to different location in his state
+                      
+                      
                   }
               }
                  return $results;

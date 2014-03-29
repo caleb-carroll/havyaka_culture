@@ -12,13 +12,13 @@
 
 	$('html')
 		.toggleClass('transform',doesCSS('transform'))
-		.toggleClass('no-transform',!doesCSS('transform'))
+		.toggleClass('no-transform',!doesCSS('transform'));
 
 	$(function(){
 		$('.flip').click(function(){
 			console.log("clicked");
 			$(this).parent().closest('.flipper').toggleClass('flipped');
-		})
+		});
 	})
 </script>
 

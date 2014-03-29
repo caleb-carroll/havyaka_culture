@@ -39,12 +39,11 @@
 		$('.flip').click(function(){
 			console.log("clicked");
 			$(this).parent().closest('.flipper').toggleClass('flipped');
-		})
-	})
+		});
+	});
 $(function()
 {
-    $(".card_back").hide();
-     
+   
          $(".save_chef").click(function() 
          {
               alert('!');
@@ -136,6 +135,7 @@ $(function()
             <div id ="chef_holder">
             <h2>Local chef's in your area!</h2>
             
+                <form class= "chef" action="localChefs.php" method="POST" id = "local_chef" name="localchef">     
            <?php
                     
                if(($results))
@@ -155,32 +155,72 @@ $(function()
                             $map_canvas = "map_canvas_".$i;
                             
                            $chef_id = $r['chef_id'];
-                           $food_id = $r['food_id'];
-                           $food_picture = $r['food_picture'];
+                          
+                            //get the foods that each chef prepares.
+                         $food_chef = mysqli_query($link,"select t1.food_id,t1.food_name,t1.food_description,t1.food_picture,t2.food_price 
+                                        from food t1, food_chef_details t2
+                                        where t2.food_id=t1.food_id and
+                                        t2.chef_id = " .$chef_id. ";") or (die(mysqli_error($link)));
                          
-                            $media_loc = htmlspecialchars($food_picture);
-                            $media_loc = BASE.$media_loc;
-                           list($width, $height, $type, $attr)= getimagesize($media_loc);  
+                         while($row_food = mysqli_fetch_assoc($food_chef))
+                            {
+
+                                $results_food[] = $row_food;
+                                
+                            }
                            
+                           //get the chef's profile picture
                            $profile_picture = $r['profile_picture'];  
-                           $media_loc_profile = htmlspecialchars($profile_picture);
+                          $media_loc_profile = htmlspecialchars($profile_picture);
                             $media_loc_profile = BASE.$media_loc_profile;
                            list($width, $height, $type, $attr)= getimagesize($media_loc_profile);
                            
-                           
              ?>
-            
-                <form class= "chef" action="localChefs.php" method="POST" id = "local_chef" name="localchef">      
+             
                  <div class ="card flipper">
                     
                     <div class="back">
                              <input type="hidden" class='chef_id' id= "<?php echo $chef_id;?>" name ='chef_id' value=<?php echo $r['chef_id']; ?> ></input>
                              <table>
                                  <tr><td>Chef: </td><td> <?php echo $r['first_name']; ?>&nbsp;<?php echo $r['last_name']; ?><br><br></br><?php echo $r['about_chef']; ?></br></td>
-                                     <td><img class="gridimg2" src="<?php echo $media_loc;?>" /></td>
+                                     <td><img class="gridimg2" src="<?php echo $media_loc_profile;?>" /></td>
                                  </tr>                                     
                                      <tr><td>Chef contact details: <br>Contact hour:</br></td><td><?php echo $r['email']; ?><br><?php echo $r['phone']; ?></br><?php echo $r['contact_time_preference']; ?></td></tr>
-                                 <tr><td>Good at preparing:</td><td><?php echo $r['food_name']; ?></td><td><?php echo $r['food_description']; ?></td></tr>
+                                 
+                                     <tr>
+                                         <th style="text-align:center;font-size: 100%;">Good at preparing:</th>
+                                     </tr>
+                                     <tr>
+                                         <?php 
+                                           foreach($results_food as $food) 
+                                           {
+                                              
+                                             $food_id = $food['food_id'];
+                                             echo $food['food_name'];
+                                             
+                                              $food_picture = $food['food_picture'];
+                                               $media_loc = htmlspecialchars($food_picture);
+                                                $media_loc = BASE.$media_loc;
+                                                list($width, $height, $type, $attr)= getimagesize($media_loc);  
+                           
+                                         ?>
+                                         <tr>
+                                                <td>
+                                                   Food Name:<br>
+                                                       Description:<br>
+                                                           Price:<br>
+                                               </td>
+                                               <td>
+                                                   <?php echo $food['food_name']; ?><br>                                        
+                                                <?php echo $food['food_description']; ?><br>
+                                                   <?php echo $food['food_price']; ?><br>
+                                               <td>
+                                                   <td><img class="gridimg2" src="<?php echo $media_loc;?>" /></td>
+                                               </td>
+                                              </td>
+                                         </tr>
+                                           <?php } ?>
+                                     </tr>
                                 
                                  <tr><td><button class = "save_chef" rel="<?php echo $r['chef_id']; ?>" id= "<?php echo $save_chef;?>" type="submit" name="save_chef">Save</button></td>
                                      <td><label name="flip" class="flip" id= "<?php echo $flip;?>" >Flip</label></td>
@@ -196,9 +236,9 @@ $(function()
                                     
                                     <tr>
                                         <td><th>Delivery available:</th></td> <td><?php echo $r['delivery_available']; ?></td> </tr>
-                                    <tr> <td><th>Pickup available:</th></td><td><?php echo $r['pickup_available']; ?></td>  </tr>  
-                                    <tr><td><th>Payment method:</th></td><td><?php echo $r['payments_accepted']; ?></td></tr>
-                                    <tr><td><th>takes offline order?:</th> </td><td><?php echo $r['taking_offline_order']; ?></td></tr>                               
+                                        <tr> <td><th>Pickup available:</th></td><td><?php echo $r['pickup_available']; ?></td>  </tr>  
+                                        <tr><td><th>Payment method:</th></td><td><?php echo $r['payments_accepted']; ?></td></tr>
+                                        <tr><td><th>takes offline order?:</th> </td><td><?php echo $r['taking_offline_order']; ?></td></tr>                               
                                    </tr>
                                    <tr>
                                        <td><label name="flip" class="flip" id= "<?php echo $flip;?>" >Flip</label></td>
