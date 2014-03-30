@@ -249,7 +249,7 @@ function get_user_info($user_id) {
 	global $salt;
 	
 	// to do: return user profile picture
-	$select = "SELECT first_name, last_name, AES_DECRYPT(email,'$salt') as email, phone";
+	$select = "SELECT first_name, last_name, AES_DECRYPT(email,'$salt') as email, phone, profile_picture";
 	// $select = "SELECT first_name, last_name, email as email, phone";
 	
 	$from = " FROM " . USERS;
@@ -376,12 +376,52 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 }
 
 /* Function to update users */
-function update_user_info($user_id, $first_name, $last_name, $email, $phone) {
+function update_user_info($user_id, $first_name, $last_name, $email, $phone, $profile_picture=NULL) {
 	global $link;
 	global $salt;
 	
-	$q = "UPDATE " . USERS . " SET first_name='$first_name', last_name='$last_name', email=AES_ENCRYPT('$email','$salt'), phone='$phone' WHERE user_id = $user_id";
+	$q = "UPDATE " . USERS . " SET ";
 	
+	// adds first name if specified
+	if (!is_null($first_name)){
+		$q .= "first_name='$first_name'";
+	}
+	
+		// adds last name if specified
+	if (!is_null($last_name)){
+		if (strpos($q,'=') !== false) {
+			$q .= ", ";
+		}
+		$q .= "last_name='$last_name'";
+	}
+	
+		// adds email if specified
+	if (!is_null($email)){
+		if (strpos($q,'=') !== false) {
+			$q .= ", ";
+		}
+		$q .= "email=AES_ENCRYPT('$email','$salt')";
+	}
+	
+		// adds phone if specified
+	if (!is_null($phone)){
+		if (strpos($q,'=') !== false) {
+			$q .= ", ";
+		}
+		$q .= "phone='$phone'";
+	}
+	
+	// adds profile picture if specified
+	if (!is_null($profile_picture)){
+		if (strpos($q,'=') !== false) {
+			$q .= ", ";
+		}
+		$q .= "profile_picture='$profile_picture'";
+	}
+	
+	$q .= " WHERE user_id = $user_id";
+	
+	echo $q;
 	// Uncomment below to debug query
 	// echo $q;
 	// echo "<br>";
@@ -678,6 +718,7 @@ function store_image($file_handler){
 		&& in_array($extension, $allowedExts)) {
 		if ($file_handler["error"] > 0) {
 			echo "Return Code: " . $file_handler["error"] . "<br>";
+			// return false;
 		}
 		else {
 /*			Uncomment to debug
@@ -688,15 +729,19 @@ function store_image($file_handler){
 
 			if (file_exists("pictures/" . $file_handler["name"])) {
 				echo $file_handler["name"] . " already exists. ";
+				// return false;
 			}
 			else {
-				move_uploaded_file($file_handler["tmp_name"], "pictures/" . $file_handler["name"]);
-				// echo "Stored in: " . "pictures/" . $file_handler["name"];
+				$new_file_location = "pictures/" . $file_handler["name"];
+				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
+				// echo "Stored in: " . $new_file_location;
+				return $new_file_location;
 			}
 		}
 	}
 	else {
 		echo "Invalid file";
+		// return false;
 	}
 }
 

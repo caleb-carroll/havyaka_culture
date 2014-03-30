@@ -26,8 +26,7 @@
 require_once 'includes/constants/sql_constants.php';
 secure_page();
 $user_id = $_SESSION['user_id'];
-$user_info = get_user_info($user_id);
-$chef_info = get_chef_info($user_id);
+
 
 if($_POST and $_GET){
 	if ($_GET['cmd'] == 'update_event'){
@@ -52,19 +51,34 @@ if($_POST and $_GET){
 	}
 
 	if ($_GET['cmd'] == 'update_user'){
-		
+		 
 		$first_name = $_POST['first_name'];
 		$last_name = $_POST['last_name'];
 		$phone = $_POST['phone'];
 		$email = $_POST['email'];
+		$profile_picture = NULL;
 		
 		// function to update an event 
-		if (update_user_info($user_id, $first_name, $last_name, $email, $phone)) {
+		if (update_user_info($user_id, $first_name, $last_name, $email, $phone, $profile_picture)) {
 			// add something here to display success/failure?
 			// echo "Update successful";
 		}
 		else {
 			// echo "Update failed";
+		}
+	}
+	
+	// if the user is adding a picture, add it to the file system and reference in user table
+	if ($_GET['cmd'] == 'add_picture'){
+
+		if ($_FILES["file"]["error"] > 0) {
+			echo "Error: " . $_FILES["file"]["error"] . "<br>";
+		}
+		else {
+			$file_handler = $_FILES["file"];
+			$profile_picture = store_image($file_handler);
+			// $user_info[0]['profile_picture'] = $profile_picture;
+			update_user_info($user_id, NULL, NULL, NULL, NULL, $profile_picture);
 		}
 	}
 	
@@ -104,20 +118,12 @@ if($_POST and $_GET){
 		}
 	}
 	
-	if ($_GET['cmd'] == 'add_picture'){
-		if ($_FILES["file"]["error"] > 0) {
-			echo "Error: " . $_FILES["file"]["error"] . "<br>";
-		}
-		else {
-			$file_handler = $_FILES["file"];
-			
-			store_image($file_handler);
-		}
-	}
 }
 
-
+$user_info = get_user_info($user_id);
+$chef_info = get_chef_info($user_id);
 ?>
+
 <head>
 	<title>Website Title</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
@@ -149,8 +155,6 @@ if($_POST and $_GET){
 			<div class="card">
 			<div class="front">
 				<p>User Profile</p>
-				<!-- <img id="profile_picture" src="pictures/calebc_profile.jpg" />
-				<button type="button" id="change_profile_picture_button">Change Profile Picture</button> -->
 					
 					<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=update_user" method="post">
 						First name: <input type="text" class="input_box" name="first_name" value="<?php echo $user_info[0]['first_name'];?>"><br><br>
@@ -162,6 +166,7 @@ if($_POST and $_GET){
 					</form>
 					
 					<p>Upload Picture</p>
+					<img id="profile_picture" src="<?php echo $user_info[0]['profile_picture'];?>" />
 					<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_picture" method="post" enctype="multipart/form-data">
 						<label for="file">Filename:</label>
 						<input type="file" name="file" id="file"><br>
@@ -200,7 +205,7 @@ if($_POST and $_GET){
 				<?php
 				
 				// get_events function defined in sql_constants.php
-				$results = get_events(1);
+				$results = get_events($user_id);
 				
 				// add each event returned to an event card
 				foreach ($results as $r) {
