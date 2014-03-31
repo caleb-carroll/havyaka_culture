@@ -130,6 +130,7 @@ $chef_info = get_chef_info($user_id);
 	<meta name="robots" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/profile_styles.css"/>
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
+	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css"/>
 </head>
 <body>
 

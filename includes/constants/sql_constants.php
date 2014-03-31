@@ -745,4 +745,28 @@ function store_image($file_handler){
 	}
 }
 
+/* Function to retrieve all chefs that cook a certain type of food */
+function get_chefs_by_food($food_type){
+	global $link;
+	
+	// SELECT * from CHEF as t1 LEFT JOIN FOOD_CHEF_DETAILS as t2 ON t1.chef_id = t2.chef_id LEFT JOIN FOOD as t3 ON t2.food_id = t3.food_id WHERE t2.food_id = 1;
+	$q = "SELECT t1.chef_id, t1.about_chef, t1.contact_time_preference, t1.delivery_available, t1.payments_accepted, t1.pickup_available, t1.taking_offline_order, t4.first_name, t4.last_name, t4.user_id, t4.email, t4.phone, t4.profile_picture 
+	FROM chef as t1 
+	LEFT JOIN " . FOOD_CHEF_DETAILS . " as t2 ON t1.chef_id = t2.chef_id 
+	LEFT JOIN " . FOOD . " as t3 ON t2.food_id = t3.food_id 
+	LEFT JOIN " . USERS . " as t4 on t4.user_id = t1.user_id 
+	WHERE t3.food_id = $food_type;";
+	
+	// uncomment this to debug
+	// echo $q;
+	
+	// execute the query
+	if($food_query = mysqli_query($link,$q)) {
+		while ($row = mysqli_fetch_assoc($food_query)) {
+			$results[] =$row;
+		}
+	}
+	
+	return $results;
+}
 ?>
