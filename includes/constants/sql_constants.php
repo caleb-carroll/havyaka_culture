@@ -293,20 +293,9 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 
 	if(empty($err)) {
               //check if the zipcode is already in the table, if not insert into the table.
-                if($loc_query = mysqli_query($link,"SELECT e_loc_id from ".LOCATION. " WHERE zipcode = $zipcode LIMIT 1") or die(mysqli_error($link)))
-                {
-                      if(mysqli_num_rows($loc_query) == 0)
-                      {
-                        $q_loc = mysqli_query($link, "INSERT INTO ".LOCATION. " (zipcode) VALUES ('$zipcode')") or die(mysqli_error($link));		
-                         //get the last inserted id from the location table
-                        $e_loc_id = mysqli_insert_id($link);
-                      } else
-                      {
-                          $row = mysqli_fetch_assoc($loc_query);
-                            $e_loc_id = $row['e_loc_id'];
-                      }
-                 } 
-                 
+               
+            $e_loc_id = insert_zipcode_location($zipcode);
+            
 		//get the community id based on the community name
 		$q = "SELECT community_id from ".COMMUNITY_TYPE. " WHERE community_name = '$community_type' LIMIT 1";
 
@@ -515,9 +504,22 @@ function generate_key($length = 7) {
 }
 
 /* Function to create an event */
-function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $user_id, $venue_id, $community_id, $e_recurring_id){
+function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $user_id, $venue_name,$venue_address,$event_zipcode, $community_id, $e_recurring_id) {
 	global $link;
-	
+	// check if the zipcode already in the location table, if not insert and get the e_loc_id
+        // insert the venue name, address, e_loc_id into venue table and get the last inserted venue_id
+        //then insert the event details into event table.
+        
+        //get the e_loc_id
+        $e_loc_id = insert_zipcode_location($event_zipcode);
+        
+        //insert venue details into venue table
+        //I am not sure why we need to store venue phone, email and owner name. may be we can skip these info,if we both agree
+        $q_venue = mysqli_query($link,"INSERT INTO " .VENUE. " (venue_name,venue_address,e_loc_id) VALUES ('$venue_name','$venue_address',$e_loc_id)") or die(mysqli_error($link));
+        
+         $venue_id = mysqli_insert_id($link);
+                
+        
 	$q = "INSERT INTO " . EVENT . "(event_name, event_date, event_desc, event_scope, e_type_id, user_id, venue_id, community_id, e_recurring_id) VALUES ('$event_name', '$event_date', '$event_desc', '$event_scope', '$e_type_id', '$user_id', '$venue_id', '$community_id', '$e_recurring_id')";
 	
 	if (mysqli_query($link,$q)){
@@ -548,7 +550,20 @@ function update_event($event_name, $event_date, $event_desc, $event_scope, $e_ty
 		// echo "Event update failed";
 	}
 }
+//get list of event_types
 
+function event_type()
+{
+    global $link;
+    $q_e_type = mysqli_query($link,"SELECT * FROM " .EVENT_TYPE) or die(mysqli_error($link));
+    
+    $row = array();
+    while($q_event = mysqli_fetch_array($q_e_type)) 
+    {
+        $row[]=$q_event;       
+    }
+    return $row;
+}
 /* Function to delete events */
 function delete_event($event_id) {
 	global $link;
@@ -702,7 +717,7 @@ function store_image($file_handler){
 	global $link;
 	global $max_file_size;
 	
-	$allowedExts = array("gif", "jpeg", "jpg", "png");
+	$allowedExts = array("gif", "jpeg", "jpg", "png","JPEG","JPG","PNG","GIF");
 
 	$temp = explode(".", $file_handler["name"]);
 
@@ -768,5 +783,26 @@ function get_chefs_by_food($food_type){
 	}
 	
 	return $results;
+}
+
+
+// get the zipcode and check if the zipcode already exists in the location table, or insert into it
+function insert_zipcode_location ($zipcode) {
+    global $link;
+    
+     if($loc_query = mysqli_query($link,"SELECT e_loc_id from ".LOCATION. " WHERE zipcode = $zipcode LIMIT 1") or die(mysqli_error($link)))
+            {
+                  if(mysqli_num_rows($loc_query) == 0)
+                  {
+                    $q_loc = mysqli_query($link, "INSERT INTO ".LOCATION. " (zipcode) VALUES ('$zipcode')") or die(mysqli_error($link));		
+                     //get the last inserted id from the location table
+                    $e_loc_id = mysqli_insert_id($link);
+                  } else
+                  {
+                      $row = mysqli_fetch_assoc($loc_query);
+                        $e_loc_id = $row['e_loc_id'];
+                  }
+             }
+         return $e_loc_id;
 }
 ?>
