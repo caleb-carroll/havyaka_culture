@@ -28,17 +28,31 @@
 	<meta name="robots" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css"/>
+
+	
+	<?php
+	
+	require_once 'includes/constants/sql_constants.php';
+	secure_page();
+	
+	if (isset($_GET['food_id'])){
+		$food_id = $_GET['food_id'];
+	}
+	else{
+		echo "<p class='error'>An error has occurred. No food search was specified.</p>";
+		exit();
+	}
+	?>
+
 </head>
 
 <body>
 
 <div id="header">
-
 	<h1>The Title / Logo of the Webiste</h1>
 	<h2>Some catchy sounding phrase</h2>
 	
 	<?php include('includes/navigation.inc.php'); ?>
-	
 </div>
 
 <div class="content leftmenu">
@@ -50,21 +64,20 @@
 		</div>
 	</div>
 	
-	<div class="card flipper">
-		<div class="back">
-			Test back
-			<button class="flip">Flip</button>
-		</div>
+	<?php
+	// This section gets all chefs for the appropriate food types, then prints them into a card
+	// functions below are defined in sql_constants
+	$chefs_list = get_chefs_by_food($food_id);
+	
+	// prints a card for each chef associated with a food type
+	foreach ($chefs_list as $chef) {
 		
-		<div class="front">
-			Test front
-			<button class="flip">Flip</button>
-		</div>
-	</div>
+		// gets the chef info and loads it into an array
+		$chef_info_array = get_chef_info($chef['chef_id']);
+		
+		// uses the chef info array to print cards
+		print_chef_card($chef_info_array);
+	}
+	?>
 	
 </div>
-
-<?php 
-require_once 'includes/constants/sql_constants.php';
-print_r(get_chefs_by_food(2));
-?>

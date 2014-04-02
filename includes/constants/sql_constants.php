@@ -9,7 +9,12 @@ define('DB_USER', "hci573");
 define('DB_PASS', "hci573");
 define('DB_NAME', "hci573");
 
-include_once 'includes/constants/dbc.php';
+//include_once '/includes/constants/dbc.php';
+//base in operating system
+define ("ROOT", $_SERVER['DOCUMENT_ROOT'] . "/havyaka_culture");
+
+//base URL of site
+define ("BASE", "http://".$_SERVER['HTTP_HOST']."/havyaka_culture");
 //base in operating system
 
 //tables
@@ -54,7 +59,7 @@ global $password_store_key;
 
 
 /*Function to super sanitize anything going near our DBs*/
-function filter($data){
+function filter($data) {
 	$data = trim(htmlentities(strip_tags($data)));
 
 	if (get_magic_quotes_gpc()) {
@@ -66,7 +71,7 @@ function filter($data){
 }
 
 /*Function to easily output all our css, js, etc...*/
-function return_meta($title = NULL, $keywords = NULL, $description = NULL){
+function return_meta($title = NULL, $keywords = NULL, $description = NULL) {
 	if(is_null($title)) {
 		$title = "Community Connect - Havyaka Community";
 	}
@@ -109,18 +114,15 @@ function hash_pass($pass) {
 }
 
 /*Function to logout users securely*/
-function logout($lm = NULL)
-{
-    global $link;
-    
-	if(!isset($_SESSION))
-	{
+function logout($lm = NULL) {
+	global $link;
+	
+	if(!isset($_SESSION)) {
 		session_start();
 	}
 
 	//If the user is 'partially' set for some reason, we'll want to unset the db session vars
-	if(isset($_SESSION['user_id']))
-	{
+	if(isset($_SESSION['user_id'])) {
 		global $db;
 		mysqli_query($link,"UPDATE ".USERS." SET ckey= '', ctime= '' WHERE user_id='".$_SESSION['user_id']."'") or die(mysqli_error($link));
 		unset($_SESSION['user_id']);
@@ -135,19 +137,17 @@ function logout($lm = NULL)
 		session_unset();
 		session_destroy();
 
-	if(isset($lm))
-	{
+	if(isset($lm)) {
 		header("Location: ".BASE."/index.php?msg=".$lm);
 	}
-	else
-	{
+	else {
 		header("Location: ".BASE."/index.php");
 	}
 }
 
- function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcode)
- {
-     $error= array();
+/* Function to check for errors */
+function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcode) {
+	$error= array();
 	if(empty($firstname)) {
 		$error[] = "You must enter your name";
 	}
@@ -184,7 +184,7 @@ function logout($lm = NULL)
 
 /* ---------- functions related to local chef----------------------*/
 /* Function to retrieve a user's information */
-function get_chef_info($user_id) {
+/* function get_chef_info($user_id) {
 	// select * from user where user_id = 1;
 	global $link;
 	global $salt;
@@ -206,40 +206,203 @@ function get_chef_info($user_id) {
 	}
 	
 	return $results;
+} */
+
+/* Function to retrieve info for a specific chef */
+function get_chef_info($chef_id) {
+	global $link;
+	
+	// SELECT * from CHEF as t1 LEFT JOIN FOOD_CHEF_DETAILS as t2 ON t1.chef_id = t2.chef_id LEFT JOIN FOOD as t3 ON t2.food_id = t3.food_id WHERE t2.food_id = 1;
+	$q = "SELECT t1.chef_id, t1.about_chef, t1.contact_time_preference, t1.delivery_available, t1.payments_accepted, t1.pickup_available, t1.taking_offline_order, t4.first_name, t4.last_name, t4.user_id, t4.email, t4.phone, t4.profile_picture 
+	FROM chef as t1 
+	LEFT JOIN " . FOOD_CHEF_DETAILS . " as t2 ON t1.chef_id = t2.chef_id 
+	LEFT JOIN " . FOOD . " as t3 ON t2.food_id = t3.food_id 
+	LEFT JOIN " . USERS . " as t4 on t4.user_id = t1.user_id 
+	WHERE t1.chef_id = $chef_id;";
+	
+	// uncomment this to debug
+	/* echo "<br> get_chef_info query is: <br>";
+	echo $q;
+	echo "<br>"; */
+	
+	// execute the query
+	if($query = mysqli_query($link,$q)) {
+		$results = mysqli_fetch_assoc($query);
+	}
+	
+	return $results;
 }
 
-/* display chef details and food details on the card based on the logged in user's locaiton*/
+/* Function to retrieve all chefs that cook a certain type of food */
+function get_chefs_by_food($food_type_id) {
+	global $link;
+	
+	// SELECT * from CHEF as t1 LEFT JOIN FOOD_CHEF_DETAILS as t2 ON t1.chef_id = t2.chef_id LEFT JOIN FOOD as t3 ON t2.food_id = t3.food_id WHERE t2.food_id = 1;
+	$q = "SELECT t1.chef_id, t1.about_chef, t1.contact_time_preference, t1.delivery_available, t1.payments_accepted, t1.pickup_available, t1.taking_offline_order, t4.first_name, t4.last_name, t4.user_id, t4.email, t4.phone, t4.profile_picture 
+	FROM chef as t1 
+	LEFT JOIN " . FOOD_CHEF_DETAILS . " as t2 ON t1.chef_id = t2.chef_id 
+	LEFT JOIN " . FOOD . " as t3 ON t2.food_id = t3.food_id 
+	LEFT JOIN " . USERS . " as t4 on t4.user_id = t1.user_id 
+	WHERE t3.food_id = $food_type_id;";
+	
+	// uncomment this to debug
+	/* echo "<br> get_chefs_by_food query is: <br>";
+	echo $q;
+	echo "<br>"; */
+	
+	// execute the query
+	if($food_query = mysqli_query($link,$q)) {
+		while ($row = mysqli_fetch_assoc($food_query)) {
+			$results[] =$row;
+		}
+	}
+	
+	return $results;
+}
 
-function get_localchef_details($user_id)
-{
-    global $link;
+/* Function to print a chef card - accepts an array of chef information to print */
+function print_chef_card($chef_info_array) {
+	$chef_id = $chef_info_array['chef_id'];
+	$first_name = $chef_info_array['first_name'];
+	$last_name = $chef_info_array['last_name'];
+	$about_chef = $chef_info_array['about_chef'];
+	$email = $chef_info_array['email'];
+	$phone = $chef_info_array['phone'];
+	$contact_time_preference = $chef_info_array['contact_time_preference'];
+	$delivery_available = $chef_info_array['delivery_available'];
+	$pickup_available = $chef_info_array['pickup_available'];
+	$payments_accepted = $chef_info_array['payments_accepted'];
+	$taking_offline_order = $chef_info_array['taking_offline_order'];
+	// $zipcode = $chef_info_array['zipcode'];
 
-    //get the logged in user's location
-     $e_loc_id= get_loggedin_user_location($user_id);
-     
-      $get_city_state = mysqli_query($link,"SELECT city,state from ".LOCATION. " WHERE e_loc_id= ".$e_loc_id. ";") or die(mysqli_error($link));
-            list($city,$state) = mysqli_fetch_row($get_city_state);
+	//get the chef's profile picture
+	$profile_picture = $chef_info_array['profile_picture']; 
+	$media_loc_profile = htmlspecialchars($profile_picture);
+	$media_loc_profile = BASE.$media_loc_profile;
+	list($width, $height, $type, $attr)= getimagesize($media_loc_profile);
 
- 
-     //query to get the chef details based on the logged in user's location
-     
-    $get_chef = "SELECT t1.chef_id,t1.about_chef,t1.contact_time_preference,t1.delivery_available,t1.payments_accepted,t1.pickup_available,t1.taking_offline_order,t2.first_name,t2.last_name,t2.user_id,t2.email,t2.phone,t2.profile_picture,t4.city,t4.zipcode,t4.state FROM chef as t1
-              left join user as t2 on t2.user_id=t1.user_id 
-              left join location as t4 on t2.e_loc_id = t4.e_loc_id 
-              left join venue as t3 on t4.e_loc_id=t3.e_loc_id
-              WHERE  (t4.city = '".$city."' OR t4.state = '".$state. "');";
-     
-    if($chef_query = mysqli_query($link,$get_chef)) 
-    {
-       while($row = mysqli_fetch_assoc($chef_query))
-       {
-           
-           $results[] = $row;
-       }
-        
-    }
-    return $results;
-    
+?>
+<div class ="card flipper">
+	<div class="back">
+		<input type="hidden" value=<?php echo $chef_id; ?> ></input>
+		<table>
+			<tr>
+				<td> <?php echo $first_name; ?>&nbsp;<?php echo $last_name; ?><br></br><?php echo $about_chef; ?>&nbsp;</td>
+				<td>Chef contact details: <br>Contact hour:</br></td>
+				<td><?php echo $email; ?><br><?php echo $phone; ?></br><?php echo $contact_time_preference; ?></td>
+			</tr>
+			
+			<tr>
+				<th style="text-align:center;font-size: 100%;">Good at preparing:</th>
+			</tr>
+			
+			<tr>
+				<?php 
+				// print foods for the selected chef
+				$asdf = get_foods_by_chef($chef_id);
+				
+				// uncomment below to debug
+				/*	echo "<br> get_foods_by_chef array is: <br>";
+				print_r($asdf);
+				echo "<br>"; */
+				
+				
+				foreach ($asdf as $row_food) {
+					
+					$food_id = $row_food['food_id'];
+					
+					$food_picture = $row_food['food_picture'];
+					$media_loc = htmlspecialchars($food_picture);
+					$media_loc = BASE.$media_loc;
+					list($width, $height, $type, $attr)= getimagesize($media_loc);  
+					?>
+					
+					<tr>
+						<td>
+						Food Name:<br><br>
+						Description:<br><br>
+						Price:<br>
+						</td>
+						
+						<td>
+						<?php echo $row_food['food_name']; ?><br><br>
+						<?php echo $row_food['food_description']; ?><br><br>
+						<?php echo $row_food['food_price']; ?><br><br>
+						<td><img class="gridimg2" src="<?php echo $media_loc;?>" style="width:10em" /></td>
+						</td>
+					</tr>
+				<?php } ?>
+			</tr>
+
+			<tr>
+				<td><button class = "save_chef" rel="<?php echo $chef_id; ?>" id= "<?php //echo $save_chef;?>" type="submit" name="save_chef">Save</button></td>
+				<td><label class="flip">Flip</label></td>
+			</tr>
+		</table>
+
+	</div>                           
+
+	<div class="front">
+		<table>
+			<tr>
+				<td><?php echo $first_name; ?> &nbsp;<?php echo $last_name; ?> <br><br><?php echo $about_chef; ?></br></td>
+				<td><img class="gridimg2" src="<?php echo $media_loc_profile;?>" style="width:10em" /></td>
+			</tr>
+			
+			<tr>
+				<td><th>Delivery available:</th></td> 
+				<td><?php echo $delivery_available; ?></td> 
+			</tr>
+			
+			<tr>
+				<td><th>Pickup available:</th></td>
+				<td><?php echo $pickup_available; ?></td>
+			</tr>
+			
+			<tr>
+				<td><th>Payment method:</th></td>
+				<td><?php echo $payments_accepted; ?></td>
+			</tr>
+			
+			<tr>
+				<td><th>takes offline order?:</th></td>
+				<td><?php echo $taking_offline_order; ?></td>
+			</tr>
+
+			<tr>
+				<td><label class="flip">Flip</label></td>
+			</tr>
+		</table>
+	</div>
+</div>
+<?php 
+}
+
+/* display chef details and food details on the card based on the logged in user's location*/
+function get_localchef_details($user_id) {
+	global $link;
+
+	//get the logged in user's location
+	$e_loc_id= get_loggedin_user_location($user_id);
+
+	$get_city_state = mysqli_query($link, "SELECT city, state from " . LOCATION . " WHERE e_loc_id = $e_loc_id;") or die(mysqli_error($link));
+	
+	list($city, $state) = mysqli_fetch_row($get_city_state);
+	
+	//query to get the chef details based on the logged in user's location
+	$get_chef = "SELECT t1.chef_id, t1.about_chef, t1.contact_time_preference, t1.delivery_available, t1.payments_accepted, t1.pickup_available, t1.taking_offline_order, t2.first_name, t2.last_name, t2.user_id, t2.email, t2.phone, t2.profile_picture, t4.city, t4.zipcode, t4.state FROM chef as t1
+		left join user as t2 on t2.user_id = t1.user_id 
+		left join location as t4 on t2.e_loc_id = t4.e_loc_id 
+		left join venue as t3 on t4.e_loc_id = t3.e_loc_id
+		WHERE  (t4.city = '$city' OR t4.state = '$state');";
+
+	if($chef_query = mysqli_query($link, $get_chef)) {
+		while($row = mysqli_fetch_assoc($chef_query)) {
+			$results[] = $row;
+		}
+	}
+	
+	return $results;
 }
 
 /* Function to retrieve a user's information */
@@ -552,10 +715,14 @@ function update_event($event_name, $event_date, $event_desc, $event_scope, $e_ty
 		// echo "Event update failed";
 	}
 }
-//get list of event_types
 
+<<<<<<< HEAD
 function get_event_types()
 {
+=======
+//get list of event_types
+function event_type() {
+>>>>>>> 8fe9a9c81f5566eb898f6f737c09f3921f393847
     global $link;
     $q_e_type = mysqli_query($link,"SELECT * FROM " .EVENT_TYPE) or die(mysqli_error($link));
     
@@ -566,6 +733,7 @@ function get_event_types()
     }
     return $row;
 }
+
 /* Function to delete events */
 function delete_event($event_id) {
 	global $link;
@@ -631,7 +799,7 @@ function retrieve_future_event($user_id) {
 }
 
 /* Function to retrieve events information. Accepts arguments for visibility and user_id */
-function get_events($user_id = NULL, $visibility = NULL){
+function get_events($user_id = NULL, $visibility = NULL) {
 	global $link;
 	
 	// to do: return picture
@@ -684,7 +852,7 @@ function get_loggedin_user_location($user_id) {
 }
 
 /* Function to save things to user profiles. Function can specify event, chef, or contact to save */
-function save_info($info_type, $user_id, $info_id){
+function save_info($info_type, $user_id, $info_id) {
 	global $link;
 	
 	$q = "INSERT INTO " . USER_SAVED_INFO . " (user_id, event_id, chef_id, contact_id) VALUES ('" . $user_id . "', ";
@@ -715,7 +883,7 @@ function save_info($info_type, $user_id, $info_id){
 }
 
 /* Function to store images in the database */
-function store_image($file_handler){
+function store_image($file_handler) {
 	global $link;
 	global $max_file_size;
 	
@@ -762,24 +930,28 @@ function store_image($file_handler){
 	}
 }
 
-/* Function to retrieve all chefs that cook a certain type of food */
-function get_chefs_by_food($food_type){
+function get_foods_by_chef($chef_id) {
 	global $link;
+	// SELECT t1.food_id, t1.food_name, t1.food_description, t1.availability, t1.food_picture, t1.community_id, t2.food_price
+	// FROM food AS t1 LEFT JOIN food_chef_details AS t2 ON t1.food_id = t2.food_id
+	// WHERE t2.chef_id = $chef_id
 	
-	// SELECT * from CHEF as t1 LEFT JOIN FOOD_CHEF_DETAILS as t2 ON t1.chef_id = t2.chef_id LEFT JOIN FOOD as t3 ON t2.food_id = t3.food_id WHERE t2.food_id = 1;
-	$q = "SELECT t1.chef_id, t1.about_chef, t1.contact_time_preference, t1.delivery_available, t1.payments_accepted, t1.pickup_available, t1.taking_offline_order, t4.first_name, t4.last_name, t4.user_id, t4.email, t4.phone, t4.profile_picture 
-	FROM chef as t1 
-	LEFT JOIN " . FOOD_CHEF_DETAILS . " as t2 ON t1.chef_id = t2.chef_id 
-	LEFT JOIN " . FOOD . " as t3 ON t2.food_id = t3.food_id 
-	LEFT JOIN " . USERS . " as t4 on t4.user_id = t1.user_id 
-	WHERE t3.food_id = $food_type;";
+	$select = "SELECT t1.food_id, t1.food_name, t1.food_description, t1.availability, t1.food_picture, t1.community_id, t2.food_price";
+	
+	$from = " FROM " . FOOD . " AS t1 LEFT JOIN " . FOOD_CHEF_DETAILS . " AS t2 ON t1.food_id = t2.food_id";
+	
+	$where = " WHERE t2.chef_id = $chef_id;";
+	
+	$q = $select . $from . $where;
 	
 	// uncomment this to debug
-	// echo $q;
+	/* echo "<br> get_foods_by_chef query is: <br>";
+	echo $q;
+	echo "<br>"; */
 	
 	// execute the query
-	if($food_query = mysqli_query($link,$q)) {
-		while ($row = mysqli_fetch_assoc($food_query)) {
+	if($query = mysqli_query($link,$q)) {
+		while ($row = mysqli_fetch_assoc($query)) {
 			$results[] =$row;
 		}
 	}
@@ -807,4 +979,5 @@ function insert_zipcode_location ($zipcode) {
              }
          return $e_loc_id;
 }
+
 ?>
