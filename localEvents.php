@@ -40,9 +40,9 @@ function doesCSS(p){
 	$(function(){
 		$('.flip').click(function(){
                         var event_id = $(this).attr('rel');
-                        alert(event_id);
+                        // alert(event_id);
                         var zipcode=$(this).attr('rel1');
-                        alert(zipcode);
+                        // alert(zipcode);
 			console.log("clicked");
 			$(this).parent().closest('.flipper').toggleClass('flipped');
                         initialize(event_id,zipcode);
@@ -60,7 +60,7 @@ $(function()
                  {                   
                             
                     var event_id = $(this).attr('rel');
-                    alert(event_id);
+                    // alert(event_id);
                     var datastring = "attending=yes&event_id="+event_id;
                         
                        $.ajax(
@@ -80,7 +80,7 @@ $(function()
                  } else 
                  {
                   //we may want to add another option called 'may be attending' in that case, we need to write the code here
-                     alert('do nothing');
+                     // alert('do nothing');
                  }
              });
              
@@ -88,7 +88,7 @@ $(function()
          {
              
                var event_id = $(this).attr('rel');
-               alert(event_id);
+               // alert(event_id);
                var datastring = "event_id="+event_id;
 
                $.ajax(
@@ -115,17 +115,17 @@ function initialize(event_id,zipcode) {
             // var zip = $(".zipcode").attr('rel');
              //var event_id = $(".event_id").attr('rel');
              var map_canvas = "map_canvas_"+event_id;
-             alert(map_canvas);
-            alert ("zipcode inside google map" +zipcode);
+             // alert(map_canvas);
+            // alert ("zipcode inside google map" +zipcode);
             var country = "USA";
              var geocoder = new google.maps.Geocoder();
                geocoder.geocode( { 'address':zipcode+ ','+country}, function(results, status) {
                     if (status === google.maps.GeocoderStatus.OK) {
                        
                        lat = results[0].geometry.location.lat();
-                        alert (lat);
+                        // alert (lat);
                        lng = results[0].geometry.location.lng();
-                       alert(lng);
+                       // alert(lng);
                        var mapOptions = {
                                     zoom: 9,
                                     center: new google.maps.LatLng(lat,lng)
@@ -145,7 +145,7 @@ function initialize(event_id,zipcode) {
                      });
                     
                     } else {
-                      alert("Geocode was not successful for the following reason: " + status);
+                      // alert("Geocode was not successful for the following reason: " + status);
                     }
                 });
                 
