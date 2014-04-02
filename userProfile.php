@@ -59,7 +59,7 @@
                         {
                     
                             var datastring = "event_name=" +event_name+ "&event_desc=" +event_desc+ "&event_date=" +event_date+ "&event_type_id=" +event_type_id+ "&event_scope=" +event_scope+ "&venue_name=" +venue_name+ "&venue_address="+venue_address+ "&event_zipcode="+event_zipcode;
-                          alert(datastring);
+                          console.log(datastring);
                              $.ajax(
                                        {
                                                type: "POST",
@@ -97,22 +97,24 @@ $user_id = $_SESSION['user_id'];
 if($_POST and $_GET){
 	if ($_GET['cmd'] == 'update_event'){
 		
-		$event_name = $_POST['event_name'];
-		$event_date = $_POST['event_date'];
-		$event_desc = $_POST['event_desc'];
-		$event_scope = 'public';
-		$e_type_id = 1; /* $_POST['event_type']; */
-		$venue_id = 1; /* $_POST['event_venue']; */
+		$event_name = filter($_POST['event_name']);
+		$event_date =filter($_POST['event_date']);
+		$event_desc = filter($_POST['event_desc']);               
+		$event_scope = filter($_POST['event_scope']);
+                $e_type_id = filter($_POST['event_type']);
+                $venue_name = filter($_POST['venue_name']);
+                $venue_address = filter($_POST['venue_address']);
+                $event_zipcode = filter($_POST['event_zipcode']); 
 		$e_recurring_id = 1;
 		$event_id = $_POST['event_id'];
 		
 		// function to update an event 
-		if (update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_id, $e_recurring_id, $event_id)) {
+		if (update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_name, $venue_address,$event_zipcode, $e_recurring_id, $event_id)) {
 			// add something here to display success/failure?
-			// echo "Update successful";
+			 $msg="Event updated successfully";
 		}
 		else {
-			// echo "Update failed";
+			$err = "Oops!. sorry, could not update your event, Please try again";
 		}
 	}
 
@@ -130,28 +132,36 @@ if($_POST and $_GET){
 			 $msg="Profile updated successfully";
 		}
 		else {
-			$err = "Oops!. sorry, could not update your profile date, Please try again";
+			$err = "Oops!. sorry, could not update your profile, Please try again";
 		}
 	}
 	
 	// if the user is adding a picture, add it to the file system and reference in user table
-	if ($_GET['cmd'] == 'add_picture'){
-
+	if ($_GET['cmd'] == 'add_picture' || $_GET['cmd'] == 'add_event_picture'){
+            echo "1";
+            print_r($_FILES);
 		if ($_FILES["file"]["error"] > 0) {
 			echo "Error: " . $_FILES["file"]["error"] . "<br>";
 		}
 		else {
 			$file_handler = $_FILES["file"];
-			$profile_picture = store_image($file_handler);
-                        $profile_picture = "/".$profile_picture;
-			// $user_info[0]['profile_picture'] = $profile_picture;
-			update_user_info($user_id, NULL, NULL, NULL, NULL, $profile_picture);
+			$picture = store_image($file_handler);
+                        $picture_loc = "/".$picture;
+                        if($_GET['cmd'] == 'add_picture') {
+                            // $user_info[0]['profile_picture'] = $profile_picture;
+                            update_user_info($user_id, NULL, NULL, NULL, NULL, $profile_picture_loc);
+                        } 
+                        elseif ($_GET['cmd'] == 'add_event_picture') 
+                        {
+                            echo "coming inside add_event-picture";
+                            $event_id = $_POST['event_id'];
+                            update_event_picture($picture_loc,$event_id);
+                        }
 		}
 	}
 	
 	// to do: create form that calls this code
 	if ($_GET['cmd'] == 'add_event'){
-		echo "it is coming here";
 		$event_name = filter($_POST['event_name']);
 		$event_date =filter($_POST['event_date']);
 		$event_desc = filter($_POST['event_desc']);               
@@ -200,6 +210,8 @@ $chef_info = get_chef_info($user_id);
 
 //get the event types
 $event_types = get_event_types();
+
+
 ?>
 
 <head>
@@ -334,10 +346,24 @@ $event_types = get_event_types();
 				<?php
 				
 				// get_events function defined in sql_constants.php
-				$results = get_events($user_id);
-				
-				// add each event returned to an event card
+                           $results = get_events($user_id);
+
+                            // add each event returned to an event card
+                           if($results) 
+                           {
 				foreach ($results as $r) {
+                                    //get event_picture
+                                    $event_id = $r['event_id'];
+                                    $event_image = get_event_picture($event_id);
+                                        $event_image_loc = htmlspecialchars($event_image);
+                                        $event_image_loc = BASE.$event_image_loc;
+                                        list($width, $height, $type, $attr)= getimagesize($event_image_loc);
+                                        
+                                       // foreach of the event, get the number of attendance
+                                        
+                                        $event_attendace = get_attendance_count_list($event_id);
+
+						
 				?>
 				<div class="card flipper">
 					<div class="front">
@@ -346,40 +372,80 @@ $event_types = get_event_types();
 						<input style="display:none" type="text" name="event_id" value="<?php echo $r['event_id']?>">
 						<table>
 							<tr><td width="25%">Event Name</td><td><input type="text" name="event_name" value="<?php echo $r['event_name']; ?>"></td></tr>
-							<tr><td>Event Location</td><td><input type="text" name="event_venue" value="<?php echo $r['venue_name']?>"></td></tr>
-							<tr><td>Event Type</td><td><input type="text" name="event_type" value="<?php echo $r['event_type']?>"></td></tr>
+                                                        <tr><td>Event Venue Name</td><td><input type="text" name="venue_name" value="<?php echo $r['venue_name']?>" ></td></tr>
+                                                        <tr><td>Event Location Address</td><td><input type="text" name="venue_address" value="<?php echo $r['venue_address']?>"></td></tr>
+                                                        <tr><td>Zipcode</td><td><input type="text" id="event_zipcode" name="event_zipcode" value="<?php echo $r['zipcode']?>" ></td></tr>
+							<tr><td>Event Type</td>
+                                                            <td> 
+                                                              <select name="event_type" id="get_event_type">
+                                                                <?php
+                                                                  foreach($event_types as $row) 
+                                                                  {
+                                                                      echo $row['event_type'];
+                                                                  ?>
+                                                                  <option value="<?php echo $row['e_type_id']; ?>" ><?php echo $row['event_type']; ?></option>
+                                                                      
+                                                                  <?php } ?>
+                                                              </select> </td>
+                                                        </tr>
+                                                        <tr><td>Event Scope</td>
+                                                            <td>
+                                                                <select name="event_scope" id="event_scope">
+                                                                    <option value="public">Public</option>
+                                                                    <option value="private">Private</option>
+                                                                </select>                                                                
+                                                            </td></tr>
 							<tr><td>Event Date</td><td><input type="text" class="datepicker" name="event_date" value="<?php echo $r['event_date']?>"></td></tr>
 							<tr><td>Event Details</td><td><textarea name="event_desc"><?php echo $r['event_desc']?></textarea><td></tr>
 						</table>
-						<!-- To do: get event picture from query results 
-						<img class="event_picture" src="pictures/event.jpg" /> -->
-						<button type="submit">Save Changes</button>
+                                                   
+						<img class="event_picture" src="<?php echo $event_image_loc; ?>" /> 
+                                                <button type="submit">Save Changes</button> &nbsp;
 						</form>
 						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=delete_event" method="post">
 							<input style="display:none" type="text" name="event_id" value="<?php echo $r['event_id']?>">
 							<button type="submit">Delete Event</button>
 						</form>
 						
-						<p>Upload Picture</p>
-						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_picture" method="post" enctype="multipart/form-data">
+						<p>Upload a Picture</p>
+						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event_picture" method="post" enctype="multipart/form-data">
+                                                    <input style="display:none" type="text" name="event_id" value="<?php echo $r['event_id']?>">
 							<label for="file">Filename:</label>
-							<input type="file"><br>
-                                                                <input type="submit">Add the picture</input>
+						<input type="file" name="file" id="file_event"><br>
+						<input type="submit" name="submit" value="Update">
 						</form>
 						
 					</div>
 					<div class="back">
 						<button class="flip">Edit Event</button>
 						<table>
-							<tr><td width="25%">Event Name</td><td><?php echo $r['event_name']; ?></td></tr>
+                                                    <tr><td width="25%">Event Name</td><td><?php echo $r['event_name']; ?></td><img class="event_picture" src="<?php echo $event_image_loc; ?>" /> <td</tr>
 							<tr><td>Event Location</td><td><?php echo $r['venue_name'] . "<br>" . $r['venue_address'] . "<br>" . $r['city'] . ", " . $r['state'] . " " . $r['zipcode']?></td></tr>
-							<tr><td>Event Type</td><td>Example Event Type</td></tr>
+							<tr><td>Event Type</td><td><?php echo $r['event_type']?></td></tr>
+                                                        <tr><td>Event Scope</td><td><?php echo $r['event_scope']?></td></tr>
 							<tr><td>Event Date</td><td><?php echo $r['event_date']; ?></td></tr>
 							<tr><td>Event Details</td><td><?php echo $r['event_desc']; ?><td></tr>
+                                                        <?php
+                                                        if($event_attendace !=NULL)
+                                                        {
+                                                         $count=$event_attendace;
+                                                        } else
+                                                        {
+                                                            $count = "No attandance!";
+                                                        }
+                                                        ?>
+                                                        <tr><td>Attendance count</td><td><?php echo $count; ?><td></tr>
+                                                        
 						</table>
 					</div>
 				</div>
-				<?php } ?>
+				<?php }
+                           } else
+                           {
+                               echo "<h2> No events found!. Add one now!</h2>";
+                           }
+                                
+                                ?>
 			</div>
 			<!-- Center column end -->
 			

@@ -697,9 +697,24 @@ function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_
 }
 
 /* Function to update events */
-function update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_id, $e_recurring_id, $event_id){
+function update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_name, $venue_address,$event_zipcode, $e_recurring_id, $event_id){
 	global $link;
 	
+        // check if the zipcode already in the location table, if not insert and get the e_loc_id
+        // insert the venue name, address, e_loc_id into venue table and get the last inserted venue_id
+        //then insert the event details into event table.
+        
+        //get the e_loc_id
+        
+         $e_loc_id = insert_zipcode_location($event_zipcode);
+        
+        //insert venue details into venue table
+        //I am not sure why we need to store venue phone, email and owner name. may be we can skip these info,if we both agree
+        $q_venue = mysqli_query($link,"INSERT INTO " .VENUE. " (venue_name,venue_address,e_loc_id) VALUES ('$venue_name','$venue_address',$e_loc_id)") or die(mysqli_error($link));
+        
+         $venue_id = mysqli_insert_id($link);
+           echo $venue_id;     
+        
 	$q = "UPDATE " . EVENT . " SET event_name='$event_name', event_date='$event_date', event_desc='$event_desc', event_scope='$event_scope', e_type_id='$e_type_id', venue_id='$venue_id', e_recurring_id='$e_recurring_id' WHERE event_id = $event_id";
 	
 	// Uncomment below to debug query
@@ -716,13 +731,10 @@ function update_event($event_name, $event_date, $event_desc, $event_scope, $e_ty
 	}
 }
 
-<<<<<<< HEAD
+
 function get_event_types()
 {
-=======
-//get list of event_types
-function event_type() {
->>>>>>> 8fe9a9c81f5566eb898f6f737c09f3921f393847
+
     global $link;
     $q_e_type = mysqli_query($link,"SELECT * FROM " .EVENT_TYPE) or die(mysqli_error($link));
     
@@ -801,11 +813,11 @@ function retrieve_future_event($user_id) {
 /* Function to retrieve events information. Accepts arguments for visibility and user_id */
 function get_events($user_id = NULL, $visibility = NULL) {
 	global $link;
-	
+	$results = array();
 	// to do: return picture
 	// to do: return if the event is editable by the current user
 	// set up query with all of the tables tied together 
-	$select = "SELECT t1.event_id, event_name, t3.venue_name, t3.venue_address, t4.city, t4.state, t4.zipcode, t2.event_type, event_date, event_desc, t1.user_id";
+	$select = "SELECT t1.event_id, t1.event_name, t3.venue_name, t3.venue_address, t4.city, t4.state, t4.zipcode, t2.event_type, t1.event_date, t1.event_desc,t1.event_scope, t1.user_id";
 	
 	$from = " FROM " . EVENT . " as t1 
 	LEFT JOIN " . EVENT_TYPE . " as t2 ON t1.e_type_id = t2.e_type_id
@@ -834,6 +846,7 @@ function get_events($user_id = NULL, $visibility = NULL) {
 		while ($row = mysqli_fetch_assoc($event_query)) {
 			$results[] =$row;
 		}
+                
 	}
 	
 	return $results;
@@ -978,6 +991,68 @@ function insert_zipcode_location ($zipcode) {
                   }
              }
          return $e_loc_id;
+}
+
+function update_event_picture($image_location,$event_id) 
+{
+    global $link;
+        echo $image_location;
+        //Check if the event_picture is inserted before or first time inserting.
+    
+        if($q_event = mysqli_query($link,"SELECT * from ".EVENT_PICTURE. " WHERE event_id = ".$event_id))
+        {
+            if(mysqli_num_rows($q_event) == 0) // if picture is not inserted, insert one.
+                  {
+              //  echo "inserting";
+                    $q = mysqli_query($link, "INSERT INTO ".EVENT_PICTURE. " (image_location,event_id) VALUES ('$image_location',$event_id)");
+                  } else {
+                    //  echo "updating";
+                       $q = "UPDATE " .EVENT_PICTURE. " SET image_location = '".$image_location."' WHERE event_id = ". $event_id;
+                  }
+        
+        
+        if (mysqli_query($link,$q)){
+		return true;
+		// echo "User updated successfully";
+	}
+	else {
+		return false;
+		// echo "User update failed";
+	}
+    }   
+}
+
+function get_event_picture($event_id)
+{
+    global $link;
+    if($q_event = mysqli_query($link,"SELECT * from ".EVENT_PICTURE. " WHERE event_id = ".$event_id))
+    {
+        
+        $row = mysqli_fetch_assoc($q_event);
+        $event_image = $row['image_location'];
+        return $event_image;
+    } else
+    {
+        return "/pictures/default.jpg";
+    }    
+}
+
+function get_attendance_count_list($event_id) 
+{
+    global $link;
+    if ($q_att = mysqli_query($link,"SELECT count(event_attendance_id) as e_count FROM `event_attendance` where event_id = ".$event_id))
+    {
+         if(mysqli_num_rows($q_att) == 0) // if picture is not inserted, insert one.
+         {
+             return NULL;             
+         }
+         else 
+         {
+             $row = mysqli_fetch_assoc($q_att);
+             $event_attendance_count = $row['e_count'];
+             return $event_attendance_count;
+         }
+    } else return NULL;
 }
 
 ?>
