@@ -518,15 +518,17 @@ function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_
         $q_venue = mysqli_query($link,"INSERT INTO " .VENUE. " (venue_name,venue_address,e_loc_id) VALUES ('$venue_name','$venue_address',$e_loc_id)") or die(mysqli_error($link));
         
          $venue_id = mysqli_insert_id($link);
-                
+           echo $venue_id;     
         
-	$q = "INSERT INTO " . EVENT . "(event_name, event_date, event_desc, event_scope, e_type_id, user_id, venue_id, community_id, e_recurring_id) VALUES ('$event_name', '$event_date', '$event_desc', '$event_scope', '$e_type_id', '$user_id', '$venue_id', '$community_id', '$e_recurring_id')";
-	
+	$q = "INSERT INTO " . EVENT . "(event_name, event_date, event_desc, event_scope, e_type_id,event_status, user_id, venue_id, community_id, e_recurring_id) VALUES ('$event_name', '$event_date', '$event_desc', '$event_scope', '$e_type_id','1', '$user_id', '$venue_id', '$community_id', '$e_recurring_id')";
+	echo $q;
 	if (mysqli_query($link,$q)){
 		echo "Event added successfully";
+                return true;
 	}
 	else {
 		echo "Event failed to add";
+                return false;
 	}
 	
 }
@@ -552,7 +554,7 @@ function update_event($event_name, $event_date, $event_desc, $event_scope, $e_ty
 }
 //get list of event_types
 
-function event_type()
+function get_event_types()
 {
     global $link;
     $q_e_type = mysqli_query($link,"SELECT * FROM " .EVENT_TYPE) or die(mysqli_error($link));
@@ -573,10 +575,10 @@ function delete_event($event_id) {
 	// echo $q; 
 	
 	if (mysqli_query($link,$q)){
-		// echo "Event deleted successfully";
+		return true;
 	}
 	else {
-		// echo "Event deletion failed";
+		return false;
 	}
 }
 

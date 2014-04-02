@@ -19,7 +19,7 @@
 
 	$(function(){
              $("#create_event_div").hide();
-              $( ".datepicker" ).datepicker({dateFormat: "yy-mm-dd" });
+              $( "#datepicker" ).datepicker({dateformat: "yy-mm-dd" });
               
 		$('.flip').click(function(){
 			console.log("clicked");
@@ -27,57 +27,47 @@
 		});
                 
                 $("#create_event_button").click(function() {
+                    alert("!");
                     $("#create_event_div").show();
                     $("#create_event_button").hide(); 
-                    return false;
                 });
                 
                 $("#cancel_event").click(function() {
                      $(this).closest('form').find("input[type=text], textarea").val("");
                     $("#create_event_div").hide();
                     $("#create_event").show(); 
-                    return false;
                 });
                 
                 $("#add_event").click(function() {
+                    alert('it is coming here');
                     var event_name = $("#event_name").val();
                     var event_desc = $("#event_desc").val();
-                    var event_date = $(".datepicker").val();
+                    var event_date = $("#datepicker").val();
                     var event_type_id = $("#event_type").val();
                     var event_scope = $("#event_scope").val();
                     var venue_name = $("#venue_name").val();
                     var venue_address = $("#venue_address").val();
                     var event_zipcode = $("#event_zipcode").val();
+                    var event_picture = $("#event_picture").val();
                     
-                     if(event_name == '' || event_desc == '' || event_date == '' || venue_name == '' || venue_address == '' || event_zipcode == '')
-                        {
-                                        //here, we change the html content of all divs with class="error" and show them
-                                        //there should be only 1 such div but the code would affect multiple if they were present in the page
-                                        $('.error').fadeIn(400).show().html('Please complete all fields.').fadeOut(6000); 
-                        }
-                        else
-                        {
-                    
-                            var datastring = "event_name=" +event_name+ "&event_desc=" +event_desc+ "&event_date=" +event_date+ "&event_type_id=" +event_type_id+ "&event_scope=" +event_scope+ "&venue_name=" +venue_name+ "&venue_address="+venue_address+ "&event_zipcode="+event_zipcode;
-                          alert(datastring);
-                             $.ajax(
+                    var datastring = "event_name=" +event_name+ "&event_desc=" +event_desc+ "&event_date=" +event_date+ "&event_type_id=" +event_type_id+ "&event_scope=" +event_scope+ "&venue_name=" +venue_name+ "&venue_address="+venue_address+ "&event_zipcode="+event_zipcode+ "&event_picture=" +event_picture;
+                    alert(datastring);
+                     $.ajax(
+                               {
+                                       type: "POST",
+                                       url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=add_event", 
+                                       data: datastring,
+                                       success: function()
                                        {
-                                               type: "POST",
-                                               url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=add_event", 
-                                               data: datastring,
-                                               success: function()
-                                               {
-                                                    $('.success').fadeIn(2000).show().html('Event created successfully!').fadeOut(6000); //Show, then hide success msg
-                                                   $('.error').fadeOut(2000).hide(); //If showing error, fade out   
-                                                   $(':input','#create_event_form').not(':button, :submit, :reset, :hidden')
-                                                    .val('')
-                                                    .removeAttr('checked')
-                                                    .removeAttr('selected');
-                                                    window.location.reload();
-                                               }
+                                            $('.success').fadeIn(2000).show().html('Event created successfully!').fadeOut(6000); //Show, then hide success msg
+					   $('.error').fadeOut(2000).hide(); //If showing error, fade out   
+                                           $(':input','#create_event_form').not(':button, :submit, :reset, :hidden')
+                                            .val('')
+                                            .removeAttr('checked')
+                                            .removeAttr('selected');
                                        }
-                               );
-                       }
+                               }
+                       );
 
                        return false;
                     
@@ -127,10 +117,10 @@ if($_POST and $_GET){
 		// function to update an event 
 		if (update_user_info($user_id, $first_name, $last_name, $email, $phone, $profile_picture)) {
 			// add something here to display success/failure?
-			 $msg="Profile updated successfully";
+			// echo "Update successful";
 		}
 		else {
-			$err = "Oops!. sorry, could not update your profile date, Please try again";
+			// echo "Update failed";
 		}
 	}
 	
@@ -159,19 +149,19 @@ if($_POST and $_GET){
                 $e_type_id = filter($_POST['event_type_id']);
                 $venue_name = filter($_POST['venue_name']);
                 $venue_address = filter($_POST['venue_address']);
-                $event_zipcode = filter($_POST['event_zipcode']);   
+                $event_zipcode = filter($_POST['event_zipcode']);                
+                
 		$e_recurring_id = 1;
                 $community_id = 1;
 		
 		$msg = NULL;
-                $err=NULL;
 		// function to add an event 
 		if (add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $user_id, $venue_name,$venue_address,$event_zipcode, $community_id, $e_recurring_id)) {
-			 
+			// add something here to display success/failure?
 			 $msg="Event is created successfully";
 		}
 		else {
-			 $err = "Oops!. sorry, could not create an event, Please try again";
+			 $msg = "Oops!. sorry, could not create an event, Please try again";
 		} 
 	}
 	
@@ -183,7 +173,7 @@ if($_POST and $_GET){
 			$msg = "Event updated successfully!";
 		}
 		else {
-			$err = "Oops!. sorry, could not update this event, Please try again";
+			$msg = "Oops!. sorry, could not update this event, Please try again";
 		}
 	}
 	
@@ -199,7 +189,7 @@ list($width, $height, $type, $attr)= getimagesize($profile_pic_loc);
 $chef_info = get_chef_info($user_id);
 
 //get the event types
-$event_types = get_event_types();
+$event_types = event_type();
 ?>
 
 <head>
@@ -232,14 +222,8 @@ $event_types = get_event_types();
                     <?php 
                     if(isset($msg))
                         {
-                                echo '<div class="success" >'.$msg.'</div>';
-                        } elseif (isset($err))
-                        {
-                            echo '<div class="error">'.$err.'</div>';
-                        }
-?>
-                    
-                     
+                                echo '<div class="success">'.$msg.'</div>';
+                        } ?>
 			<!-- Middle column start -->
 			<div class="card">
 			<div class="front">
@@ -293,30 +277,30 @@ $event_types = get_event_types();
 			<div id="event_holder">
                             
                             <br></br> <button name="create_event" id="create_event_button">Create an event</button>
-                            <div class="card" id="create_event_div">
-                               
+                            <div class="card flipper" id="create_event_div">
                                 <h3>Create a new event!</h3>
-                                <div class="front">
-                                     <div class="success" style="display:none;"></div>
-                                     <div class="error" style="display:none;">Please enter some text</div>
-                                     <form action="<?php echo basename($_SERVER['PHP_SELF']);?>" id="create_event_form" onsubmit="return false;" method="post">
+                                <div class="back">
+                                    <form action="<?php echo basename($_SERVER['PHP_SELF']);?>" id="create_event_form" method="post">
 						<table>
 							<tr><td width="25%">Event Name</td><td><input type="text" id="event_name" name="event_name"></td></tr>
 							<tr><td>Event Venue Name</td><td><input type="text" id="venue_name" name="event_venue" ></td></tr>
                                                         <tr><td>Event Location Address</td><td><input type="text" id="venue_address" name="venue_address"></td></tr>
-                                                        <tr><td>Zipcode</td><td><input type="text" id="event_zipcode" name="event_zipcode" ></td></tr>
-                                                        <tr><td>Event Date</td><td><input type="text" class="datepicker" value="" name="event_date"></td></tr>                                                        
+                                                        <tr><td>Zipcode</td><td><input type="text" id="event_zipcode" name="event_zipcode"></td></tr>
+                                                        <tr><td>Event Date</td><td><input type="text" id="datepicker" name="event_date"></td></tr>                                                        
                                                         <tr><td>Event Type</td>
                                                             <td> 
                                                               <select id="event_type">
                                                                 <?php
+
                                                                   foreach($event_types as $r) 
                                                                   {
                                                                   ?>
                                                                     <option value="<?php echo $r['e_type_id']; ?>"><?php echo $r['event_type']; ?></option>
+                                                                    
                                                                       
                                                                   <?php } ?>
                                                                 </select> </td></tr>
+                                                                
 							<tr><td>Event Scope</td>
                                                             <td>
                                                                 <select id="event_scope">
@@ -325,9 +309,14 @@ $event_types = get_event_types();
                                                                 </select>                                                                
                                                             </td></tr>
 							<tr><td>Event Details</td><td><textarea id="event_desc" name="event_desc"></textarea><td></tr>
-						</table>                                                                                   
-                                                  <button type="submit" id="add_event">Add Event</button> &nbsp; <button type="submit" id="cancel_event">Cancel Event</button>	
-                                        </form>					
+						</table>
+						</form>						
+						
+						<p>Upload a Picture</p>
+						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>" method="post" enctype="multipart/form-data">							
+							<input id="event_picture" type="file"><br>
+						</form>                                                
+                                                  <button type="submit" id="add_event">Add Event</button> &nbsp; <button type="submit" id="cancel_event">Cancel Event</button>						
                                 </div>
                             </div>
                                
@@ -348,7 +337,7 @@ $event_types = get_event_types();
 							<tr><td width="25%">Event Name</td><td><input type="text" name="event_name" value="<?php echo $r['event_name']; ?>"></td></tr>
 							<tr><td>Event Location</td><td><input type="text" name="event_venue" value="<?php echo $r['venue_name']?>"></td></tr>
 							<tr><td>Event Type</td><td><input type="text" name="event_type" value="<?php echo $r['event_type']?>"></td></tr>
-							<tr><td>Event Date</td><td><input type="text" class="datepicker" name="event_date" value="<?php echo $r['event_date']?>"></td></tr>
+							<tr><td>Event Date</td><td><input type="text" name="event_date" value="<?php echo $r['event_date']?>"></td></tr>
 							<tr><td>Event Details</td><td><textarea name="event_desc"><?php echo $r['event_desc']?></textarea><td></tr>
 						</table>
 						<!-- To do: get event picture from query results 
@@ -361,10 +350,10 @@ $event_types = get_event_types();
 						</form>
 						
 						<p>Upload Picture</p>
-						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_picture" method="post" enctype="multipart/form-data">
+						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>cmd=add_picture" method="post" enctype="multipart/form-data">
 							<label for="file">Filename:</label>
 							<input type="file"><br>
-                                                                <input type="submit">Add the picture</input>
+							<input type="submit">
 						</form>
 						
 					</div>
@@ -383,6 +372,8 @@ $event_types = get_event_types();
 			</div>
 			<!-- Center column end -->
 			
+                     <div class="success" style="display:none;"></div>
+                     <div class="error" style="display:none;">Please enter some text</div>
 		</div>
 	</div>
 </div>
@@ -391,4 +382,10 @@ $event_types = get_event_types();
 
 </body>
 
+<?php 
+	// function to add an event 
+	// add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $user_id, $venue_id, $community_id, $e_recurring_id)
+	// testing adding event
+	// add_event("new event", "2014-04-04", "This is a newly added event description", "public", 1, 1, 1, 1, 1)
+?>
 </html>
