@@ -49,7 +49,11 @@ if($_GET){
 			*/
 			
 			$dummy_sql = "LOAD DATA INFILE '" . ROOT . "/dummy_data/$name.txt'
-			INTO TABLE $name;";
+			INTO TABLE $name
+			FIELDS TERMINATED BY ','
+			OPTIONALLY ENCLOSED BY '\"' 
+			LINES TERMINATED BY '\n'
+			IGNORE 1 LINES;";
 						
 			$install = mysqli_query($link, $dummy_sql) /* or die(mysql_error()) */;
 			if($install){
