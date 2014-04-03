@@ -4,24 +4,24 @@
 	<title>Community Resource</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="LocalEvents" content="index, follow" />
-        <link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
-        <script src="includes/js/jquery-1.10.2.js"></script>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="includes/js/jquery.flip.min.js"></script>
-        <script type="text/javascript" src="includes/js/scripts.js"></script>
-        <script type=text/javascript src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'></script>
-    <meta charset="utf-8">
-    
-  <?php
-                       
+	<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
+	<script src="includes/js/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="includes/js/jquery.flip.min.js"></script>
+	<script type="text/javascript" src="includes/js/scripts.js"></script>
+	<script type=text/javascript src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'></script>
+	<meta charset="utf-8">
 
-        require_once 'includes/constants/sql_constants.php';
-        secure_page();  
-        return_meta("Local Chef!");
-        $msg = NULL;
-        $user_id =  $_SESSION['user_id'];
-  ?>
+<?php
+	require_once 'includes/constants/sql_constants.php';
+	secure_page();  
+	return_meta("Local Chef!");
+	$msg = NULL;
+	$user_id =  $_SESSION['user_id'];
+?>
+
 <script>
 
 	function doesCSS(p){
@@ -41,227 +41,123 @@
 			$(this).parent().closest('.flipper').toggleClass('flipped');
 		});
 	});
-$(function()
-{
-   
-         $(".save_chef").click(function() 
-         {
-              alert('!');
-               var chef_id = $(this).attr('rel');
-               alert(chef_id);
-               var datastring = "chef_id="+chef_id;
+	
+	$(function() {
+		$(".save_chef").click(function() {
+			alert('!');
+			var chef_id = $(this).attr('rel');
+			alert(chef_id);
+			var datastring = "chef_id="+chef_id;
 
-               $.ajax(
-                     {
-                            type: "POST",
-                            url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=save", 
-                            data: datastring,
-                            success: function()
-                            {
-                               $('.success').fadeIn(2000).show().html('Chef details are saved in your profile!').fadeOut(6000); //Show, then hide success msg
-                                $('.error').fadeOut(2000).hide(); //If showing error, fade out
-                            }
-                     }
-                );
+			$.ajax({
+				type: "POST",
+				url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=save", 
+				data: datastring,
+				success: function() {
+				$('.success').fadeIn(2000).show().html('Chef details are saved in your profile!').fadeOut(6000); //Show, then hide success msg
+				$('.error').fadeOut(2000).hide(); //If showing error, fade out
+				}
+			}
+			);
+			
+			return false;
+		});
+	});
+</script>
 
-              return false;
-            
-         });         
-});
-
- </script>
-            
 </head>
-    <body>
-    <?php  
-    
-        if(isset($_POST) and isset($_GET))
-        {
-            if (!empty($_GET['cmd']))
-            {
-                   if($_GET['cmd'] == 'save') 
-                       {
-                            $chef_id = $_POST['chef_id'];
-                            echo "hello";
-                           if($stmt = mysqli_prepare($link, "SELECT * FROM ".USER_SAVED_INFO. " WHERE user_id = ".$_SESSION['user_id']." AND chef_id= " .$chef_id) or die(mysqli_error($link)))
-                           {
-                                //execute the query
-                                 mysqli_stmt_execute($stmt);
-                                 //store the result
-                                 mysqli_stmt_store_result($stmt);
+<body>
+<?php
+	// PHP code to save a chef
+	if(isset($_POST) and isset($_GET)) {
+		if (!empty($_GET['cmd'])) {
+			if($_GET['cmd'] == 'save') {
+				$chef_id = $_POST['chef_id'];
+				echo "hello";
+				
+				if($stmt = mysqli_prepare($link, "SELECT * FROM ".USER_SAVED_INFO. " WHERE user_id = ".$_SESSION['user_id']." AND chef_id= " .$chef_id) or die(mysqli_error($link))) {
+					//execute the query
+					mysqli_stmt_execute($stmt);
+					//store the result
+					mysqli_stmt_store_result($stmt);
 
-                                 if(mysqli_stmt_num_rows($stmt) == 0) {
-                                      $q = mysqli_query($link, "INSERT INTO ".USER_SAVED_INFO. " (user_id,chef_id) VALUES(" .$_SESSION['user_id']. ",".$chef_id. ")") or die(mysqli_error($link));
-                                 } 
-                                 else 
-                                 {
-                                     $err[] = "You have saved this chef details!";
+					if(mysqli_stmt_num_rows($stmt) == 0) {
+						$q = mysqli_query($link, "INSERT INTO ".USER_SAVED_INFO. " (user_id,chef_id) VALUES(" .$_SESSION['user_id']. ",".$chef_id. ")") or die(mysqli_error($link));
+					} 
+					else {
+						$err[] = "You have saved this chef details!";
+					}
 
-                                  }
+					mysqli_stmt_close($stmt);
+				}
+				
+				exit();  
+			}
+		}
+	}
+?>
 
-                                     mysqli_stmt_close($stmt);
+	<div id ="header">
+		<h1>Community Connect</h1>
+		<?php      include('includes/navigation.inc.php');
 
-                                 } 
-                                 exit();  
-                        }
-            }
-            
-        }
-    ?>
-        
-        <div id ="header">
-            <h1>Community Connect</h1>
-        <?php      include('includes/navigation.inc.php');  
-        
-       // $firstname = $_SESSION['firstname'];
-        // front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
-        $results = get_localchef_details($user_id);  
-        
-                
-      ?>       
-     </div>   
-  <div class="content leftmenu">      
-        
-     <div class="colright">
-         <div class="col1">
-                <!-- Left Column start -->
-                <?php include('includes/left_column.inc.php'); ?>			
+		// $firstname = $_SESSION['firstname'];
+		// front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
+		$results = get_localchef_details($user_id);
 
-                <!-- Left Column end -->
-        </div>
-        <div class="col2">
-            <!-- Middle Column start -->
-            <style>img {width: 160px;}</style> 
-            <div id ="chef_holder">
-            <h2>Local chef's in your area!</h2>
-            
-                <form class= "chef" action="localChefs.php" method="POST" id = "local_chef" name="localchef">     
-           <?php
-                    
-               if(($results))
-                {
-                   $i =0;
-                     foreach ($results as $r) 
-                      {
-                        //generate individual ids                          
-                        //get the picture of the event
-                         //  
-                            $zipcode = "zipcode_".$i;
-                            $chef_id = "chefid_".$i;
-                            $save_chef = "savechef_".$i;
-                            $flip = "flip_".$i;
-                            $success_id = "success_".$i;
-                            $error_id = "error_".$i;
-                            $map_canvas = "map_canvas_".$i;
-                            
-                           $chef_id = $r['chef_id'];
-                          
-                            //get the foods that each chef prepares.
-                         $food_chef = "select t1.food_id,t1.food_name,t1.food_description,t1.food_picture,t2.food_price 
-                                        from food t1, food_chef_details t2
-                                        where t2.food_id=t1.food_id and
-                                        t2.chef_id = " .$chef_id. ";";
-                       
-                                 $food_chef_result = mysqli_query($link,$food_chef) or (die(mysqli_error($link)));
-                         
-                           //get the chef's profile picture
-                           $profile_picture = $r['profile_picture'];  
-                          $media_loc_profile = htmlspecialchars($profile_picture);
-                            $media_loc_profile = BASE.$media_loc_profile;
-                           list($width, $height, $type, $attr)= getimagesize($media_loc_profile);
-                           
-             ?>
-             
-                 <div class ="card flipper">
-                    
-                    <div class="back">
-                             <input type="hidden" class='chef_id' id= "<?php echo $chef_id;?>" name ='chef_id' value=<?php echo $r['chef_id']; ?> ></input>
-                             <table>
-                                 <tr><td> <?php echo $r['first_name']; ?>&nbsp;<?php echo $r['last_name']; ?><br></br><?php echo $r['about_chef']; ?>&nbsp;</td>
-                                                                     
-                                     <td>Chef contact details: <br>Contact hour:</br></td><td><?php echo $r['email']; ?><br><?php echo $r['phone']; ?></br><?php echo $r['contact_time_preference']; ?></td></tr>
-                                 
-                                     <tr>
-                                         <th style="text-align:center;font-size: 100%;">Good at preparing:</th>
-                                     </tr>
-                                     <tr>
-                                         <?php 
-                                          while($row_food = mysqli_fetch_assoc($food_chef_result))
-                                            {
+		?>
+	</div>
+	<div class="content leftmenu">
+		<div class="colright">
+			<div class="col1">
+			<!-- Left Column start -->
+			<?php include('includes/left_column.inc.php'); ?>			
 
-                                               $food_id = $row_food['food_id'];
-                                             
-                                               $food_picture = $row_food['food_picture'];
-                                               $media_loc = htmlspecialchars($food_picture);
-                                                $media_loc = BASE.$media_loc;
-                                                list($width, $height, $type, $attr)= getimagesize($media_loc);  
-                           
-                                         ?>
-                                         <tr>
-                                                <td>
-                                                    Food Name:<br><br>
-                                                            Description:<br><br>
-                                                           Price:<br>
-                                               </td>
-                                               <td>
-                                                   <?php echo $row_food['food_name']; ?><br> <br>                                        
-                                                <?php echo $row_food['food_description']; ?><br> <br>
-                                                   <?php echo $row_food['food_price']; ?><br> <br>
-                                                   <td><img class="gridimg2" src="<?php echo $media_loc;?>" /></td>
-                                              </td>
-                                         </tr>
-                                           <?php } ?>
-                                     </tr>
-                                
-                                 <tr><td><button class = "save_chef" rel="<?php echo $r['chef_id']; ?>" id= "<?php echo $save_chef;?>" type="submit" name="save_chef">Save</button></td>
-                                     <td><label name="flip" class="flip" id= "<?php echo $flip;?>" >Flip</label></td>
-                                 </tr>
-                             </table>
-                                 
-                       </div>                           
-                                                               
-                       <div class="front">
-                                <table>
-                                    
-                                    <tr><td><?php echo $r['first_name']; ?> &nbsp;<?php echo $r['last_name']; ?> <br><br><?php echo $r['about_chef']; ?></br></td><td><img class="gridimg2" src="<?php echo $media_loc_profile;?>" /></td></tr>
-                                     
-                                    <tr>
-                                        <td><th>Delivery available:</th></td> <td><?php echo $r['delivery_available']; ?></td> </tr>
-                                        <tr> <td><th>Pickup available:</th></td><td><?php echo $r['pickup_available']; ?></td>  </tr>  
-                                        <tr><td><th>Payment method:</th></td><td><?php echo $r['payments_accepted']; ?></td></tr>
-                                        <tr><td><th>takes offline order?:</th> </td><td><?php echo $r['taking_offline_order']; ?></td></tr>                               
-                                   </tr>
-                                   <tr>
-                                       <td><label name="flip" class="flip" id= "<?php echo $flip;?>" >Flip</label></td>
-                                 </tr>
-                                    
-                                </table>
-                                
-                       </div> 
-                                    <span class="success" id ='<?php echo $success_id;?>' style="display:none;"></span>
-                                    <span class="error" id ='<?php echo $error_id; ?>' style="display:none;">Please enter some text</span>
-                                
-                      </div>
-                     <?php
-                     $i++;
-                 } // end of foreach
-              } else
-              { ?>
-                        <div class="card_front">
-                            <h2>No chef's found in your area! </h2>
-                            use the advanced search  <a href="advancedsearch.php">here</a>
-                        </div>
-        <?php }   ?>
-                                      
-        </form> 
-      </div>         
-      </div>   <!-- end of col2-->                   
-    </div>  
-                              
- </div>
+			<!-- Left Column end -->
+			</div>
+			
+			<div class="col2">
+			<!-- Middle Column start -->
+			<style>img {width: 160px;}</style> 
+				<div id ="chef_holder">
+					<h2>Local chef's in your area!</h2>
+					
+						<?php
+						// This section gets all chefs for the appropriate food types, then prints them into a card
+						// functions below are defined in sql_constants
+						$chefs_list = get_localchef_details($user_id);
+						
+						// prints a card for each chef associated with a food type
+						foreach ($chefs_list as $chef) {
+							
+							// gets the chef info and loads it into an array
+							$chef_info_array = get_chef_info($chef['chef_id']);
+							
+							// uses the chef info array to print cards
+							print_chef_card($chef_info_array);
+						}
+						?>
+					
+					
+					<!-- <form class= "chef" action="localChefs.php" method="POST" id = "local_chef" name="localchef">
+					
+					else
+						{ ?>
+						<div class="card_front">
+						<h2>No chef's found in your area! </h2>
+						use the advanced search  <a href="advancedsearch.php">here</a>
+						</div>
+						<?php //}   ?>
 
-<?php include('includes/footer.inc.php'); ?>
+					</form> -->
+				</div>
+			</div>   <!-- end of col2-->
+		</div>
+
+	</div>
+
+	<?php include('includes/footer.inc.php'); ?>
 
 </body>
 </html>
-    
+

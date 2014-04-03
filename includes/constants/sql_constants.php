@@ -284,7 +284,7 @@ function print_chef_card($chef_info_array) {
 
 ?>
 <div class ="card flipper">
-	<div class="back">
+	<div class="front">
 		<input type="hidden" value=<?php echo $chef_id; ?> ></input>
 		<table>
 			<tr>
@@ -300,39 +300,49 @@ function print_chef_card($chef_info_array) {
 			<tr>
 				<?php 
 				// print foods for the selected chef
-				$asdf = get_foods_by_chef($chef_id);
-				
+				$foods_array = get_foods_by_chef($chef_id);
+				 
 				// uncomment below to debug
 				/*	echo "<br> get_foods_by_chef array is: <br>";
-				print_r($asdf);
+				print_r($foods_array);
 				echo "<br>"; */
 				
-				
-				foreach ($asdf as $row_food) {
-					
-					$food_id = $row_food['food_id'];
-					
-					$food_picture = $row_food['food_picture'];
-					$media_loc = htmlspecialchars($food_picture);
-					$media_loc = BASE.$media_loc;
-					list($width, $height, $type, $attr)= getimagesize($media_loc);  
-					?>
-					
-					<tr>
-						<td>
-						Food Name:<br><br>
-						Description:<br><br>
-						Price:<br>
-						</td>
+				if ($foods_array){
+					foreach ($foods_array as $row_food) {
 						
-						<td>
-						<?php echo $row_food['food_name']; ?><br><br>
-						<?php echo $row_food['food_description']; ?><br><br>
-						<?php echo $row_food['food_price']; ?><br><br>
-						<td><img class="gridimg2" src="<?php echo $media_loc;?>" style="width:10em" /></td>
-						</td>
+						$food_id = $row_food['food_id'];
+						
+						$food_picture = $row_food['food_picture'];
+						$media_loc = htmlspecialchars($food_picture);
+						$media_loc = BASE.$media_loc;
+						list($width, $height, $type, $attr)= getimagesize($media_loc);  
+						?>
+						
+						<tr>
+							<td>
+							Food Name:<br><br>
+							Description:<br><br>
+							Price:<br>
+							</td>
+							
+							<td>
+							<?php echo $row_food['food_name']; ?><br><br>
+							<?php echo $row_food['food_description']; ?><br><br>
+							<?php echo $row_food['food_price']; ?><br><br>
+							<td><img class="gridimg2" src="<?php echo $media_loc;?>" style="width:10em" /></td>
+							</td>
+						</tr>
+				<?php
+					}
+				}
+				else{ 
+				?>
+					<tr>
+						<td>This chef has not specified any foods</td>
 					</tr>
-				<?php } ?>
+				<?php 
+				}
+				?>
 			</tr>
 
 			<tr>
@@ -343,7 +353,7 @@ function print_chef_card($chef_info_array) {
 
 	</div>                           
 
-	<div class="front">
+	<div class="back">
 		<table>
 			<tr>
 				<td><?php echo $first_name; ?> &nbsp;<?php echo $last_name; ?> <br><br><?php echo $about_chef; ?></br></td>
@@ -391,6 +401,7 @@ function get_localchef_details($user_id) {
 	list($city, $state) = mysqli_fetch_row($get_city_state);
 	
 	//query to get the chef details based on the logged in user's location
+	/* 	
 	$get_chef = "SELECT t1.chef_id, t1.about_chef, t1.contact_time_preference, t1.delivery_available, t1.payments_accepted, t1.pickup_available, t1.taking_offline_order, t2.first_name, t2.last_name, t2.user_id, t2.email, t2.phone, t2.profile_picture, t4.city, t4.zipcode, t4.state FROM chef as t1
 		left join user as t2 on t2.user_id = t1.user_id 
 		left join location as t4 on t2.e_loc_id = t4.e_loc_id 
@@ -398,6 +409,20 @@ function get_localchef_details($user_id) {
 		WHERE  (t4.city = '$city' OR t4.state = '$state');";
 
 	if($chef_query = mysqli_query($link, $get_chef)) {
+		while($row = mysqli_fetch_assoc($chef_query)) {
+			$results[] = $row;
+		} 
+	}
+	*/
+	
+	$q = "SELECT t1.chef_id FROM chef as t1
+		LEFT JOIN " . USERS . " AS t2 ON t2.user_id = t1.user_id 
+		LEFT JOIN " . LOCATION . " AS t3 ON t2.e_loc_id = t3.e_loc_id 
+		WHERE  (t3.city = '$city' OR t3.state = '$state');";
+	
+	// echo "<br>q is: " . $q . "<br>";
+	
+	if($chef_query = mysqli_query($link, $q)) {
 		while($row = mysqli_fetch_assoc($chef_query)) {
 			$results[] = $row;
 		}
@@ -959,15 +984,20 @@ function get_foods_by_chef($chef_id) {
 	$q = $select . $from . $where;
 	
 	// uncomment this to debug
-	/* echo "<br> get_foods_by_chef query is: <br>";
+/* 	echo "<br> get_foods_by_chef query is: <br>";
 	echo $q;
 	echo "<br>"; */
 	
 	// execute the query
 	if($query = mysqli_query($link,$q)) {
+		$results = false;
+		
 		while ($row = mysqli_fetch_assoc($query)) {
 			$results[] =$row;
 		}
+	}
+	else {
+		
 	}
 	
 	return $results;
