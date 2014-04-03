@@ -5,6 +5,8 @@
  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
   <script src="//code.jquery.com/jquery-1.9.1.js"></script>
   <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+ <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+ 
 <script>
 	function doesCSS(p){
 		var s = ( document.body || document.documentElement).style;
@@ -17,8 +19,67 @@
 		.toggleClass('transform',doesCSS('transform'))
 		.toggleClass('no-transform',!doesCSS('transform'));
 
-	$(function(){
+
+function get_city_state(zipcode) {
+
+            var zip = zipcode;
+            var country = 'United States';
+            var lat;
+            var lng;
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': zipcode + ',' + country }, function (results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    geocoder.geocode({'latLng': results[0].geometry.location}, function(results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        if (results[1]) {
+
+                            var loc = getCityState(results,zipcode);
+                        }
+                 }
+            });
+        }
+    }); 
+ }
+
+
+function getCityState(results,zipcode)
+{
+
+        var a = results[0].address_components;
+        var city, state;
+        for(i = 0; i <  a.length; ++i)
+        {
+           var t = a[i].types;
+           if(compIsType(t, 'administrative_area_level_1'))
+              state = a[i].long_name; //store the state
+           else if(compIsType(t, 'locality'))
+              city = a[i].long_name; //store the city
+        }
+        var datastring = "zipcode= "+zipcode+ "&city= " +city+"&state= "+state;
+        alert(datastring);
+         $.ajax(
+              {
+                        type: "POST",
+                        url: "updateaddress.php?cmd=updatecitystate", 
+                        data: datastring,                        
+                }
+         );
+          return false;
+    }
+
+function compIsType(t, s) { 
+       for(z = 0; z < t.length; ++z) 
+          if(t[z] === s)
+             return true;
+       return false;
+    }
+    
+$(function(){
              $("#create_event_div").hide();
+             $("#saved_event_div").hide();
+             $("#saved_chef_div").hide();
+             $("#close_card_event_chef").hide();
+             
               $( ".datepicker" ).datepicker({dateFormat: "yy-mm-dd" });
               
 		$('.flip').click(function(){
@@ -35,15 +96,29 @@
                 $("#cancel_event").click(function() {
                      $(this).closest('form').find("input[type=text], textarea").val("");
                     $("#create_event_div").hide();
-                    $("#create_event").show(); 
+                    $("#create_event_button").show(); 
                     return false;
                 });
                 
-                $("#add_event").click(function() {
+                $("#saved_event_button").click(function() {
+                    $("#saved_event_div").show();
+                    $("#close_card_event_chef").show();
+                });
+                 $("#saved_chef_button").click(function() {
+                    $("#saved_chef_div").show();
+                    $("#close_card_event_chef").show();
+                });
+                $("#close_card_event_chef").click(function() {
+                    $("#saved_event_div").hide();
+                 $("#saved_chef_div").hide();
+                 $("#close_card_event_chef").hide();
+                });
+                
+              /*  $("#add_event").click(function() {
                     var event_name = $("#event_name").val();
                     var event_desc = $("#event_desc").val();
                     var event_date = $(".datepicker").val();
-                    var event_type_id = $("#event_type").val();
+                    var event_type = $("#event_type").val();
                     var event_scope = $("#event_scope").val();
                     var venue_name = $("#venue_name").val();
                     var venue_address = $("#venue_address").val();
@@ -58,7 +133,7 @@
                         else
                         {
                     
-                            var datastring = "event_name=" +event_name+ "&event_desc=" +event_desc+ "&event_date=" +event_date+ "&event_type_id=" +event_type_id+ "&event_scope=" +event_scope+ "&venue_name=" +venue_name+ "&venue_address="+venue_address+ "&event_zipcode="+event_zipcode;
+                            var datastring = "event_name=" +event_name+ "&event_desc=" +event_desc+ "&event_date=" +event_date+ "&event_type_id=" +event_type+ "&event_scope=" +event_scope+ "&venue_name=" +venue_name+ "&venue_address="+venue_address+ "&event_zipcode="+event_zipcode;
                           console.log(datastring);
                              $.ajax(
                                        {
@@ -73,19 +148,18 @@
                                                     .val('')
                                                     .removeAttr('checked')
                                                     .removeAttr('selected');
-                                                    window.location.reload();
+                                                    //window.location.reload();
                                                }
                                        }
                                );
                        }
 
+                                               
                        return false;
                     
-                });
-                
-                
-                
-	})
+                }); */
+})
+
 </script>
 
 <?php
@@ -93,10 +167,12 @@ require_once 'includes/constants/sql_constants.php';
 secure_page();
 $user_id = $_SESSION['user_id'];
 
+		$msg = NULL;
+                $err=NULL;
 
 if($_POST and $_GET){
 	if ($_GET['cmd'] == 'update_event'){
-		
+		echo "inside update_event";
 		$event_name = filter($_POST['event_name']);
 		$event_date =filter($_POST['event_date']);
 		$event_desc = filter($_POST['event_desc']);               
@@ -111,6 +187,11 @@ if($_POST and $_GET){
 		// function to update an event 
 		if (update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_name, $venue_address,$event_zipcode, $e_recurring_id, $event_id)) {
 			// add something here to display success/failure?
+                   ?>
+                       <script>
+                         get_city_state('<?php echo $event_zipcode;?>');
+                        </script>  
+                   <?php 
 			 $msg="Event updated successfully";
 		}
 		else {
@@ -166,19 +247,23 @@ if($_POST and $_GET){
 		$event_date =filter($_POST['event_date']);
 		$event_desc = filter($_POST['event_desc']);               
 		$event_scope = filter($_POST['event_scope']);
-                $e_type_id = filter($_POST['event_type_id']);
+                $e_type_id = filter($_POST['event_type']);
                 $venue_name = filter($_POST['venue_name']);
                 $venue_address = filter($_POST['venue_address']);
                 $event_zipcode = filter($_POST['event_zipcode']);   
 		$e_recurring_id = 1;
                 $community_id = 1;
-		
-		$msg = NULL;
-                $err=NULL;
+                
 		// function to add an event 
 		if (add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $user_id, $venue_name,$venue_address,$event_zipcode, $community_id, $e_recurring_id)) {
-			 
-			 $msg="Event is created successfully";
+			
+	           ?>
+                       <script>
+                         get_city_state(<?php echo $event_zipcode;?>);
+                        </script>  
+ 
+                      <?php 
+                      $msg="Event is created successfully";
 		}
 		else {
 			 $err = "Oops!. sorry, could not create an event, Please try again";
@@ -251,7 +336,18 @@ $event_types = get_event_types();
                         }
 ?>
                     
-                     
+                    <button name="saved_event" id='saved_event_button'>Saved Events</button> &nbsp; <button name="saved_chef" id='saved_chef_button'>My favorite Chef</button> &nbsp;
+                    <button name="close_card" id='close_card_event_chef'>Close the cards</button>
+                    <div class="card" id='saved_event_div'>
+                        <div class="front">
+                            saved events
+                        </div>
+                    </div>
+                    <div class="card" id='saved_chef_div'>
+                        <div class="front">
+                            saved chef
+                        </div>
+                    </div>
 			<!-- Middle column start -->
 			<div class="card">
 			<div class="front">
@@ -311,16 +407,16 @@ $event_types = get_event_types();
                                 <div class="front">
                                      <div class="success" style="display:none;"></div>
                                      <div class="error" style="display:none;">Please enter some text</div>
-                                     <form action="<?php echo basename($_SERVER['PHP_SELF']);?>" id="create_event_form" onsubmit="return false;" method="post">
+                                     <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event" id="create_event_form" method="post">
 						<table>
 							<tr><td width="25%">Event Name</td><td><input type="text" id="event_name" name="event_name"></td></tr>
-							<tr><td>Event Venue Name</td><td><input type="text" id="venue_name" name="event_venue" ></td></tr>
+							<tr><td>Event Venue Name</td><td><input type="text" id="venue_name" name="venue_name" ></td></tr>
                                                         <tr><td>Event Location Address</td><td><input type="text" id="venue_address" name="venue_address"></td></tr>
                                                         <tr><td>Zipcode</td><td><input type="text" id="event_zipcode" name="event_zipcode" ></td></tr>
                                                         <tr><td>Event Date</td><td><input type="text" class="datepicker" value="" name="event_date"></td></tr>                                                        
                                                         <tr><td>Event Type</td>
                                                             <td> 
-                                                              <select id="event_type">
+                                                              <select name ="event_type" id="event_type">
                                                                 <?php
                                                                   foreach($event_types as $r) 
                                                                   {
@@ -331,7 +427,7 @@ $event_types = get_event_types();
                                                                 </select> </td></tr>
 							<tr><td>Event Scope</td>
                                                             <td>
-                                                                <select id="event_scope">
+                                                                <select name="event_scope" id="event_scope">
                                                                     <option value="public">Public</option>
                                                                     <option value="private">Private</option>
                                                                 </select>                                                                
@@ -420,7 +516,7 @@ $event_types = get_event_types();
 						<button class="flip">Edit Event</button>
 						<table>
                                                     <tr><td width="25%">Event Name</td><td><?php echo $r['event_name']; ?></td><img class="event_picture" src="<?php echo $event_image_loc; ?>" /> <td</tr>
-							<tr><td>Event Location</td><td><?php echo $r['venue_name'] . "<br>" . $r['venue_address'] . "<br>" . $r['city'] . ", " . $r['state'] . " " . $r['zipcode']?></td></tr>
+							<tr><td>Event Location</td><td><?php echo $r['venue_name'] . "<br>" . $r['venue_address'] . "<br>" . $r['city'] . ", " . $r['state'] . " - " . $r['zipcode']?></td></tr>
 							<tr><td>Event Type</td><td><?php echo $r['event_type']?></td></tr>
                                                         <tr><td>Event Scope</td><td><?php echo $r['event_scope']?></td></tr>
 							<tr><td>Event Date</td><td><?php echo $r['event_date']; ?></td></tr>

@@ -1,3 +1,4 @@
+
 <?php
 /* This file contains variables defining the database for the Havyaka culture site and functions to manipulate the database. */
 ini_set('display_errors', 'On');
@@ -681,7 +682,7 @@ function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_
         $q_venue = mysqli_query($link,"INSERT INTO " .VENUE. " (venue_name,venue_address,e_loc_id) VALUES ('$venue_name','$venue_address',$e_loc_id)") or die(mysqli_error($link));
         
          $venue_id = mysqli_insert_id($link);
-           echo $venue_id;     
+            
         
 	$q = "INSERT INTO " . EVENT . "(event_name, event_date, event_desc, event_scope, e_type_id,event_status, user_id, venue_id, community_id, e_recurring_id) VALUES ('$event_name', '$event_date', '$event_desc', '$event_scope', '$e_type_id','1', '$user_id', '$venue_id', '$community_id', '$e_recurring_id')";
 	echo $q;
@@ -978,10 +979,10 @@ function insert_zipcode_location ($zipcode) {
     global $link;
     
      if($loc_query = mysqli_query($link,"SELECT e_loc_id from ".LOCATION. " WHERE zipcode = $zipcode LIMIT 1") or die(mysqli_error($link)))
-            {
+            {      
                   if(mysqli_num_rows($loc_query) == 0)
-                  {
-                    $q_loc = mysqli_query($link, "INSERT INTO ".LOCATION. " (zipcode) VALUES ('$zipcode')") or die(mysqli_error($link));		
+                  { 
+                      $q_loc = mysqli_query($link, "INSERT INTO ".LOCATION. " (zipcode) VALUES ('$zipcode')") or die(mysqli_error($link));		
                      //get the last inserted id from the location table
                     $e_loc_id = mysqli_insert_id($link);
                   } else

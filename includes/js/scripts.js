@@ -1,50 +1,54 @@
 /* This file contains jquery/javascript scripts for the Havyaka culture website */
+function get_city_state(zipcode) {
 
-$(document).ready(function(){
-	/* The following code is executed once the DOM is loaded */
-	
-        $(".flip").click(function() {
-  
-	$('.card_front').bind("click",function(){
-		
-		// $(this) point to the clicked .sponsorFlip element (caching it in elem for speed):
-		
-		var elem = $(this);
-		
-		// data('flipped') is a flag we set when we flip the element:
-		
-		if(elem.data('flipped'))
-		{
-			// If the element has already been flipped, use the revertFlip method
-			// defined by the plug-in to revert to the default state automatically:
-			
-			elem.revertFlip();
-			
-			// Unsetting the flag:
-			elem.data('flipped',false)
-		}
-		else
-		{
-			// Using the flip method defined by the plugin:
-			
-			elem.flip({
-				direction:'lr',
-				speed: 350,
-				onBefore: function(){
-					// Insert the contents of the .card_back div (hidden from view with display:none)
-					// into the clicked .card_front div before the flipping animation starts:
-					
-					elem.html(elem.siblings('.card_back').show().html());
-                                        
-				}
-			});
-			
-			// Setting the flag:
-			elem.data('flipped',true);
-		}
-	});
-            
-        });
-	
-});
-    
+            var zip = zipcode;
+            var country = 'United States';
+            var lat;
+            var lng;
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': zipcode + ',' + country }, function (results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    geocoder.geocode({'latLng': results[0].geometry.location}, function(results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        if (results[1]) {
+
+                            var loc = getCityState(results,zipcode);
+                        }
+                 }
+            });
+        }
+    }); 
+ }
+
+
+function getCityState(results,zipcode)
+{
+
+        var a = results[0].address_components;
+        var city, state;
+        for(i = 0; i <  a.length; ++i)
+        {
+           var t = a[i].types;
+           if(compIsType(t, 'administrative_area_level_1'))
+              state = a[i].long_name; //store the state
+           else if(compIsType(t, 'locality'))
+              city = a[i].long_name; //store the city
+        }
+        var datastring = "zipcode= "+zipcode+ "&city= " +city+"&state= "+state;
+        alert(datastring);
+         $.ajax(
+              {
+                        type: "POST",
+                        url: "updateaddress.php?cmd=updatecitystate", 
+                        data: datastring,                        
+                }
+         );
+          return false;
+    }
+
+function compIsType(t, s) { 
+       for(z = 0; z < t.length; ++z) 
+          if(t[z] == s)
+             return true;
+       return false;
+    }

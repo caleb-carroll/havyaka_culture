@@ -6,8 +6,7 @@
 	<meta name="home" content="index, follow" />
         <link rel="stylesheet" type="text/css" href="includes/styles/styles.css" media="screen" />
         <script src="includes/js/jquery-1.10.2.js"></script>
-
-
+      
         <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
         
         <script>
@@ -22,7 +21,7 @@ $(document).ready(function(){
         }
         setInterval( refresh_content, 6000 );
         
-   function get_city_state(zipcode) {
+ function get_city_state(zipcode) {
 
             var zip = zipcode;
             var country = 'United States';
@@ -75,14 +74,12 @@ function compIsType(t, s) {
           if(t[z] == s)
              return true;
        return false;
-    }
+    } 
         </script>
       
   <?php 
   
   require 'includes/constants/sql_constants.php';
-
-
 
 $meta_title = "Get Started";
 
