@@ -64,6 +64,12 @@
 		</div>
 	</div>
 	
+	<div>
+		<?php $food_info = get_food_info($food_id); ?>
+		<h1>Chefs that serve <?php echo $food_info['food_name']; ?></h1>
+		<img src="<?php echo BASE . $food_info['food_picture']; ?>" style="width:30%">
+	</div>
+	
 	<?php
 	// This section gets all chefs for the appropriate food types, then prints them into a card
 	// functions below are defined in sql_constants

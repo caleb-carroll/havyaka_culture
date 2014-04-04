@@ -991,13 +991,33 @@ function get_foods_by_chef($chef_id) {
 	// execute the query
 	if($query = mysqli_query($link,$q)) {
 		$results = false;
-		
 		while ($row = mysqli_fetch_assoc($query)) {
 			$results[] =$row;
 		}
 	}
-	else {
-		
+	
+	return $results;
+}
+
+function get_food_info($food_id){
+	global $link;
+	
+	$select = "SELECT t1.food_id, t1.food_name, t1.food_description, t1.availability, t1.food_picture, t1.community_id, t2.food_price";
+	
+	$from = " FROM " . FOOD . " AS t1 LEFT JOIN " . FOOD_CHEF_DETAILS . " AS t2 ON t1.food_id = t2.food_id";
+	
+	$where = " WHERE t1.food_id = $food_id;";
+	
+	$q = $select . $from . $where;
+	
+	// uncomment this to debug
+/* 	echo "<br> get_food_info query is: <br>";
+	echo $q;
+	echo "<br>"; */
+	
+	// execute the query
+	if($query = mysqli_query($link,$q)) {
+		$results = mysqli_fetch_assoc($query);
 	}
 	
 	return $results;
