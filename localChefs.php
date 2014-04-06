@@ -5,6 +5,7 @@
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="LocalEvents" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="includes/styles/chef_style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
 	<script src="includes/js/jquery-1.10.2.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
@@ -27,17 +28,17 @@
 	function doesCSS(p){
 		var s = ( document.body || document.documentElement).style;
 		return !!$.grep(['','-moz-', '-webkit-'],function(v){
-			return  typeof s[v+p] === 'string'
+			return typeof s[v+p] === 'string'
 		}).length
 	}
 	
 	$('html')
 		.toggleClass('transform',doesCSS('transform'))
 		.toggleClass('no-transform',!doesCSS('transform'))
-
+	
 	$(function(){
 		$('.flip').click(function(){
-			console.log("clicked");
+			// console.log("clicked");
 			$(this).parent().closest('.flipper').toggleClass('flipped');
 		});
 	});

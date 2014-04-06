@@ -95,6 +95,7 @@ if(isset($_POST['login']))
         
 return_meta("Log in to your account");
 ?>
+
 <script>
 /*$(document).ready(function(){
 	$("#login_form").validate();

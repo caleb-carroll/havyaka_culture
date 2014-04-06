@@ -77,12 +77,12 @@ http://home.jejaju.com/play/flipCards/simple */
 }
 
 .card .front {
- 	background:#FFF;
+	background-color: #FFF;
 	border:1px solid brown;
 	border-bottom:3px solid blue;
 }
 .card .back {
- 	background:#FFF;
+	background-color: #FFF;
 	border:1px solid brown;
 	border-bottom:3px solid blue;
 }

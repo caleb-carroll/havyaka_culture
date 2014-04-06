@@ -1,0 +1,120 @@
+/* login section css */
+
+#logincol {
+	margin-top: 2em;
+	margin-left: 60em;
+	margin-right:1px;
+	border:1px solid gray;
+	width: 500px;
+	height: 200px;
+	margin-bottom: 1em;
+}
+/* register section css*/
+#registercol {
+	position:absolute;
+	margin-top: 19em;
+	margin-left: 60em;
+	margin-right:2px;
+	background-color: #B8CFE6;
+	border:1px solid gray;
+	width: 500px;
+	height: auto;
+}
+
+#registercol #register_form ul{
+	list-style: none;
+}
+
+#registercol #register_form ul li {
+	font-family: sans-serif;
+	font-size: 100%;
+	margin-top:.5em;
+	margin-left: 10px;
+}
+
+#register_form input {
+	height: 20px;
+	float:right;
+	width: 300px;
+	padding: 5px 8px;
+	margin-left: 15px;
+	margin-right: 5px;
+}
+
+#login_form label,
+#register_form label {
+	padding: 5px;
+	display: inline-block;
+	font-size: 110%;
+	font-family:  serif;
+	font-style: italic;
+	font-weight:  bold;
+	color:  forestgreen;
+}
+#login_form #login,
+ #register_form  button {
+	background: #3498db;
+	background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+	background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+	background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+	background-image: -o-linear-gradient(top, #3498db, #2980b9);
+	background-image: linear-gradient(to bottom, #3498db, #2980b9);
+	-webkit-border-radius: 10;
+	-moz-border-radius: 10;
+	border-radius: 10px;
+	font-family: Arial;
+	color: #ffffff;
+	font-size: 16px;
+	padding: 10px 20px 10px 20px;
+	text-decoration: none;
+}
+
+#login_form #login,
+#register_form button :hover {
+	background: #3cb0fd;
+	background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+	background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+	background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+	background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+	background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+	text-decoration: none;    
+}
+
+/* login section css */
+#logincol #login_form ul{
+	list-style: none;
+	padding: .5em;
+}
+
+#login_form ul li {
+	font-family: sans-serif;
+	font-size: 100%;
+	margin-top:.5em;
+	margin-left: 1px;
+}
+
+#login_form input {
+	height: 20px;
+	float:right;
+	width: 300px;
+	margin-right: 5px;
+}
+
+#logincol #login_form ul{
+	list-style: none;
+	padding: .5em;
+}
+
+#login_form ul li {
+	font-family: sans-serif;
+	font-size: 100%;
+	margin-top:.5em;
+	margin-left: 1px;
+}
+
+#login_form input {
+	height: 20px;
+	float:right;
+	width: 300px;
+	margin-right: 5px;
+}
