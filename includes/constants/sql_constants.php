@@ -204,12 +204,40 @@ function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcod
 	// execute the query
 	if($event_query = mysqli_query($link,$q)) {
 		$results[] = mysqli_fetch_assoc($event_query);
-	}
+                return $results;
+               
+	} else {
+           // $results = NULL;
+        }
 	
-	return $results;
+	//return $results;
 }
-//get all the food names
 
+function  create_update_chef_profile($about_chef,$contact_time_preference,$accepted_payment_type,$pickup,$offline,$delivery,$user_id,$chef_id = NULL)
+{
+    global $link;
+    
+       
+    if($chef_id != NULL)
+    {
+        $q = "UPDATE ".CHEF. " SET about_chef ='" .$about_chef. "' contact_time_preference ='" .$contact_time_preference. "' payments_accepted ='" .$accepted_payment_type. "' pickup_available='" .$pickup. "' delivery_available='".$delivery. "' taking_offline_order='".$offline."' WHERE chef_id ='".$chef_id. "';";
+    } else {
+        $q = "INSERT INTO ".CHEF. " (about_chef,contact_time_preference,payments_accepted,pickup_available,delivery_available,taking_offline_order,user_id,community_id) VALUES ( '".$about_chef. "','".$contact_time_preference. "','".$accepted_payment_type. "','" .$pickup. "','" .$delivery. "','" .$offline. "',".$user_id. ",1);";
+      }
+      if($q_execute = mysqli_query($link,$q))
+      {
+         // echo " success";
+          return true;
+      }
+      else 
+      {
+          //echo "failure";
+          return false;
+      }
+    
+}
+
+//get all the food names
 function get_all_food_names()
 {
     global $link;
@@ -232,12 +260,18 @@ function get_foods_of_chef($chef_id)
             food t1,
             food_chef_details t2
             where t1.food_id=t2.food_id and t2.chef_id = ".$chef_id;
-     
-            if($query = mysqli_query($link,$q)) {
-		while ($row = mysqli_fetch_assoc($query)) {
-			$results[] =$row;
-		}
-            }
+     echo $q;
+        $results =array();
+            $query = mysqli_query($link,$q) or die (mysqli_query($link)); 
+                if(mysqli_num_rows($query) !=0)
+                    {
+                        while ($row = mysqli_fetch_assoc($query)) {
+                                $results[] =$row;
+                     }
+              } else
+              {
+                  $results = NULL;
+              }
             return $results;
 }
 
@@ -312,12 +346,12 @@ function add_new_food($chef_id,$food_name,$food_description,$picture_loc)
           $add_selected_food = add_selected_food($food_id,$chef_id);
             if($add_selected_food)
             {
-                echo "success";
+               
                 //return true;
             } 
             else
             {
-                 echo "failure2";
+                
                // return false;
             }
             return $food_id;
@@ -343,6 +377,7 @@ function get_chef_info($chef_id) {
 	echo $q;
 	echo "<br>"; */
 	
+        
 	// execute the query
 	if($query = mysqli_query($link,$q)) {
 		$results = mysqli_fetch_assoc($query);
@@ -356,19 +391,21 @@ function add_selected_food($food_id,$chef_id)
     global $link;
     
     $q_food = "SELECT * from ".FOOD_CHEF_DETAILS. " WHERE food_id= ".$food_id. " AND chef_id = ".$chef_id;
-    echo $q_food;
+    
     $food_query = mysqli_query($link,$q_food) or die(mysqli_error($link));
         
         if(mysqli_num_rows($food_query) == 0)
         {
             $q_food_insert = mysqli_query($link,"INSERT INTO ".FOOD_CHEF_DETAILS. " (food_id,chef_id) VALUES (".$food_id. "," .$chef_id. ");") or die(mysqli_query($link));
             
-            echo "success";
+            
+            
             return true;
         } else
         {
-            echo "failure";
+            
             return false;
+            
         }
     
     

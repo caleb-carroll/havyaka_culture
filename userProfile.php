@@ -298,23 +298,30 @@ if($_POST and $_GET){
 	
 }
 
-$user_info = get_user_info($user_id);
-$profile_pic = $user_info[0]['profile_picture'];
- $profile_pic_loc = htmlspecialchars($profile_pic);
-  $profile_pic_loc = BASE.$profile_pic_loc;
-list($width, $height, $type, $attr)= getimagesize($profile_pic_loc);
+    $user_info = get_user_info($user_id);
+    $profile_pic = $user_info[0]['profile_picture'];
+     $profile_pic_loc = htmlspecialchars($profile_pic);
+      $profile_pic_loc = BASE.$profile_pic_loc;
+    list($width, $height, $type, $attr)= getimagesize($profile_pic_loc);
 
-//Get the chef details of the logged in user if exists
-$chef_info = get_chef_details_logged_in_user($user_id);
+    //Get the chef details of the logged in user if exists
+    $chef_info_ret = get_chef_details_logged_in_user($user_id);
+    $chef_info = array_filter($chef_info_ret);
 
-$chef_id =$chef_info[0]['chef_id'];
-$about_chef = $chef_info[0]['about_chef'];
-$contact_time_preference = $chef_info[0]['contact_time_preference'];
-$pickup_available = $chef_info[0]['pickup_available'];
-echo $about_chef."<br>".$contact_time_preference."<br>".$pickup_available;
+    if(!empty($chef_info)) {
 
+       
+    $chef_id =$chef_info[0]['chef_id'];
+    $about_chef = $chef_info[0]['about_chef'];
+    $contact_time_preference = $chef_info[0]['contact_time_preference'];
+    $pickup_available = $chef_info[0]['pickup_available'];
+    //echo "about chef".$about_chef."<br>".$contact_time_preference."<br>".$pickup_available;
+
+        if($chef_id !=NULL){
+          $food_chef = get_foods_of_chef($chef_id);
+        }
+    }
 //Get the foods that the chef is preparing.
-$food_chef = get_foods_of_chef($chef_id);
 
 //get the event types
 $event_types = get_event_types();
@@ -381,7 +388,7 @@ $results = get_events($user_id);
                             { ?>
                                 <a href="manageEvents.php" name="manage_events">Manage your Event</a>
                           <?php  }
-                            if(empty($chef_info))
+                            if($chef_info == NULL)
                             {
                             ?>
                             <h4>Become and chef and show off your cooking skill!</h4>
@@ -398,7 +405,7 @@ $results = get_events($user_id);
 						Last name: <input type="text" class="input_box" name="last_name" value="<?php echo $user_info[0]['last_name'];?>"><br><br>
 						Phone: <input type="text" class="input_box" name="phone" value="<?php echo $user_info[0]['phone'];?>"><br><br>
 						Email: <input type="text" class="input_box" name="email" value="<?php echo $user_info[0]['email'];?>"><br><br>    
-                                                            <input type="checkbox" value="public_info">Allow others to see my contact info</input><br></br>
+                                                            <input type="checkbox" value="public_info">Allow others to see my contact info<br></br>
 						<button type="submit">Save Changes</button>
 					</form>
 					

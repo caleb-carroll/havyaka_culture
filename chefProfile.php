@@ -89,7 +89,7 @@ $(function(){
                     
                     var chef_id = $(this).attr('rel1');
                     var datastring = "food_id=" +food_id+ "&chef_id="+chef_id;
-                    alert(datastring);
+                    
                      $.ajax(
                          { 
                             
@@ -271,7 +271,7 @@ if($_POST and $_GET){
         
         if($_GET['cmd'] == 'add_selected_food')
         {
-            print_r ($_POST);
+            
              $chef_id = $_POST['chef_id'];
               $food_id = $_POST['food_id'];
               echo $chef_id.$food_id;
@@ -317,9 +317,50 @@ if($_POST and $_GET){
         }
         if($_GET['cmd'] == 'update_chef_profile')
         {
-            //todo
+            
+            $about_chef = filter($_POST['about_chef']);
+            $contact_time_preference = $_POST['contact_time_preference'];
+            $accepted_payment_type = $_POST['accepted_payment_type'];
+            $chef_id = $_POST['chef_id'];
+            if(isset ($_POST['pickup']))
+                {
+                    $pickup = $_POST['pickup']; 
+                    $pickup = "yes";                    
+                } else 
+                {
+                    $pickup = "no";
+                }
+                 if(isset ($_POST['offline']))
+                {
+                     $offline = $_POST['offline']; 
+                    $offline = "yes";                    
+                } else 
+                {
+                    $offline = "no";
+                }
+                 if(isset ($_POST['delivery']))
+                {
+                    $delivery = $_POST['delivery']; 
+                    $delivery = "yes";                    
+                } else 
+                {
+                    $delivery = "no";
+                }
+           
+            if($chef_id)
+            {
+             $chef_profile_edit = create_update_chef_profile($about_chef,$contact_time_preference,$accepted_payment_type,$pickup,$offline,$delivery);
+            } else {
+                $chef_profile_edit = create_update_chef_profile($about_chef,$contact_time_preference,$accepted_payment_type,$pickup,$offline,$delivery,$user_id,$chef_id);
+            }
+            if($chef_profile_edit)
+            {
+                $msg = "Chef profile updated successfully!";
+            } else
+            {
+                $err = "Could not update your profile page, please try again";
+            }            
         }
-        
  }
     
     $user_info = get_user_info($user_id);
@@ -329,15 +370,22 @@ if($_POST and $_GET){
    list($width, $height, $type, $attr)= getimagesize($profile_pic_loc);
 
 //Get the chef details of the logged in user if exists
-$chef_info = get_chef_details_logged_in_user($user_id);
+  $chef_info = get_chef_details_logged_in_user($user_id);
+    $chef_info_filter = array_filter($chef_info);
 
-$chef_id =$chef_info[0]['chef_id'];
-$about_chef = $chef_info[0]['about_chef'];
-$contact_time_preference = $chef_info[0]['contact_time_preference'];
-$pickup_available = $chef_info[0]['pickup_available'];
+       if(!empty($chef_info_filter)) {
+       
+            $chef_id =$chef_info[0]['chef_id'];
+           // echo "chef id is: " .$chef_id;
+            $about_chef = $chef_info[0]['about_chef'];
+            $contact_time_preference = $chef_info[0]['contact_time_preference'];
+            $pickup_available = $chef_info[0]['pickup_available'];
 
-//Get the foods that the chef is preparing.
-$food_chef = get_foods_of_chef($chef_id);
+            //Get the foods that the chef is preparing.
+            if($chef_id !=NULL){
+            $food_chef = get_foods_of_chef($chef_id);
+            }
+       }
 
 //get the event types
 $event_types = get_event_types();
@@ -381,19 +429,23 @@ $food_names = get_all_food_names();
                         }
 ?>
                     
-                    <?php
-                    if(!empty($chef_info))
-                    {
-                    ?>
-     <div class="dashboard_sub_section">  
-        <?php include('includes/subnavigation.inc.php'); ?>
-            
-    </div>
-    <div class="card flipper" style="width:80em; height:500px;">
-                            <div class="back"  >
+                <div class="dashboard_sub_section">  
+                   <?php include('includes/subnavigation.inc.php'); ?>
+
+               </div>
+                       <div class="card flipper" style="width:80em; height:500px;">
+                            <div class="back">
+                               <?php if(!empty($chef_info_filter))
+                                { ?>
                                 <button class="flip">Edit your food bucket</button> &nbsp;<br></br>
                                 <h2>Edit your Chef Profile</h2> 
-                                     <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?update_chef_profile" method="post">    
+                                <?php } else {?>                                
+                                    <h2>Create a new Chef Profile</h2> 
+                                    <button class="flip">Create your food bucket</button> &nbsp;<br></br>
+                                <?php } ?>
+                                     <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=update_chef_profile" method="post"> 
+                                         <input type='hidden' name='chef_id' value='<?php echo $chef_info[0]['chef_id'];?>' ></input>
+                                                
                                             About yourself as a chef: <textarea style="width:400px; height: 100px;"  name="about_chef"><?php echo $chef_info[0]['about_chef'];?></textarea><br>				
                                             Contact Hours: <select name="contact_time_preference" id="contact_time_preference">                                            
                                                                 <option value="morning" <?php if($chef_info[0]['contact_time_preference'] == "morning") echo "selected";?>>Morning</option>
@@ -411,14 +463,21 @@ $food_names = get_all_food_names();
                                               </select> 
                                     <br>
                                                 <!-- marks these checkboxes as checked or unchecked based on what we find in the DB -->
-                                                <input style="width:20px; height: 20px;" type="checkbox" value="pickup" <?php if($chef_info[0]['pickup_available'] == "Yes") echo "checked"; else echo "unchecked";?>>Offer pickup?</input><br>
-                                                    <input style="width:20px; height: 20px;" type="checkbox" value="offline" <?php if($chef_info[0]['taking_offline_order'] == "Yes") echo "checked"; else echo "unchecked";?>>Take offline orders?</input><br>
-                                                        <input style="width:20px; height: 20px;" type="checkbox" value="delivery" <?php if($chef_info[0]['delivery_available'] == "Yes") echo "checked"; else echo "unchecked";?>>Offer delivery?</input><br>
-                                                <input type="submit" name="submit" value="Update"></input>
+                                                <input style="width:20px; height: 20px;" type="checkbox" name='pickup' value="pickup" <?php if($chef_info[0]['pickup_available'] == "Yes") echo "checked"; else echo "unchecked";?>>Offer pickup?</input><br>
+                                                 <input style="width:20px; height: 20px;" type="checkbox" name='offline' value="offline" <?php if($chef_info[0]['taking_offline_order'] == "Yes") echo "checked"; else echo "unchecked";?>>Take offline orders?</input><br>
+                                                 <input style="width:20px; height: 20px;" type="checkbox" name='delivery' value="delivery" <?php if($chef_info[0]['delivery_available'] == "Yes") echo "checked"; else echo "unchecked";?>>Offer delivery?</input><br>
+                                                 
+                                                 <input type="submit" name="submit" value="Update"></input>
                                       </form>             
                                  </div>
                             <div class="front">
                                 <button class="flip">Back to Chef Profile</button> &nbsp;<br></br>
+                                 <?php if(!empty($food_chef))
+                                { ?>
+                                <h2>Edit your food bucket</h2> 
+                                <?php } else {?>
+                                    <h2>Create a new food bucket</h2> 
+                                <?php } ?>
                                 <div id="request_new_food_div" style="display:none;">   
                                
                                 <h3>Add a food to your profile. (This should be one, you started taking orders!)</h3>
@@ -435,93 +494,63 @@ $food_names = get_all_food_names();
                                </div>
                                 <br>
                                   <form action="<?php echo basename($_SERVER['PHP_SELF']);?>" method="post">    
-                                <div id="food_from_db">
-                                    <select id ="selected_food" class="dropdown">
-                                        <option selected value="default">Please Select a Food Type</option>
-                                        <?php
-                                        foreach ($food_names as $current_food)
-                                        {
-                                        ?>
-                                            <option value="<?php echo $current_food['food_id'];?>" ><?php echo $current_food['food_name'];?></option>
-                                           
-                                        <?php } ?>
-                                     </select>
-                                    <button rel="<?php echo $current_food['food_id'];?>" rel1="<?php echo $chef_info[0]['chef_id'];?>" id="add_selected_food">Add this food to your bucket </button> &nbsp;&nbsp;&nbsp; <h4>Not found anything you prepare?</h4>
-                                    <a class="link_class" id="request_new_food_link" href="#" >Request one Now!</a>
-                                </div>
+                                        <div id="food_from_db">
+                                            <select id ="selected_food" class="dropdown">
+                                                <option selected value="default">Please Select a Food Type</option>
+                                                <?php
+                                                foreach ($food_names as $current_food)
+                                                {
+                                                ?>
+                                                    <option value="<?php echo $current_food['food_id'];?>" ><?php echo $current_food['food_name'];?></option>
+
+                                                <?php } ?>
+                                             </select>
+                                            <button rel="<?php echo $current_food['food_id'];?>" rel1="<?php echo $chef_info[0]['chef_id'];?>" id="add_selected_food">Add this food to your bucket </button> &nbsp;&nbsp;&nbsp; <h4>Not found anything you prepare?</h4>
+                                            <a class="link_class" id="request_new_food_link" href="#" >Request one Now!</a>
+                                        </div>
                                   </form>
-                                <table><h4>Food details, that you are ready to prepare</h4>
-                                    
-                                    <tr><th> Food Name </th>
-                                    <th> Food Description </th>
-                                    <th> Food picture </th>
-                                    <th> Your Action</th></tr>
-                                <?php
-                                foreach($food_chef as $r)
-                                {
-                                        $food_id= $r['food_id'];
-                                        $food_picture = $r['food_picture'];
-                                        $food_picture_loc = htmlspecialchars($food_picture);
-                                        $food_picture_loc = BASE.$food_picture_loc;
-                                        list($width, $height, $type, $attr)= getimagesize($food_picture_loc);
-                                ?>
-                                    <tr>
-                                        
-                                        <form action="<?php echo basename($_SERVER['PHP_SELF']);?>" method="post">
+                                 <?php if(isset($food_chef))
+                               { ?>   
+                                    <table><h4>Food details, that you are ready to prepare</h4>
 
-                                                 <td id="food_name_<?php echo $food_id;?>"> <?php echo $r['food_name'];?></td>
+                                        <tr><th> Food Name </th>
+                                        <th> Food Description </th>
+                                        <th> Food picture </th>
+                                        <th> Your Action</th></tr>
+                                    <?php
+                                        foreach($food_chef as $r)
+                                        {
+                                                $food_id= $r['food_id'];
+                                                $food_picture = $r['food_picture'];
+                                                $food_picture_loc = htmlspecialchars($food_picture);
+                                                $food_picture_loc = BASE.$food_picture_loc;
+                                                list($width, $height, $type, $attr)= getimagesize($food_picture_loc);
+                                        ?>
+                                        <tr>
+                                            <form action="<?php echo basename($_SERVER['PHP_SELF']);?>" method="post">
 
-                                                 <td> <textarea name="food_description" id="food_description_<?php echo $r['food_id'];?>" ><?php echo $r['food_description'];?></textarea></td>
+                                                     <td id="food_name_<?php echo $food_id;?>"> <?php echo $r['food_name'];?></td>
 
-                                                 <td><img style="width: 80px; height: 70px;" src="<?php echo $food_picture_loc;?>"</td>
+                                                     <td> <textarea name="food_description" id="food_description_<?php echo $r['food_id'];?>" ><?php echo $r['food_description'];?></textarea></td>
 
-                                                 <td><button name="delete_food" class ="delete_food" rel="<?php echo $r['food_id'];?>" rel1="<?php echo $chef_info[0]['chef_id'];?>" id="delete_food_"<?php echo $r['food_id'];?> >Delete this food</button><br> 
+                                                     <td><img style="width: 80px; height: 70px;" src="<?php echo $food_picture_loc;?>"</td>
 
-                                                 <button class="update_food" rel="<?php echo $r['food_id'];?>" rel1=<?php echo $chef_info[0]['chef_id'];?> id="update_food_"<?php echo $r['food_id'];?> >Update this food</button>
+                                                     <td><button name="delete_food" class ="delete_food" rel="<?php echo $r['food_id'];?>" rel1="<?php echo $chef_info[0]['chef_id'];?>" id="delete_food_"<?php echo $r['food_id'];?> >Delete this food</button><br> 
 
-                                        </form>
-                                         <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_food_picture" method="post" enctype="multipart/form-data">
-                                             <input  type="hidden" name="food_id" value="<?php echo $r['food_id'];?>">                                                   
-                                             <input type="file" name="file" id="food_pic"><br>
-                                             <input type="submit" name="submit" value="Update">
-                                         </form>
-                                    </tr>
-                                <?php } ?>
-                               </table>
+                                                     <button class="update_food" rel="<?php echo $r['food_id'];?>" rel1=<?php echo $chef_info[0]['chef_id'];?> id="update_food_"<?php echo $r['food_id'];?> >Update this food</button>
+                                            </form>
+                                             <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_food_picture" method="post" enctype="multipart/form-data">
+                                                 <input  type="hidden" name="food_id" value="<?php echo $r['food_id'];?>">                                                   
+                                                 <input type="file" name="file" id="food_pic"><br>
+                                                 <input type="submit" name="submit" value="Update">
+                                             </form>
+                                        </tr>
+                            <?php } ?>
+                            
+                                   </table>
+                             <?php  }?>
                             </div>
 			</div>
-                        <?php
-                    } else
-                    {   ?>
-                        <div class="card" style="overflow-y: scroll; width: 800px;">
-				<div class="front">
-                                    <p><h2>Create a new Chef Profile</h2></p>
-                                    About yourself as a chef: <textarea cols="input_box" name="about_chef" value=''>Don't hesitate! Brag about yourself!</textarea><br><br>					
-					 Contact Hours: <select name="contact_time_preference" id="contact_time_preference">                                            
-                                                                <option value="morning">Morning</option>
-                                                                <option value="noon">Noon</option>
-                                                                <option value="evening">Evening</option>
-                                                                <option value="anytime">Any time</option>
-                                                           </select> 
-                                                 <br>
-                                       Accepted payment method's : <select name="accepted_payment_type" id="accepted_payment_type">                                            
-                                                   <option value="cash">Cash</option>
-                                                   <option value="check">Check</option>
-                                                   <option value="cash or check">Cash or Check</option>
-                                                   <option value="paypal">Paypal</option>
-                                                   <option value="other">Other</option>
-                                              </select> 
-                                    <br>
-
-					<!-- marks these checkboxes as checked or unchecked based on what we find in the DB -->
-					<input type="checkbox" value="pickup">Offer pickup?
-					<input type="checkbox" value="offline">Take offline orders?
-					<input type="checkbox" value="delivery">Offer delivery?
-				</div>
-			</div>
-                        <?php
-                    } ?>
-
 			<!-- Center column end -->
 			
 		</div>
