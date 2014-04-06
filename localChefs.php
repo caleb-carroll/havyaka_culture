@@ -30,7 +30,7 @@
 			return  typeof s[v+p] === 'string'
 		}).length
 	}
-
+	
 	$('html')
 		.toggleClass('transform',doesCSS('transform'))
 		.toggleClass('no-transform',!doesCSS('transform'))
@@ -120,7 +120,7 @@
 			<!-- Middle Column start -->
 			<style>img {width: 160px;}</style> 
 				<div id ="chef_holder">
-					<h2>Local chef's in your area!</h2>
+					<h2>Local chefs in your area!</h2>
 					
 						<?php
 						// This section gets all chefs for the appropriate food types, then prints them into a card
