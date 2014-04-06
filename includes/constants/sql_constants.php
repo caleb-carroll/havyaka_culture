@@ -328,9 +328,10 @@ function add_new_food($chef_id,$food_name,$food_description,$picture_loc)
 /* Function to retrieve info for a specific chef */
 function get_chef_info($chef_id) {
 	global $link;
+	global $salt;
 	
 	// SELECT * from CHEF as t1 LEFT JOIN FOOD_CHEF_DETAILS as t2 ON t1.chef_id = t2.chef_id LEFT JOIN FOOD as t3 ON t2.food_id = t3.food_id WHERE t2.food_id = 1;
-	$q = "SELECT t1.chef_id, t1.about_chef, t1.contact_time_preference, t1.delivery_available, t1.payments_accepted, t1.pickup_available, t1.taking_offline_order, t4.first_name, t4.last_name, t4.user_id, t4.email, t4.phone, t4.profile_picture 
+	$q = "SELECT t1.chef_id, t1.about_chef, t1.contact_time_preference, t1.delivery_available, t1.payments_accepted, t1.pickup_available, t1.taking_offline_order, t4.first_name, t4.last_name, t4.user_id, AES_DECRYPT(t4.email, '$salt') as email, t4.phone, t4.profile_picture 
 	FROM chef as t1 
 	LEFT JOIN " . FOOD_CHEF_DETAILS . " as t2 ON t1.chef_id = t2.chef_id 
 	LEFT JOIN " . FOOD . " as t3 ON t2.food_id = t3.food_id 
@@ -343,10 +344,8 @@ function get_chef_info($chef_id) {
 	echo "<br>"; */
 	
 	// execute the query
-	if($food_query = mysqli_query($link,$q)) {
-		while ($row = mysqli_fetch_assoc($food_query)) {
-			$results[] =$row;
-		}
+	if($query = mysqli_query($link,$q)) {
+		$results = mysqli_fetch_assoc($query);
 	}
 	
 	return $results;
