@@ -1,16 +1,10 @@
+<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
 <?php
 
-//if(isset($_SESSION['user_id'])) // if the user is logged in and display related navigation tabs, else display the default tabs.
-//{
-    $names = array("Home","LocalEvents","LocalChefs","LocalContacts","MyDashboard","Logout");
-    $links = array("home.php","localEvents.php","localChefs.php","localContacts.php","userProfile.php","logout.php");
-
-//} else 
-//{
-  //$names = array("Register","Login");
-  //$links = array("register.php","login.php");
-  
-//}
+if(isset($_SESSION['user_id'])) // if the user is logged in and display related navigation tabs, else display the default tabs.
+{
+    $names = array("My chef profile","My profile","My saved Info","Manage my events");
+    $links = array("chefProfile.php","userProfile.php","savedInfo.php","manageEvents.php");
 
 ?>
 <ul>
@@ -32,4 +26,4 @@
 		}
                    ?>
 </ul>
-<p id="layoutdims"></p>
+<?php } ?>

@@ -319,11 +319,11 @@ $food_chef = get_foods_of_chef($chef_id);
 //get the event types
 $event_types = get_event_types();
 
-$results = get_events($user_id);
+ $results = get_events($user_id);
 ?>
 
 <head>
-	<title>Community Connect</title>
+	<title>Manage Events</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="robots" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/profile_styles.css"/>
@@ -359,58 +359,152 @@ $results = get_events($user_id);
 ?>
     <div class="dashboard_sub_section">  
         <?php include('includes/subnavigation.inc.php'); ?>
-     </div>
-                    <div class="card" id='saved_event_div'>
-                        <div class="front">
-                            saved events
+     </div>   
+                 <div id="event_holder">
+                            
+                    <br></br> <button name="create_event" id="create_event_button">Create an event</button>
+                    <div class="card flipper" id="create_event_div" >
+
+                        
+                        <div class="back">
+                            <h3>Create a new event!</h3>
+                             <div class="success" style="display:none;"></div>
+                             <div class="error" style="display:none;">Please enter some text</div>
+                             <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event" id="create_event_form" method="post">
+                                        <table>
+                                                <tr><td width="25%">Event Name</td><td><input type="text" id="event_name" name="event_name"></td></tr>
+                                                <tr><td>Event Venue Name</td><td><input type="text" id="venue_name" name="venue_name" ></td></tr>
+                                                <tr><td>Event Location Address</td><td><input type="text" id="venue_address" name="venue_address"></td></tr>
+                                                <tr><td>Zipcode</td><td><input type="text" id="event_zipcode" name="event_zipcode" ></td></tr>
+                                                <tr><td>Event Date</td><td><input type="text" class="datepicker" value="" name="event_date"></td></tr>                                                        
+                                                <tr><td>Event Type</td>
+                                                    <td> 
+                                                      <select name ="event_type" id="event_type">
+                                                        <?php
+                                                          foreach($event_types as $r) 
+                                                          {
+                                                          ?>
+                                                            <option value="<?php echo $r['e_type_id']; ?>"><?php echo $r['event_type']; ?></option>
+
+                                                          <?php } ?>
+                                                        </select> </td></tr>
+                                                <tr><td>Event Scope</td>
+                                                    <td>
+                                                        <select name="event_scope" id="event_scope">
+                                                            <option value="public">Public</option>
+                                                            <option value="private">Private</option>
+                                                        </select>                                                                
+                                                    </td></tr>
+                                                <tr><td>Event Details</td><td><textarea id="event_desc" name="event_desc"></textarea><td></tr>
+                                        </table>                                                                                   
+                                          <button type="submit" id="add_event">Add Event</button> &nbsp; <button type="submit" id="cancel_event">Cancel Event</button>	
+                                </form>					
                         </div>
                     </div>
-                    <div class="card" id='saved_chef_div'>
-                        <div class="front">
-                            saved chef
-                        </div>
-                    </div>
-			<!-- Middle column start -->
-                        <div class="card " id="user_profile_div"  style="overflow-y: scroll;">
-			<div class="front">
-                            <?php 
-                            if(empty($results))
-                            { ?>
-                            <a href="manageEvents.php" name="create_events">Create an Event</a>&nbsp;&nbsp;
-                           <?php } else
-                            { ?>
-                                <a href="manageEvents.php" name="manage_events">Manage your Event</a>
-                          <?php  }
-                            if(empty($chef_info))
-                            {
-                            ?>
-                            <h4>Become and chef and show off your cooking skill!</h4>
-                            <a href="chefProfile.php" name="create_chef_profile">Create a Chef Profile</a>
-                            <?php 
-                            } else {?>
-                              <a href="chefProfile.php" name="edit_chef_profile">Edit your Chef Profile</a>
-                           <?php } ?>
-                              
-                            <p><h2>Hello &nbsp;<?php echo $user_info[0]['first_name'];?>,</h2>&nbsp;&nbsp;<br><br><img style="margin-left: 25px;" id="profile_picture" src="<?php echo $profile_pic_loc;?>" /><br><br><h3>Edit your profile here:</h3></br></p>
-					
-					<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=update_user" method="post">
-						First name: <input type="text" class="input_box" name="first_name" value="<?php echo $user_info[0]['first_name'];?>"><br><br>
-						Last name: <input type="text" class="input_box" name="last_name" value="<?php echo $user_info[0]['last_name'];?>"><br><br>
-						Phone: <input type="text" class="input_box" name="phone" value="<?php echo $user_info[0]['phone'];?>"><br><br>
-						Email: <input type="text" class="input_box" name="email" value="<?php echo $user_info[0]['email'];?>"><br><br>    
-                                                            <input type="checkbox" value="public_info">Allow others to see my contact info</input><br></br>
-						<button type="submit">Save Changes</button>
-					</form>
-					
-					<p>Upload a Picture</p>
-					
-					<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_picture" method="post" enctype="multipart/form-data">					
-						<input type="file" name="file" id="file"><br>
-						<input type="submit" name="submit" value="Submit">
-					</form>
+                               
+		<?php
+				// get_events function defined in sql_constants.php
+                      
+
+                            // add each event returned to an event card
+                           if($results) 
+                           {
+				foreach ($results as $r) {
+                                    //get event_picture
+                                    $event_id = $r['event_id'];
+                                    $event_image = get_event_picture($event_id);
+                                        $event_image_loc = htmlspecialchars($event_image);
+                                        $event_image_loc = BASE.$event_image_loc;
+                                        list($width, $height, $type, $attr)= getimagesize($event_image_loc);
+                                        
+                                       // foreach of the event, get the number of attendance
+                                        
+                                        $event_attendace = get_attendance_count_list($event_id);
+
+						
+				?>
+				<div class="card flipper">
+					<div class="front">
+						<button class="flip">Cancel</button>
+						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=update_event" method="post">
+						<input style="display:none" type="text" name="event_id" value="<?php echo $r['event_id']?>">
+						<table>
+							<tr><td width="25%">Event Name</td><td><input type="text" name="event_name" value="<?php echo $r['event_name']; ?>"></td></tr>
+                                                        <tr><td>Event Venue Name</td><td><input type="text" name="venue_name" value="<?php echo $r['venue_name']?>" ></td></tr>
+                                                        <tr><td>Event Location Address</td><td><input type="text" name="venue_address" value="<?php echo $r['venue_address']?>"></td></tr>
+                                                        <tr><td>Zipcode</td><td><input type="text" id="event_zipcode" name="event_zipcode" value="<?php echo $r['zipcode']?>" ></td></tr>
+							<tr><td>Event Type</td>
+                                                            <td> 
+                                                              <select name="event_type" id="get_event_type">
+                                                                <?php
+                                                                  foreach($event_types as $row) 
+                                                                  {
+                                                                      echo $row['event_type'];
+                                                                  ?>
+                                                                  <option value="<?php echo $row['e_type_id']; ?>" ><?php echo $row['event_type']; ?></option>
+                                                                      
+                                                                  <?php } ?>
+                                                              </select> </td>
+                                                        </tr>
+                                                        <tr><td>Event Scope</td>
+                                                            <td>
+                                                                <select name="event_scope" id="event_scope">
+                                                                    <option value="public">Public</option>
+                                                                    <option value="private">Private</option>
+                                                                </select>                                                                
+                                                            </td></tr>
+							<tr><td>Event Date</td><td><input type="text" class="datepicker" name="event_date" value="<?php echo $r['event_date']?>"></td></tr>
+							<tr><td>Event Details</td><td><textarea name="event_desc"><?php echo $r['event_desc']?></textarea><td></tr>
+						</table>
+                                                   
+						<img class="event_picture" src="<?php echo $event_image_loc; ?>" /> 
+                                                <button type="submit">Save Changes</button> &nbsp;
+						</form>
+						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=delete_event" method="post">
+							<input style="display:none" type="text" name="event_id" value="<?php echo $r['event_id']?>">
+							<button type="submit">Delete Event</button>
+						</form>
+						
+						<p>Upload a Picture</p>
+						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event_picture" method="post" enctype="multipart/form-data">
+                                                    <input style="display:none" type="text" name="event_id" value="<?php echo $r['event_id']?>">
+							<label for="file">Filename:</label>
+						<input type="file" name="file" id="file_event"><br>
+						<input type="submit" name="submit" value="Update">
+						</form>
+						
+					</div>
+					<div class="back">
+						<button class="flip">Edit Event</button>
+						<table>
+                                                    <tr><td width="25%">Event Name</td><td><?php echo $r['event_name']; ?></td><img class="event_picture" src="<?php echo $event_image_loc; ?>" /> <td</tr>
+							<tr><td>Event Location</td><td><?php echo $r['venue_name'] . "<br>" . $r['venue_address'] . "<br>" . $r['city'] . ", " . $r['state'] . " - " . $r['zipcode']?></td></tr>
+							<tr><td>Event Type</td><td><?php echo $r['event_type']?></td></tr>
+                                                        <tr><td>Event Scope</td><td><?php echo $r['event_scope']?></td></tr>
+							<tr><td>Event Date</td><td><?php echo $r['event_date']; ?></td></tr>
+							<tr><td>Event Details</td><td><?php echo $r['event_desc']; ?><td></tr>
+                                                        <?php
+                                                        if($event_attendace !=NULL)
+                                                        {
+                                                         $count=$event_attendace;
+                                                        } else
+                                                        {
+                                                            $count = "No attandance!";
+                                                        }
+                                                        ?>
+                                                        <tr><td>Attendance count</td><td><?php echo $count; ?><td></tr>
+                                                        
+						</table>
+					</div>
+				</div>
+				<?php }
+                           } else
+                           {
+                               echo "<h2> No events found!. Add one now!</h2>";
+                           }
+                                
+                                ?>
 			</div>
-		</div>
-                       
 			<!-- Center column end -->
 			
 		</div>

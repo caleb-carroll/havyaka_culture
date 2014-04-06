@@ -25,7 +25,14 @@ p {
 	margin:.4em 0 .8em 0;
 	padding:0;
 }
-
+.link_class {
+    color:brown;
+}
+.link_class:hover
+{
+    text-decoration:  underline;
+    color:white;
+}
 
 /* Header styles */
 #header {
@@ -454,3 +461,14 @@ table td last {
 	position:relative;
 	margin-top: .5em;
 }
+
+.sub-menu {
+       display: none;
+       position: absolute;
+       text-align: center;
+       font-size: 100%;
+       top: 20px;
+       left: -10px;
+       padding: 10px;
+       z-index: 90;
+        }

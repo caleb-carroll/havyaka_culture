@@ -20,7 +20,6 @@ function get_city_state(zipcode) {
     }); 
  }
 
-
 function getCityState(results,zipcode)
 {
 
@@ -52,3 +51,4 @@ function compIsType(t, s) {
              return true;
        return false;
     }
+    

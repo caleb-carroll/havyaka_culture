@@ -185,18 +185,18 @@ function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcod
 
 /* ---------- functions related to local chef----------------------*/
 /* Function to retrieve a user's information */
-/* function get_chef_info($user_id) {
+ function get_chef_details_logged_in_user($user_id) {
 	// select * from user where user_id = 1;
 	global $link;
 	global $salt;
-	
+	$results = array();
 	// to do: return user profile picture
-	$select = "SELECT about_chef, pickup_available, contact_time_preference, payments_accepted, delivery_available, taking_offline_order";
+	$select = "SELECT chef_id,about_chef, pickup_available, contact_time_preference, payments_accepted, delivery_available, taking_offline_order";
 	
-	$from = " FROM " . USERS . " as t1 LEFT JOIN " . CHEF . " as t2 ON t1.user_id = t2.user_id";
+	$from = " FROM " . CHEF ;
 	
 	// will always return events that are active
-	$where = " where t1.user_id=" . $user_id;
+	$where = " where user_id=" . $user_id;
 		
 	// build the query
 	$q = $select . $from . $where . ";";
@@ -207,7 +207,123 @@ function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcod
 	}
 	
 	return $results;
-} */
+}
+//get all the food names
+
+function get_all_food_names()
+{
+    global $link;
+    $results = array();
+    $q = mysqli_query($link,"SELECT * FROM ".FOOD.";") or die(mysqli_error($link));
+    
+    while ($q_food = mysqli_fetch_assoc($q))
+    {
+        $results[] = $q_food;
+    }
+    return $results;
+}
+//get the foods that the chef is preparing
+
+function get_foods_of_chef($chef_id)
+{
+     global $link;
+     
+     $q = "SELECT t1.food_name,t1.food_description,t1.food_picture,t1.food_id,t2.food_price from
+            food t1,
+            food_chef_details t2
+            where t1.food_id=t2.food_id and t2.chef_id = ".$chef_id;
+     
+            if($query = mysqli_query($link,$q)) {
+		while ($row = mysqli_fetch_assoc($query)) {
+			$results[] =$row;
+		}
+            }
+            return $results;
+}
+
+function update_foods_of_chef($chef_id=NULL,$food_id,$food_description=NULL,$food_price=NULL,$food_picture=NULL)
+{
+    global $link;
+   
+    //update teh description, price and picture
+       if($food_description != NULL || $food_picture != NULL) 
+       {
+            $q = "UPDATE " .FOOD. " SET ";
+
+            if (!is_null($food_description)){
+                    $q .= "food_description='$food_description'";
+            }
+
+             if (!is_null($food_price)){
+                    $q .= "food_price='$food_price'";
+            }
+
+             if (!is_null($food_picture)){
+                    $q .= "food_picture='$food_picture'";
+            }
+            $q .= " WHERE food_id = $food_id";
+           
+           if(mysqli_query($link,$q))
+            {
+                
+                return true;
+            } else 
+            {
+               
+                return false;
+            }
+       } elseif($food_price !=NULL) 
+         {
+        $q1 = "UPDATE ".FOOD_CHEF_DETAILS. " SET food_price=" .$food_price. " WHERE food_id = ".$food_id. " AND chef_id =".$chef_id;
+               
+               if(mysqli_query($link,$q1))
+               {
+                  
+                    return true;
+                } else 
+                {
+                    
+                    return false;
+                }     
+         } 
+}
+
+// add a new food to food table
+
+function add_new_food($chef_id,$food_name,$food_description,$picture_loc)
+{
+   //check if the requested new food exists in the database already using string match. if not add one to the db
+    global $link;
+    $q_new_food = mysqli_query($link, "SELECT * from ".FOOD. " WHERE food_name ='" .$food_name. "';") or(die(mysqli_error($link)));
+    
+     if(mysqli_num_rows($q_new_food) == 0)
+        {
+            if( $q_food_insert = mysqli_query($link,"INSERT INTO ".FOOD. " (food_name, food_description,food_picture,community_id) VALUES ('".$food_name. "','" .$food_description. "','".$picture_loc. "',1);"))
+            {
+                $food_id = mysqli_insert_id($link);               
+                
+            } 
+        } else
+        { 
+            $food_id = mysqli_fetch_row($q_new_food);
+            
+        }
+        
+          $add_selected_food = add_selected_food($food_id,$chef_id);
+            if($add_selected_food)
+            {
+                echo "success";
+                //return true;
+            } 
+            else
+            {
+                 echo "failure2";
+               // return false;
+            }
+            return $food_id;
+}
+
+/* get the list of 
 
 /* Function to retrieve info for a specific chef */
 function get_chef_info($chef_id) {
@@ -227,11 +343,36 @@ function get_chef_info($chef_id) {
 	echo "<br>"; */
 	
 	// execute the query
-	if($query = mysqli_query($link,$q)) {
-		$results = mysqli_fetch_assoc($query);
+	if($food_query = mysqli_query($link,$q)) {
+		while ($row = mysqli_fetch_assoc($food_query)) {
+			$results[] =$row;
+		}
 	}
 	
 	return $results;
+}
+
+function add_selected_food($food_id,$chef_id)
+{
+    global $link;
+    
+    $q_food = "SELECT * from ".FOOD_CHEF_DETAILS. " WHERE food_id= ".$food_id. " AND chef_id = ".$chef_id;
+    echo $q_food;
+    $food_query = mysqli_query($link,$q_food) or die(mysqli_error($link));
+        
+        if(mysqli_num_rows($food_query) == 0)
+        {
+            $q_food_insert = mysqli_query($link,"INSERT INTO ".FOOD_CHEF_DETAILS. " (food_id,chef_id) VALUES (".$food_id. "," .$chef_id. ");") or die(mysqli_query($link));
+            
+            echo "success";
+            return true;
+        } else
+        {
+            echo "failure";
+            return false;
+        }
+    
+    
 }
 
 /* Function to retrieve all chefs that cook a certain type of food */
@@ -950,17 +1091,22 @@ function store_image($file_handler) {
 			echo "Type: " . $file_handler["type"] . "<br>";
 			echo "Size: " . ($file_handler["size"] / 1024) . " kB<br>";
 			echo "Temp file: " . $file_handler["tmp_name"] . "<br>"; */
-
-			if (file_exists("pictures/" . $file_handler["name"])) {
-				echo $file_handler["name"] . " already exists. ";
-				// return false;
+                           
+                      $img_name = str_replace(" ", "", $file_handler["name"]); //remove spaces from the filename
+			if (file_exists("pictures/" . $img_name)) {
+				$date = new DateTime();
+                                $x = $date->getTimestamp();
+                                $img_name = $x.$img_name;
+                                $new_file_location ="pictures/" .$img_name;
+                                move_uploaded_file($file_handler["tmp_name"], $new_file_location);
 			}
 			else {
-				$new_file_location = "pictures/" . $file_handler["name"];
+				$new_file_location = "pictures/" . $img_name;
 				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
 				// echo "Stored in: " . $new_file_location;
-				return $new_file_location;
+				
 			}
+                        return $new_file_location;
 		}
 	}
 	else {
@@ -1104,6 +1250,49 @@ function get_attendance_count_list($event_id)
              return $event_attendance_count;
          }
     } else return NULL;
+}
+
+//functions to get saved chef, contacts, events
+
+
+ function get_saved_events($user_id)
+ {
+     global $link;
+     global $salt;
+     $results = array();
+     $q = "SELECT t1.event_date, t1.event_desc, t1.event_id, t1.event_name, t5.first_name, AES_DECRYPT(t5.email, '$salt') as email, t5.phone, t5.last_name, t3.venue_address, t3.venue_name, t4.city, t4.zipcode, t4.state
+                    FROM event AS t1
+                    right JOIN event_type AS t2 ON t1.e_type_id = t2.e_type_id
+                    right JOIN venue AS t3 ON t1.venue_id = t3.venue_id
+                    right JOIN location AS t4 ON t3.e_loc_id = t4.e_loc_id
+                    right JOIN user AS t5 ON t1.user_id = t5.user_id
+                    left JOIN user_saved_info AS t6 on t1.event_id = t6.event_id
+                                        WHERE t1.event_status =1
+                    AND t6.user_id = 6;";
+     
+     $q_saved_events = mysqli_query($link,$q) or die(mysqli_error($link));
+     if(mysqli_num_rows($q_saved_events) !=0)
+     {
+         while($r = mysqli_fetch_array($q_saved_events))
+         {
+             $results[]=$r;
+         }
+     } else
+     {
+         $results=NULL;
+     }
+     return $results;
+ }
+ 
+ 
+ 
+function get_saved_chef($user_id)
+{
+    
+}
+function get_saved_contacts($user_id)
+{
+    
 }
 
 ?>
