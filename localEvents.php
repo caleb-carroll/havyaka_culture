@@ -5,6 +5,7 @@
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="LocalEvents" content="index, follow" />
         <link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
         <script src="includes/js/jquery-1.10.2.js"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
@@ -223,6 +224,7 @@ function initialize(event_id,zipcode) {
        // $firstname = $_SESSION['firstname'];
         // front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
         $results = retrieve_future_event($user_id);  
+
         
                 
       ?>       

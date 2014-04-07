@@ -6,8 +6,8 @@
 	function doesCSS(p){
 		var s = ( document.body || document.documentElement).style;
 		return !!$.grep(['','-moz-', '-webkit-'],function(v){
-			return  typeof s[v+p] === 'string'
-		}).length
+			return  typeof s[v+p] === 'string';
+		}).length;
 	}
 
 	$('html')
@@ -62,28 +62,28 @@
 			<?php include('includes/left_column.inc.php'); ?>
 			<!-- Left Column end -->
 		</div>
+		<div class="col2">
+			<div>
+				<?php $food_info = get_food_info($food_id); ?>
+				<h1>Chefs that serve <?php echo $food_info['food_name']; ?></h1>
+				<img src="<?php echo BASE . $food_info['food_picture']; ?>" style="width:30%">
+			</div>
+			
+			<?php
+			// This section gets all chefs for the appropriate food types, then prints them into a card
+			// functions below are defined in sql_constants
+			$chefs_list = get_chefs_by_food($food_id);
+			
+			// prints a card for each chef associated with a food type
+			foreach ($chefs_list as $chef) {
+				
+				// gets the chef info and loads it into an array
+				$chef_info_array = get_chef_info($chef['chef_id']);
+				
+				// uses the chef info array to print cards
+				print_chef_card($chef_info_array);
+			}
+			?>
+		</div>
 	</div>
-	
-	<div>
-		<?php $food_info = get_food_info($food_id); ?>
-		<h1>Chefs that serve <?php echo $food_info['food_name']; ?></h1>
-		<img src="<?php echo BASE . $food_info['food_picture']; ?>" style="width:30%">
-	</div>
-	
-	<?php
-	// This section gets all chefs for the appropriate food types, then prints them into a card
-	// functions below are defined in sql_constants
-	$chefs_list = get_chefs_by_food($food_id);
-	
-	// prints a card for each chef associated with a food type
-	foreach ($chefs_list as $chef) {
-		
-		// gets the chef info and loads it into an array
-		$chef_info_array = get_chef_info($chef['chef_id']);
-		
-		// uses the chef info array to print cards
-		print_chef_card($chef_info_array);
-	}
-	?>
-	
 </div>
