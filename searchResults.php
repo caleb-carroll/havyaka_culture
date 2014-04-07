@@ -19,7 +19,7 @@
 			console.log("clicked");
 			$(this).parent().closest('.flipper').toggleClass('flipped');
 		});
-	})
+	});
 </script>
 
 <head>

@@ -12,6 +12,9 @@
         <script type="text/javascript" src="includes/js/jquery.flip.min.js"></script>
         <script type="text/javascript" src="includes/js/scripts.js"></script>
         <script type=text/javascript src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'></script>
+        
+	<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
+	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css"/>
     <meta charset="utf-8">
     
   <?php
@@ -35,7 +38,7 @@ function doesCSS(p){
 	}
 
 	$('html')
-		.toggleClass('transform',doesCSS('transform'))
+		.toggleClass('transform',doesCSS('transform'));
 		.toggleClass('no-transform',!doesCSS('transform'));
 
 	$(function(){
@@ -190,7 +193,6 @@ function initialize(event_id,zipcode) {
                        elseif($_GET['cmd'] == 'save') 
                        {
                             $event_id = $_POST['event_id'];
-                            echo "hello";
                            if($stmt = mysqli_prepare($link, "SELECT * FROM ".USER_SAVED_INFO. " WHERE user_id = ".$_SESSION['user_id']." AND event_id= " .$event_id) or die(mysqli_error($link)))
                            {
                                 //execute the query
@@ -209,9 +211,9 @@ function initialize(event_id,zipcode) {
 
                                      mysqli_stmt_close($stmt);
 
-                                 } 
+                            } 
                                  exit();  
-                        }
+                      }
             }
             
         }
