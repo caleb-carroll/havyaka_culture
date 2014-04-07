@@ -11,6 +11,30 @@
 </head>
 
 <body>
+    <?php
+     
+     if(isset($_POST))
+     {
+         if(isset($_POST['send_message']))
+         {
+             $user_name = filter($_POST['user_name']);
+             $user_phone = filter($_POST['phone']);
+             $email = check_email($_POST['email']);
+             $message = filter($_POST['message']);
+             
+             if(($_POST['email']<>''))
+             {
+                 $toemail = GLOBAL_EMAIL;
+                 $email_subject = 'Email from website contact form';
+                 $
+             }
+             
+             
+         }
+     }
+    
+    
+    ?>
 
     
         <div id="header">
@@ -40,36 +64,31 @@
             <div class="dashboard_sub_section">  
                 <?php include('includes/subnavigation.inc.php'); ?>
              </div>
-                        <form class = "contact_form" action="#" method = "post" name = "contact_form">
+                        <form class = "contact_form" action="<?php echo basename($_SERVER['PHP_SELF']);?>" method = "post" name = "contact_form">
                           <ul>
                                 <h2>Contact Us:</h2>
 
                              <li>
                                 <label>Name:</label>
-                                <input type="text" placeholder="Enter your name" required="required" />
+                                <input type="text" placeholder="Enter your name" name='user_name' required="required" />
                              </li>
 
                              <li>
                                 <label>Phone:</label>
-                                <input type="number" placeholder = "123-345-1234"  />
+                                <input type="number" name='phone' placeholder = "123-345-1234"  />
                              </li>
 
                              <li>
                                 <label>Email:</label>
-                                <input type="email" placeholder="abc@abc.com"  />
+                                <input type="email" name='email' placeholder="abc@abc.com" required="required" />
                              </li>
 
                              <li>
                                  <label>Message:</label>
                                  <textarea name="message" cols="30" rows="10"></textarea>
                              </li>
-
                              <li>
-                              <input class="radio" type="radio" checked="checked" name = "Contact_freequency" value = "First_time" />I am contacting you for the first time</br>
-                              <input class ="radio" type="radio" name = "Contact_freequency" value= "often" />I have contacted you before
-                             </li>
-                             <li>
-                                 <button class = "submit" type = "submit">Send the message</button>
+                                 <button class = "submit" name="send_message" type = "submit">Send the message</button>
                              </li>
                           </ul>
                      </form>

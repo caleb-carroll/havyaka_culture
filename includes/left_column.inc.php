@@ -36,10 +36,10 @@ if($food_query = mysqli_query($link, $q)) {
 		</div>
 	</div>
 	
-	<div class="ad_search_heading">
+	<!--<div class="ad_search_heading">
 		<center>Advanced Search</center>
 		<div class="search_option">
 			<p>search options</p>
 		</div>
-	</div>
+	</div> -->
 </div>

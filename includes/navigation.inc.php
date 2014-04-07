@@ -2,8 +2,8 @@
 
 //if(isset($_SESSION['user_id'])) // if the user is logged in and display related navigation tabs, else display the default tabs.
 //{
-    $names = array("Home","LocalEvents","LocalChefs","LocalContacts","MyDashboard","Logout");
-    $links = array("home.php","localEvents.php","localChefs.php","localContacts.php","userProfile.php","logout.php");
+    $names = array("Home","LocalEvents","LocalChefs","MyDashboard","Logout");
+    $links = array("home.php","localEvents.php","localChefs.php","userProfile.php","logout.php");
 
 //} else 
 //{

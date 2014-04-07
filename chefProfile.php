@@ -363,33 +363,33 @@ if($_POST and $_GET){
         }
  }
     
-    $user_info = get_user_info($user_id);
-    $profile_pic = $user_info[0]['profile_picture'];
-    $profile_pic_loc = htmlspecialchars($profile_pic);
-     $profile_pic_loc = BASE.$profile_pic_loc;
-   list($width, $height, $type, $attr)= getimagesize($profile_pic_loc);
+            $user_info = get_user_info($user_id);
+            $profile_pic = $user_info[0]['profile_picture'];
+            $profile_pic_loc = htmlspecialchars($profile_pic);
+            $profile_pic_loc = BASE.$profile_pic_loc;
+            list($width, $height, $type, $attr)= getimagesize($profile_pic_loc);
 
-//Get the chef details of the logged in user if exists
-  $chef_info = get_chef_details_logged_in_user($user_id);
-    $chef_info_filter = array_filter($chef_info);
+            //Get the chef details of the logged in user if exists
+            $chef_info = get_chef_details_logged_in_user($user_id);
+            $chef_info_filter = array_filter($chef_info);
 
-       if(!empty($chef_info_filter)) {
+            if(!empty($chef_info_filter)) {
        
-            $chef_id =$chef_info[0]['chef_id'];
-           // echo "chef id is: " .$chef_id;
-            $about_chef = $chef_info[0]['about_chef'];
-            $contact_time_preference = $chef_info[0]['contact_time_preference'];
-            $pickup_available = $chef_info[0]['pickup_available'];
+                $chef_id =$chef_info[0]['chef_id'];
+               // echo "chef id is: " .$chef_id;
+                $about_chef = $chef_info[0]['about_chef'];
+                $contact_time_preference = $chef_info[0]['contact_time_preference'];
+                $pickup_available = $chef_info[0]['pickup_available'];
 
-            //Get the foods that the chef is preparing.
-            if($chef_id !=NULL){
-            $food_chef = get_foods_of_chef($chef_id);
+                //Get the foods that the chef is preparing.
+                if($chef_id !=NULL){
+                $food_chef = get_foods_of_chef($chef_id);
+                }
             }
-       }
 
-//get the event types
-$event_types = get_event_types();
-$food_names = get_all_food_names();
+                //get the event types
+                $event_types = get_event_types();
+                $food_names = get_all_food_names();
 
 ?>
 
@@ -488,8 +488,8 @@ $food_names = get_all_food_names();
                                            
                                      <h3> Add a colorful picture to your food!</h3>
                                           <input type="file" name="file" id="food_pic"><br>
-                                                  <input type="submit" name="submit" value="Update"> &nbsp;<button name="cancel_food" id="cancel_food">Cancel</button>
-                                </form>
+                                          <input type="submit" name="submit" value="Update"> &nbsp;<button name="cancel_food" id="cancel_food">Cancel</button>
+                                  </form>
                                 
                                </div>
                                 <br>
