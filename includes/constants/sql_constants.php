@@ -1,4 +1,3 @@
-
 <?php
 /* This file contains variables defining the database for the Havyaka culture site and functions to manipulate the database. */
 ini_set('display_errors', 'On');
@@ -176,11 +175,12 @@ function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcod
 	if($password != $confirm_pass) {
 		$error[] = "Password and confirm password do not match!";
 	}
-        if(strlen($zipcode)<5)
-        {
-            $error[] = "Please enter the right zipcode";
-        }
-        return $error;
+	
+	if(strlen($zipcode)<5)
+	{
+		$error[] = "Please enter the right zipcode";
+	}
+	return $error;
 }
 
 /* ---------- functions related to local chef----------------------*/
@@ -204,11 +204,12 @@ function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcod
 	// execute the query
 	if($event_query = mysqli_query($link,$q)) {
 		$results[] = mysqli_fetch_assoc($event_query);
-                return $results;
-               
+		mysqli_free_result($event_query);
+		return $results;
+	
 	} else {
-           // $results = NULL;
-        }
+	   // $results = NULL;
+	}
 	
 	//return $results;
 }
@@ -244,12 +245,12 @@ function get_all_food_names()
 	$results = array();
 	$q = mysqli_query($link,"SELECT * FROM ".FOOD.";") or die(mysqli_error($link));
 
-	while ($q_food = mysqli_fetch_assoc($q))
-	{
+	while ($q_food = mysqli_fetch_assoc($q)) {
 		$results[] = $q_food;
 	}
 	
-	mysqli_close($link);
+	
+	mysqli_free_result($q);
 	return $results;
 }
 //get the foods that the chef is preparing
@@ -266,14 +267,14 @@ function get_foods_of_chef($chef_id) {
 		$query = mysqli_query($link,$q) or die (mysqli_query($link));
 			if(mysqli_num_rows($query) !=0) {
 				while ($row = mysqli_fetch_assoc($query)) {
-							$results[] =$row;
+					$results[] =$row;
 				}
 			}
 			else {
 				$results = NULL;
 			}
 	
-	mysqli_close($link);
+	mysqli_free_result($query);
 	return $results;
 }
 
@@ -299,11 +300,11 @@ function update_foods_of_chef($chef_id=NULL,$food_id,$food_description=NULL,$foo
 		$q .= " WHERE food_id = $food_id";
 		
 		if(mysqli_query($link,$q)) {
-			mysqli_close($link);
+			
 			return true;
 		}
 		else {
-			mysqli_close($link);
+			
 			return false;
 		}
 	}
@@ -311,16 +312,16 @@ function update_foods_of_chef($chef_id=NULL,$food_id,$food_description=NULL,$foo
 		$q1 = "UPDATE ".FOOD_CHEF_DETAILS. " SET food_price=" .$food_price. " WHERE food_id = ".$food_id. " AND chef_id =".$chef_id;
 
 		if(mysqli_query($link,$q1)) {
-			mysqli_close($link);
+			
 			return true;
 		}
 		else {
-			mysqli_close($link);
+			
 			return false;
 		}
 	}
 	
-	mysqli_close($link);
+	
 }
 
 // add a new food to food table
@@ -347,7 +348,7 @@ function add_new_food($chef_id,$food_name,$food_description,$picture_loc) {
 		// return false;
 	}
 	
-	mysqli_close($link);
+	
 	return $food_id;
 }
 
@@ -374,7 +375,6 @@ function get_chef_info($chef_id) {
 		$results = mysqli_fetch_assoc($query);
 	}
 	
-	mysqli_close($link);
 	return $results;
 }
 
@@ -389,11 +389,11 @@ function add_selected_food($food_id,$chef_id)
 	if(mysqli_num_rows($food_query) == 0) {
 		$q_food_insert = mysqli_query($link,"INSERT INTO ".FOOD_CHEF_DETAILS. " (food_id,chef_id) VALUES (".$food_id. "," .$chef_id. ");") or die(mysqli_query($link));
 		
-		mysqli_close($link);
+		
 		return true;
 	} 
 	else {
-		mysqli_close($link);
+		
 		return false;
 	}
 }
@@ -422,7 +422,7 @@ function get_chefs_by_food($food_type_id) {
 		}
 	}
 	
-	mysqli_close($link);
+	mysqli_free_result($food_query);
 	return $results;
 }
 
@@ -579,7 +579,7 @@ function get_localchef_details($user_id) {
 		}
 	}
 	
-	mysqli_close($link);
+	mysqli_free_result($chef_query);
 	return $results;
 }
 
@@ -605,7 +605,7 @@ function get_user_info($user_id) {
 		$results[] = mysqli_fetch_assoc($event_query);
 	}
 	
-	mysqli_close($link);
+	mysqli_free_result($event_query);
 	return $results;
 }
 
@@ -701,7 +701,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 		}
 	}
 	
-	mysqli_close($link);
+	mysqli_free_result($query);
 	return $err;
 }
 
@@ -757,12 +757,12 @@ function update_user_info($user_id, $first_name, $last_name, $email, $phone, $pr
 	// echo "<br>";
 	
 	if (mysqli_query($link,$q)){
-		mysqli_close($link);
+		
 		return true;
 		// echo "User updated successfully";
 	}
 	else {
-		mysqli_close($link);
+		
 		return false;
 		// echo "User update failed";
 	}
@@ -807,7 +807,7 @@ function secure_page() {
 		//Make sure values match!
 		if($_SESSION['HTTP_USER_AGENT'] != md5($_SERVER['HTTP_USER_AGENT']) or $_SESSION['logged'] != true) {
 			logout();
-			mysqli_close($link);
+			
 			exit;
 		}
 		//We can only check the DB IF the session has specified a user id
@@ -818,7 +818,7 @@ function secure_page() {
 			//We know that we've declared the variables below, so if they aren't set, or don't match the DB values, force exit
 			if(!isset($_SESSION['stamp']) && $_SESSION['stamp'] != $ctime || !isset($_SESSION['key']) && $_SESSION['key'] != $ckey) {
 				logout();
-				mysqli_close($link);
+				
 				exit;
 			}
 		}
@@ -826,7 +826,7 @@ function secure_page() {
 	//if we get to this, then the $_SESSION['HTTP_USER_AGENT'] was not set and the user cannot be validated
 	else {
 		logout();
-		mysqli_close($link);
+		
 		exit;
 	}
 }
@@ -869,12 +869,12 @@ function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_
 	echo $q;
 	if (mysqli_query($link,$q)){
 		echo "Event added successfully";
-		mysqli_close($link);
+		
 		return true;
 	}
 	else {
 		echo "Event failed to add";
-		mysqli_close($link);
+		
 		return false;
 	}
 	
@@ -906,12 +906,12 @@ function update_event($event_name, $event_date, $event_desc, $event_scope, $e_ty
 	// echo "<br>";
 	
 	if (mysqli_query($link,$q)){
-		mysqli_close($link);
+		
 		return true;
 		// echo "Event updated successfully";
 	}
 	else {
-		mysqli_close($link);
+		
 		return false;
 		// echo "Event update failed";
 	}
@@ -927,7 +927,7 @@ function get_event_types() {
 		$row[]=$q_event;
 	}
 	
-	mysqli_close($link);
+	
 	return $row;
 }
 
@@ -940,11 +940,11 @@ function delete_event($event_id) {
 	// echo $q; 
 	
 	if (mysqli_query($link,$q)){
-		mysqli_close($link);
+		
 		return true;
 	}
 	else {
-		mysqli_close($link);
+		
 		return false;
 	}
 }
@@ -992,7 +992,7 @@ function retrieve_future_event($user_id) {
 		}
 	}
 	
-	mysqli_close($link);
+	mysqli_free_result($event_query);
 	return $results;
 }
 
@@ -1035,7 +1035,7 @@ function get_events($user_id = NULL, $visibility = NULL) {
 		}
 	}
 	
-	mysqli_close($link);
+	mysqli_free_result($event_query);
 	return $results;
 }
 
@@ -1048,7 +1048,7 @@ function get_loggedin_user_location($user_id) {
 	$row = mysqli_fetch_assoc($query);
 	$location_id = $row['e_loc_id'];
 	
-	mysqli_close($link);
+	mysqli_free_result($query);
 	return $location_id;
 }
 
@@ -1082,7 +1082,7 @@ function save_info($info_type, $user_id, $info_id) {
 		echo $info_type . " failed to add";
 	}
 	
-	mysqli_close($link);
+	
 }
 
 /* Function to store images in the database */
@@ -1129,7 +1129,7 @@ function store_image($file_handler) {
 				// echo "Stored in: " . $new_file_location;
 			}
 			
-			mysqli_close($link);
+			
 			return $new_file_location;
 		}
 	}
@@ -1138,7 +1138,7 @@ function store_image($file_handler) {
 		// return false;
 	}
 	
-	mysqli_close($link);
+	
 }
 
 function get_foods_by_chef($chef_id) {
@@ -1168,7 +1168,7 @@ function get_foods_by_chef($chef_id) {
 		}
 	}
 	
-	mysqli_close($link);
+	mysqli_free_result($query);
 	return $results;
 }
 
@@ -1193,7 +1193,7 @@ function get_food_info($food_id){
 		$results = mysqli_fetch_assoc($query);
 	}
 	
-	mysqli_close($link);
+	
 	return $results;
 }
 
@@ -1214,7 +1214,7 @@ function insert_zipcode_location ($zipcode) {
 		}
 	}
 	
-	mysqli_close($link);
+	mysqli_free_result($loc_query);
 	return $e_loc_id;
 }
 
@@ -1236,12 +1236,12 @@ function update_event_picture($image_location,$event_id) {
 		}
 		
 		if (mysqli_query($link,$q)){
-			mysqli_close($link);
+			
 			return true;
 			// echo "User updated successfully";
 		}
 		else {
-			mysqli_close($link);
+			
 			return false;
 			// echo "User update failed";
 		}
@@ -1268,19 +1268,19 @@ function get_attendance_count_list($event_id) {
 	if ($q_att = mysqli_query($link,"SELECT count(event_attendance_id) as e_count FROM `event_attendance` where event_id = ".$event_id)) {
 		// if picture is not inserted, insert one.
 		if(mysqli_num_rows($q_att) == 0) {
-			mysqli_close($link);
+			mysqli_free_result($q_att);
 			return NULL;
 		}
 		else {
 			 $row = mysqli_fetch_assoc($q_att);
 			 $event_attendance_count = $row['e_count'];
 			 
-			 mysqli_close($link);
+			 mysqli_free_result($q_att);
 			 return $event_attendance_count;
 		}
 	} 
 	else {
-		mysqli_close($link);
+		
 		return NULL;
 	}
 }
@@ -1310,7 +1310,7 @@ function get_saved_events($user_id) {
 		$results=NULL;
 	}
 	
-	mysqli_close($link);
+	
 	return $results;
 }
 

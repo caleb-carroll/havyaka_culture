@@ -4,28 +4,25 @@
 	<title>Community Resource</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="LocalEvents" content="index, follow" />
-        <link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
-		<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
-        <script src="includes/js/jquery-1.10.2.js"></script>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="includes/js/jquery.flip.min.js"></script>
-        <script type="text/javascript" src="includes/js/scripts.js"></script>
-        <script type=text/javascript src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'></script>
-        
+	<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
+	<script src="includes/js/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="includes/js/jquery.flip.min.js"></script>
+	<script type="text/javascript" src="includes/js/scripts.js"></script>
+	<script type=text/javascript src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'></script>
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css"/>
-    <meta charset="utf-8">
-    
-  <?php
-                       
+	<meta charset="utf-8">
 
-        require_once 'includes/constants/sql_constants.php';
-        secure_page();  
-        return_meta("Local Events!");
-        $msg = NULL;
-        $user_id =  $_SESSION['user_id'];
-  ?>
+<?php
+	require_once 'includes/constants/sql_constants.php';
+	secure_page();  
+	return_meta("Local Events!");
+	$msg = NULL;
+	$user_id =  $_SESSION['user_id'];
+?>
 <script>
 
  //setTimeout('initialize()',2000);
@@ -38,7 +35,7 @@ function doesCSS(p){
 	}
 
 	$('html')
-		.toggleClass('transform',doesCSS('transform'));
+		.toggleClass('transform',doesCSS('transform'))
 		.toggleClass('no-transform',!doesCSS('transform'));
 
 	$(function(){
@@ -219,18 +216,15 @@ function initialize(event_id,zipcode) {
         }
     ?>
         
-        <div id ="header">
-            <h1>Community Connect</h1>
-        <?php      include('includes/navigation.inc.php');  
-        
-       // $firstname = $_SESSION['firstname'];
-        // front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
-        $results = retrieve_future_event($user_id);  
+	<div id ="header">
+	<h1>Community Connect</h1>
+	<?php      include('includes/navigation.inc.php');  
 
-        
-                
-      ?>       
-     </div>   
+	// $firstname = $_SESSION['firstname'];
+	// front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
+	$results = retrieve_future_event($user_id);  
+	?>
+	</div>
   <div class="content leftmenu">      
         
      <div class="colright">
@@ -369,8 +363,9 @@ function initialize(event_id,zipcode) {
 
 </div>
 
-<?php include('includes/footer.inc.php'); ?>
-
+	<div id="footer">
+	<?php include('includes/footer.inc.php'); ?>
+	</div>
 </body>
 </html>
     
