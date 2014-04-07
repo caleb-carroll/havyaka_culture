@@ -1,4 +1,3 @@
-
 <?php
 /* This file contains variables defining the database for the Havyaka culture site and functions to manipulate the database. */
 ini_set('display_errors', 'On');
@@ -176,11 +175,12 @@ function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcod
 	if($password != $confirm_pass) {
 		$error[] = "Password and confirm password do not match!";
 	}
-        if(strlen($zipcode)<5)
-        {
-            $error[] = "Please enter the right zipcode";
-        }
-        return $error;
+	
+	if(strlen($zipcode)<5)
+	{
+		$error[] = "Please enter the right zipcode";
+	}
+	return $error;
 }
 
 /* ---------- functions related to local chef----------------------*/
@@ -204,11 +204,12 @@ function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcod
 	// execute the query
 	if($event_query = mysqli_query($link,$q)) {
 		$results[] = mysqli_fetch_assoc($event_query);
-                return $results;
-               
+		mysqli_free_result($event_query);
+		return $results;
+	
 	} else {
-           // $results = NULL;
-        }
+	   // $results = NULL;
+	}
 	
 	//return $results;
 }
@@ -244,12 +245,15 @@ function get_all_food_names()
 	$results = array();
 	$q = mysqli_query($link,"SELECT * FROM ".FOOD.";") or die(mysqli_error($link));
 
-	while ($q_food = mysqli_fetch_assoc($q))
-	{
+	while ($q_food = mysqli_fetch_assoc($q)) {
 		$results[] = $q_food;
 	}
 	
 	
+
+
+	mysqli_free_result($q);
+
 	return $results;
 }
 //get the foods that the chef is preparing
@@ -266,14 +270,18 @@ function get_foods_of_chef($chef_id) {
 		$query = mysqli_query($link,$q) or die (mysqli_query($link));
 			if(mysqli_num_rows($query) !=0) {
 				while ($row = mysqli_fetch_assoc($query)) {
-							$results[] =$row;
+					$results[] =$row;
 				}
 			}
 			else {
 				$results = NULL;
 			}
 	
+
 	
+
+	mysqli_free_result($query);
+
 	return $results;
 }
 
@@ -374,7 +382,10 @@ function get_chef_info($chef_id) {
 		$results = mysqli_fetch_assoc($query);
 	}
 	
+
 	
+
+
 	return $results;
 }
 
@@ -422,7 +433,11 @@ function get_chefs_by_food($food_type_id) {
 		}
 	}
 	
+
 	
+
+	mysqli_free_result($food_query);
+
 	return $results;
 }
 
@@ -579,7 +594,11 @@ function get_localchef_details($user_id) {
 		}
 	}
 	
+
 	
+
+	mysqli_free_result($chef_query);
+
 	return $results;
 }
 
@@ -605,7 +624,11 @@ function get_user_info($user_id) {
 		$results[] = mysqli_fetch_assoc($event_query);
 	}
 	
+
 	
+
+	mysqli_free_result($event_query);
+
 	return $results;
 }
 
@@ -701,7 +724,11 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 		}
 	}
 	
+
 	
+
+	mysqli_free_result($query);
+
 	return $err;
 }
 
@@ -992,7 +1019,11 @@ function retrieve_future_event($user_id) {
 		}
 	}
 	
+
 	
+
+	mysqli_free_result($event_query);
+
 	return $results;
 }
 
@@ -1035,7 +1066,11 @@ function get_events($user_id = NULL, $visibility = NULL) {
 		}
 	}
 	
+
 	
+
+	mysqli_free_result($event_query);
+
 	return $results;
 }
 
@@ -1048,7 +1083,11 @@ function get_loggedin_user_location($user_id) {
 	$row = mysqli_fetch_assoc($query);
 	$location_id = $row['e_loc_id'];
 	
+
 	
+
+	mysqli_free_result($query);
+
 	return $location_id;
 }
 
@@ -1168,7 +1207,11 @@ function get_foods_by_chef($chef_id) {
 		}
 	}
 	
+
 	
+
+	mysqli_free_result($query);
+
 	return $results;
 }
 
@@ -1214,7 +1257,11 @@ function insert_zipcode_location ($zipcode) {
 		}
 	}
 	
+
 	
+
+	mysqli_free_result($loc_query);
+
 	return $e_loc_id;
 }
 
@@ -1268,14 +1315,22 @@ function get_attendance_count_list($event_id) {
 	if ($q_att = mysqli_query($link,"SELECT count(event_attendance_id) as e_count FROM `event_attendance` where event_id = ".$event_id)) {
 		// if picture is not inserted, insert one.
 		if(mysqli_num_rows($q_att) == 0) {
+
 			
+
+			mysqli_free_result($q_att);
+
 			return NULL;
 		}
 		else {
 			 $row = mysqli_fetch_assoc($q_att);
 			 $event_attendance_count = $row['e_count'];
 			 
+
 			 
+
+			 mysqli_free_result($q_att);
+
 			 return $event_attendance_count;
 		}
 	} 
