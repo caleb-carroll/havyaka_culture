@@ -21,58 +21,12 @@
 
 
 $(function(){
-             $("#create_event_div").hide();
-             $("#saved_event_div").hide();
-             $("#saved_chef_div").hide();
-             $("#close_card_event_chef").hide();
-             $("#change_food_pic_form").hide();
-             
-              $( ".datepicker" ).datepicker({dateFormat: "yy-mm-dd" });
-              
+            
 		$('.flip').click(function(){
 			console.log("clicked");
 			$(this).parent().closest('.flipper').toggleClass('flipped');
 		});
-                
-                $("#create_event_button").click(function() {
-                    $("#create_event_div").show();
-                    $("#create_event_button").hide(); 
-                    return false;
-                });
-                
-                $("#cancel_event").click(function() {
-                     $(this).closest('form').find("input[type=text], textarea").val("");
-                    $("#create_event_div").hide();
-                    $("#create_event_button").show(); 
-                    return false;
-                });
-                
-                $("#saved_event_button").click(function() {
-                    $("#saved_event_div").show();
-                    $("#close_card_event_chef").show();
-                    
-                });
-                 $("#saved_chef_button").click(function() {
-                    $("#saved_chef_div").show();
-                    $("#close_card_event_chef").show();
-                   
-                });
-                $("#close_card_event_chef").click(function() {
-                    $("#saved_event_div").hide();
-                 $("#saved_chef_div").hide();
-                 $("#close_card_event_chef").hide(); 
-                  $("#user_profile_div").hide();
-                });
-                
-                $("#change_food_pic").click(function() {
-                    $("#change_food_pic_form").show();
-                     $("#change_food_pic").hide();                    
-                });
-                $("#user_profile_button").click(function() {
-                    $("#user_profile_div").show();
-                    $("#close_card_event_chef").show(); 
-                });
-                
+                                
                 $("#request_new_food_link").click(function() {
                    $("#request_new_food_div").show(); 
                 });

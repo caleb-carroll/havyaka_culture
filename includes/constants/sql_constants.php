@@ -57,6 +57,7 @@ global $passsalt;
 $password_store_key = sha1("dsf4dgfd5s2");
 global $password_store_key;
 
+include_once 'includes/swift/lib/swift_required.php';
 
 /*Function to super sanitize anything going near our DBs*/
 function filter($data) {
@@ -679,7 +680,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 			mysqli_query($link, "UPDATE ".USERS." SET md5_id='$md5_id' WHERE id='$user_id'");
 			
 			if(REQUIRE_ACTIVIATION != 1) {
-				echo "activation " .REQUIRE_ACTIVIATION;
+				//echo "activation " .REQUIRE_ACTIVIATION;
 				
 				//Build a message to email for confirmation
 				$message = "<p>Hi ".$firstname."!</p>
@@ -692,7 +693,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 					<p>You must activate your account before you can actually do anything:<br />
 					".BASE."/users/activate.php?user=".$md5_id."&activ_code=".$activation_code."</p>
 
-					<p>Thank You<br />
+					<p>Thank You<br/>
 
 					Administrator<br />
 					".BASE."</p>";
@@ -703,7 +704,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 				$rs_activ = mysqli_query($link, "UPDATE ".USERS." SET approved='0' WHERE
 				md5_id='". $md5_id. "' AND activation_code = '" . $activation_code ."' ") or die(mysql_error());
 
-				$result = send_message($firstname,$username,$email,$activation_code,$msg,$message);
+				$result = send_message($email,$msg,$message);
 				if($result) {
 					echo "message sent";
 				}
@@ -796,18 +797,18 @@ function update_user_info($user_id, $first_name, $last_name, $email, $phone, $pr
 }
 
 /* Function to send an email message to a user */
-function send_message($firstname, $username, $email, $activation_code,$msg_subject, $message) {
+function send_message($email_to,$msg_subject, $message) {
 	global $password_store_key;
 
 	$key = $password_store_key;
 
-	$result = mysql_query("SELECT AES_DECRYPT(p_pass,'$key') AS password FROM pstore_nivi WHERE p_email=AES_ENCRYPT('".GLOBAL_EMAIL."',connectcommunity1, '$key')") or die(mysql_error());
-	$row = mysql_fetch_assoc($result);
+	//$result = mysql_query("SELECT AES_DECRYPT(p_pass,'$key') AS password FROM pstore_nivi WHERE p_email=AES_ENCRYPT('".GLOBAL_EMAIL."',connectcommunity1, '$key')") or die(mysql_error());
+	//$row = mysql_fetch_assoc($result);
 
-	$pw = $row['password'];
-
+	//$pw = $row['password'];
+        $pw = 'connectcommunity1';
 	//instead, we use swift's email function
-	$email_to = $email; $email_from=GLOBAL_EMAIL;$password = $pw; $subj = $msg_subject;
+	$email_to = $email_to; $email_from=GLOBAL_EMAIL;$password = $pw; $subj = $msg_subject;
 	$transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, "ssl")
 	->setUsername($email_from)
 	->setPassword($password);
@@ -815,7 +816,7 @@ function send_message($firstname, $username, $email, $activation_code,$msg_subje
 	$mailer = Swift_Mailer::newInstance($transport);
 
 	$message = Swift_Message::newInstance($subj)
-	->setFrom(array($email_from => 'Nivedita'))
+	->setFrom(array($email_from => 'Admin'))
 	->setTo(array($email_to))
 	->setBody($message);
 

@@ -110,7 +110,7 @@ $saved_chef = get_saved_chef($user_id);
 ?>
 
 <head>
-	<title>Community Connect</title>
+	<title>Saved Information</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="robots" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/profile_styles.css"/>
@@ -152,7 +152,7 @@ $saved_chef = get_saved_chef($user_id);
     <?php
                 if(!empty($saved_events))
                 { ?>
-                    <div class="card" id='saved_event_div'>
+                     <div class="card" id='saved_event_div' style="width: 40%; height: 60%; overflow-y: scroll;">
                        
                         <div class="front">
                              <h2>&nbsp;&nbsp;Your saved event details:</h2>
