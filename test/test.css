@@ -1,446 +1,136 @@
-body {
-	margin:0;
-	padding:0;
-	border:0;			/* This removes the border around the viewport in old versions of IE */
-	width:100%;
-	background:#B8CFE6;
-	min-width:600px;    	/* Minimum width of layout - remove line if not required */
-					/* The min-width property does not work in old versions of Internet Explorer */
-	font-size:90%;
-}
-a {
-	color:#369;
-}
-a:hover {
-	color:#fff;
-	background:#369;
-	text-decoration:none;
-}
-h1, h2, h3 {
-	margin:.8em 0 .2em 0;
-	padding:0;
-}
-
-p {
-	margin:.4em 0 .8em 0;
-	padding:0;
-}
-
-
-/* Header styles */
-#header {
-	clear:both;
-	float:center;
-	width:100%;
-}
-#header {
-	border-bottom:1px solid #000;
-        margin-bottom: 3em;
-        margin-top: 4em;
-}
-#header h1 {
-    margin-left: 12em;
-    margin-top: 1em;
-    color: brown;
-    font-size: 40px;
-}
-#header p,
-#header h2 {
-	padding:.4em 15px 0 10px;
-	margin:0;
-}
-#header ul {
-	clear:left;
-	float:left;
-	width:100%;
-	list-style:none;
-	margin:10px 10px 10px 20px;
-	padding:0;
-}
-#header ul li {
-	display:inline;
-	list-style:none;
-        font-size: 25px;
-	margin:8px 8px 8px 70px;
-	padding:0;
-}
-#header ul li a {
-	display:block;
-	float:left;
-	margin:8px 8px 8px 50px;
-	padding:3px 8px;
-	text-align:center;
-	background:#eee;
-	color:#000;
-	text-decoration:none;
+.card {
+	display:inline-block;
 	position:relative;
-	left:15px;
-	line-height:1.3em;
+	padding:0px;
+	margin:2em;
+	width:40em;
+	height:40em;
+	/* added overflow auto until I figure out how we want to size these cards */
+ 	/*overflow-y: scroll;*/
+	background-position: top right;
+	border-radius: 25px;
 }
-#header ul li a:hover {
-	background:#369;
-	color:#fff;
-}
-
-#header ul li .active,
-#header ul li .active:hover {
-	color:#fff;
-	background:#000;
-}
-
-#header ul li a span {
-	display:block;
-}
-
-/* column container */
-.content {
-	position:relative;	/* This fixes the IE7 overflow hidden bug */
-	clear:both;
-	float:left;
-	width:100%;			/* width of whole page */
-	overflow:hidden;		/* This chops off any overhanging divs */
-        background:#eee;
-}
-.colright,
-.colmid,
-.colleft {
-	float:left;
-	width:100%;
-	position:relative;
-	
-}
-.col1,
-.col2,
-.col3 {
-	float:left;
-	position:relative;
-	padding:0 0 1em 0;
-	overflow-y:scroll;
-}
-
-.leftmenu .colright{    
-    right: 30%
-}
-/* 2 Column  settings */
-
-.leftmenu .col1 {
-	width:12%;
-        left: 31%;
-        margin-top: 15px;
-}
- .leftmenu .col2 {
-      width:77%;
-      left:31%;
-       margin-left: 15px;
-       padding:1em;
-       float: left;
-       position:relative;
-       top: 0px;  
-       height: auto;
     
+.card >div {
+ 	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	padding: 2em;
+	border-radius: 2em;
+	-webkit-border-radius: 2em;
+	-moz-border-radius: 2em;
+	-ms-border-radius: 2em;
+	-o-border-radius: 2em;
 }
-/*.leftmenu .col3 {
-      width:12%;
-      left:30%;
-       margin: 0;
-       padding:1em;
-       float: left;
-       position:relative;
-       top: 0px;
-       border:1px solid black;
-     margin-top: 15px;
-}*/
-
-#carousal {
     
-    border: 2px solid black;
-    display:bloack;
-    height: 200px;
-    width: 85%;
-    overflow: hidden;
-    border-radius: 10px;
+.card .front {
+	background-color: #FFF;
+	border:1px solid brown;
+	border-bottom:3px solid blue;
 }
-#carousal ul {
-    width:1920px;
-    padding:0;
-    margin:0;
+.card .back {
+	background-color: #FFF;
+	border:1px solid brown;
+	border-bottom:3px solid blue;
 }
-
-#carousal ul li {
-    width: 480px;
-    text-align: center;
-    height: 280px;
-    list-style: none;
-    float: left;    
-}
-#carousal img {
-    width: 480px;
-    height: 280px;
     
-}
-/*.leftmenu .card {   
-    
-    position: relative;
-    float:left;    
-    width: 500px;
-    height: 400px; 
-     margin: 0 .5em .5em 0;
-
-     padding:.5em;    
-} */
-
-
-
-/*left column css */
-#left_column {
-     border: 1px solid black; 
-     background-color: #eee;
-     height: 400px;
-     border-radius: 10px;
-}
-#left_column .category_heading {
-    border: 1px solid blue; 
-    margin: 1em ;
-}
-#left_column category_heading .categories {
-    width: 95%;
-    padding: 1em;
-    
-}
-.categories ul {
-    display: block;   
-    list-style: none; 
-    padding: .5em;
-    margin-left: 2em;
-    padding-bottom: 1em;   
-    
-}
-.categories ul li {
-    list-style: none;
-    font-size: 16px;
-    display: block;
-    padding-bottom: 1em;
-}
-
-.categories ul li a {
-    display: block;
-    border: activeborder;
-    background-color: bisque;
-}
-
-#left_column .ad_search_heading {
-    border: 1px solid brown; 
-     margin: 1em ;
-}
-#left_column ad_search_heading .search_option {
-    width: 95%;
-    padding: 1em;    
-}
-
-/* Footer styles */
-#footer {
-	clear:both;
-	float:left;
-	width:100%;
-	border-top:1px solid #000;
-}
-#footer p {
-	padding:10px;
-	margin-bottom: 0px;
-}
-
-/* register section css */
-
-#register_body {
-    background-color: #CCE6FF;  
-    
-}
-
-.login_event_section {
-     
-    display: block;
-    background-color: #B8CFE6;
-    float:left;
-    
-    
- }
- #eventcol
- {
-     margin-top: 3em;
-    margin-left: 15em;
-    border: 1px solid #121517;
-    width:350px;
-    height: 300px;
-    margin-bottom: 1em;
-   
- }
- #infocol { 
-    positon:absolute;
-    margin-top: 30em;
-    margin-left: 0px;
-    background-color: #B8CFE6;
-    border: 1px solid #121517;
-    width: 500px;
-    height: 170px;
- 
- }
- #logincol {
-     margin-top: 2em;
-    
-     margin-left: 60em;
-    margin-right:1px;
-    border:1px solid gray;
-    width: 500px;
-    height: 200px;
-    margin-bottom: 1em;
- }
- /* register section css*/
- #registercol {
-    position:absolute;    
-    margin-top: 19em;  
-    margin-left: 60em;
-    margin-right:2px;
-    background-color: #B8CFE6;
-    border:1px solid gray;
-    width: 500px;
-    height: auto;
- }
- #registercol #register_form ul{
-     list-style: none;
- }
- #registercol #register_form ul li {
-     font-family: sans-serif;
-     font-size: 100%;
-     margin-top:.5em;
-     margin-left: 10px;
- }
- #register_form input {
-      height: 20px;
-      float:right;
-     width: 300px;
-     padding: 5px 8px;
-     margin-left: 15px;
-     margin-right: 5px;
- }
- #login_form label,
-  #register_form label {     
-    padding: 5px;
-    display: inline-block;
-    font-size: 110%;
-    font-family:  serif;
-    font-style: italic;
-    font-weight:  bold;
-   color:  forestgreen;      
-}
-button {    
-     background: #3498db;
-  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
-  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
-  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
-  background-image: -o-linear-gradient(top, #3498db, #2980b9);
-  background-image: linear-gradient(to bottom, #3498db, #2980b9);
-  -webkit-border-radius: 10;
-  -moz-border-radius: 10;
-  border-radius: 10px;
-  font-family: Arial;
-  color: #ffffff;
-  font-size: 16px;
-  padding: 10px 20px 10px 20px;
-  text-decoration: none;
-}
-
-#login_form #login,
- #register_form button :hover {
-    background: #3cb0fd;
-  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
-  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
-  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
-  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
-  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
-  text-decoration: none;    
-}
-/* login section css */
-#logincol #login_form ul{
-    list-style: none;
-    padding: .5em;
-        
-}
-#login_form ul li {
-    font-family: sans-serif;
-     font-size: 100%;
-     margin-top:.5em;
-     margin-left: 1px;
-}
-#login_form input {
-     height: 20px;
-      float:right;
-     width: 300px;
-     margin-right: 5px;
-}
-/*public event table css*/
-table {
-    display:  block;
-    width:  100%;
-    border-collapse:  collapse;
-    overflow-y: auto;
-    
-}
-thead {
-    font-family:  sans-serif;
-    font-size: 100%;
-    color: blanchedalmond;
-    
-}
-table th {
-    
-    background-color:  activecaption;
-    font-family: cursive;
-    font-weight: bold;
-    border: solid 1px  #D4D4D3;
-}
-
-.hover {
-  background-color: #3F78CC;
-}
-
-table td {
-    padding-bottom: .5em;
-    font-family: sans-serif;
-    font-size: 14px;
-    border: solid 1px #D4D4D3;
-    width: 50%;
-}
-table td last {
-   border-bottom: none;
-}
-
-
-.error
-{
-	margin:auto;
-	width:40%;
-	font-size: 15px;
-	color: #CC0000;
-	margin-top: 30px;
-}
-
-.success
-{
-	margin:auto;
-	width:23%;
-	font-size: 13px;
-	color: #0000CC;
-	margin-top: 30px;
-}
-
-
 #chef_holder {
 /* 	display:inline-block;
-	width: 100%;  */
+	width: 100%; 
+	margin-top: .5em;
+	position:relative; */
 	background-color:lightgrey;
-/* 	position:relative;
-	margin-top: .5em; */
 }
-tr {
-    width:30em;
+
+table {
+	display: table;
+	width: 100%;
+	border-collapse: collapse;
+	overflow-y: auto;
+	border: solid 1px #D4D4D3;
+}
+thead {
+	font-family: sans-serif;
+	font-size: 100%;
+	color: blanchedalmond;
+	border: solid 1px #D4D4D3;
+}
+table th {
+	background-color: activecaption;
+	font-family: cursive;
+	font-weight: bold;
+	border: solid 1px #D4D4D3;
+}
+
+table tr {
+	/* width: 60%; */
+	border: solid 1px #D4D4D3;
+}
+
+
+
+.card_header{
+	display:block;
+	position:absolute;
+	top: 1em;
+	left: 1em;
+	font-size:1.5em;
+	font-weight:bold
+}
+
+.chef_name p {
+	display:block; 
+    position:absolute; 
+    top: 1em; 
+    left: 1em; 
+    font-size:1.5em; 
+    font-weight:bold
+}
+
+.chef_profile {
+	width:14em; 
+}
+
+.tl {
+    position: absolute; 
+    top: 1em; 
+    left: 1em; 
+    right: 40%; 
+    bottom: 75%; 
+    /*background: pink; */
+}
+.tr { 
+    position: absolute; 
+    top: 1em; 
+    left: 60%; 
+    right: 1em; 
+    bottom: 60%; 
+    /*background: lightblue; */
+}
+.bl { 
+    position: absolute; 
+    top: 25%; 
+    left: 1em; 
+    right: 41%; 
+    bottom: 1em; 
+    /*background: yellow; */
+}
+.br { 
+    position: absolute; 
+    top: 40%; 
+    left: 61%; 
+    right: 1em; 
+    bottom: 1em; 
+    /*background: green; */
+} 
+.contact_info {
+    display:inline-block; 
+    padding-left: 2em;
+    margin-top: 0em;
+}
+
+.card_title {
+    font-weight:bold;
+    font-size:3em;
+    margin-bottom: 0em;
+    margin-top: .5em;
 }

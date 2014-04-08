@@ -1,243 +1,116 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
-<head>
-<title>Community Resource</title>
-<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
-<meta name="LocalEvents" content="index, follow" />
+<html>
 <link rel="stylesheet" type="text/css" href="test.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="../includes/styles/card_style.css" media="screen" />
-<script src="../includes/js/jquery-1.10.2.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../includes/js/jquery.flip.min.js"></script>
-<script type="text/javascript" src="../includes/js/scripts.js"></script>
-<script type=text/javascript src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'></script>
-<meta charset="utf-8">
 
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-	<title>Local Chef!</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="keywords" content="" />
-	<meta name="description" content="" />
-	<meta name="language" content="en-us" />
-	<meta name="robots" content="index,follow" />
-	<meta name="googlebot" content="index,follow" />
-	<meta name="msnbot" content="index,follow" />
-	<meta name="revisit-after" content="7 Days" />
-	<meta name="url" content="http://localhost/havyaka_culture" />
-	<meta name="copyright" content="Copyright 2014 Community Connect. All rights reserved." />
-	<meta name="author" content="Your site name here" />
-	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
-	
-	
-<script>
-
-	function doesCSS(p){
-		var s = ( document.body || document.documentElement).style;
-		return !!$.grep(['','-moz-', '-webkit-'],function(v){
-			return  typeof s[v+p] === 'string'
-		}).length
-	}
-	
-	$('html')
-		.toggleClass('transform',doesCSS('transform'))
-		.toggleClass('no-transform',!doesCSS('transform'))
-
-	$(function(){
-		$('.flip').click(function(){
-			console.log("clicked");
-			$(this).parent().closest('.flipper').toggleClass('flipped');
-		});
-	});
-	
-	$(function() {
-		$(".save_chef").click(function() {
-			alert('!');
-			var chef_id = $(this).attr('rel');
-			alert(chef_id);
-			var datastring = "chef_id="+chef_id;
-
-			$.ajax({
-				type: "POST",
-				url: "/havyaka_culture/localChefs.php?cmd=save", 
-				data: datastring,
-				success: function() {
-				$('.success').fadeIn(2000).show().html('Chef details are saved in your profile!').fadeOut(6000); //Show, then hide success msg
-				$('.error').fadeOut(2000).hide(); //If showing error, fade out
-				}
-			}
-			);
-			
-			return false;
-		});
-	});
-</script>
-
-</head>
 <body>
-
-	<div id ="header">
-		<h1>Community Connect</h1>
-		<ul>
-				<li><a href="home.php" class="">Home</a></li>
-			
-						<li><a href="localEvents.php" class="">LocalEvents</a></li>
-			
-						<li><a href="localChefs.php" class="active">LocalChefs</a></li>
-			
-						<li><a href="localContacts.php" class="">LocalContacts</a></li>
-			
-						<li><a href="userProfile.php" class="">MyDashboard</a></li>
-			
-						<li><a href="logout.php" class="">Logout</a></li>
-			
-			</ul>
-<p id="layoutdims"></p>	</div>
-	<div class="content leftmenu">
-		<div class="colright">
-			<div class="col1">
-			<!-- Left Column start -->
-			
-
-<!-- This column contains the food categories and search options which will be present on each page.  -->
-<!-- Column 1 start -->
-<div id = "left_column">
-	<div class="category_heading">
-		<center>Food Categories</center>
-		<div class="categories">
-			<p>
-			<ul>
-								<li>
-					<a href="searchResults.php?food_id=1">Rice</a>
-				</li>
-								<li>
-					<a href="searchResults.php?food_id=2">Beans</a>
-				</li>
-								<li>
-					<a href="searchResults.php?food_id=3">Lentils</a>
-				</li>
-							</ul>
-			</p>
-		</div>
-	</div>
-	
-	<div class="ad_search_heading">
-		<center>Advanced Search</center>
-		<div class="search_option">
-			<p>search options</p>
-		</div>
-	</div>
-</div>			
-
-			<!-- Left Column end -->
-			</div>
-			
-			<div class="col2">
-			<!-- Middle Column start -->
-
-				<div id ="chef_holder">
-					<h2>Local chefs in your area!</h2>
-					
-            <div class ="card flipper">
-	<div class="front">
+<div class ="card flipper">
+	<div class="front" style="width:40em; height:40em">
 		<input type="hidden" value=1 ></input>
-                
-        <p style="display:block; position:absolute; top: 1em; left: 1em; font-size:1.5em; font-weight:bold">Foods by Caleb Carroll</p>
-        <p style="display:inline-block; position:absolute; top: 1em; right: 5px;">Chef contact details: 515-451-7842</p>
-        <p style="display:inline-block; position:absolute; top: 2em; right: 5px;">Contact hour: Any time after noon. </p>
+		<p style="display:block; position:absolute; top: 1em; left: 1em; font-size:1.5em; font-weight:bold">Foods by Caleb Carroll</p>
+		<p style="display:inline-block; position:absolute; top: 1em; right: 5px;">Phone: 515-451-7842</p>
+		<p style="display:inline-block; position:absolute; top: 2em; right: 5px;">Email: <a href="mailto:calebc@iastate.edu">calebc@iastate.edu</a></p>
+		<p style="display:inline-block; position:absolute; top: 3em; right: 5px;">Contact hour: Any time after noon.</p>
+		<br><br><br>
 
-        <p style="margin-bottom:0em; margin-top:2em;"><strong>Foods Offered:</p></strong>
-        
-        <table>
+        <table class="food_table">
         <tr>
         <td>
-        Rice - $1<br><br>
-        Tasty and filling<br><br>
-
-        <td><img class="gridimg2" src="http://localhost/havyaka_culture/pictures/2.jpg" style="height:8em; float:right;" /></td>
+        Rice - $1
+        <br><br>
+        Tasty and filling<br><br><br><br>
+  </td>
+        <td><img class="gridimg2" src="http://localhost/havyaka_culture/pictures/4.jpg" style="height:8em; float:right;" />
+      
         </td>
         </tr>
+
+
         <tr>
         <td>
-        Lentils - $1<br><br>
-        Tasty and filling<br><br>
-
-        <td><img class="gridimg2" src="http://localhost/havyaka_culture/pictures/3.jpg" style="width:8em; float:right;" /></td>
-        </td>
+        Beans - $2
+        <br><br>
+        Musical and bland<br><br><br><br>
+  </td>
+        <td><img class="gridimg2" src="http://localhost/havyaka_culture/pictures/4.jpg" style="height:8em; float:right;" /></td>
+      
         </tr>
-            <tr>
+
+
+        <tr>
         <td>
-        Beans - $1<br><br>
-        Tasty and filling<br><br>
-
-        <td><img class="gridimg2" src="http://localhost/havyaka_culture/pictures/1.jpg" style="width:8em; float:right;" /></td>
-        </td>
+        Lentils - $3
+        <br><br>
+        Lentily<br><br><br><br>
+ </td>
+        <td><img class="gridimg2" src="http://localhost/havyaka_culture/pictures/3.jpg" style="height:8em; float:right;" /></td>
+       
         </tr>
+
+        </table>
+
+        <button class="save_chef" rel="1" type="submit">Save</button>
+        <button class="flip">Flip</button>
+    </div>
+</div>
+
+<br><br><br><br><br><br><br><br>
+
     
-        </table>
-        <button class = "save_chef" rel="1" id= "" type="submit" name="save_chef">Save</button>
-        <button class="flip">Flip</button>
-        </div>                           
-
-        <div class="back">    
-        <p style="font-weight:bold;font-size:1.5em;">Caleb Carroll</p>
-        <p>He makes tasty food</p>
-
-            <img class="gridimg2" src="http://localhost/havyaka_culture/pictures/calebc_profile.jpg" style="width:10em; position:absolute;top:1em;right:1em;" />
-        <table>
-        <tr>
-        <th>Delivery available:</th> 
-        <td>No</td> 
-        </tr>
-
-        <tr>
-        <th>Pickup available:</th>
-        <td>Yes</td>
-        </tr>
-
-        <tr>
-        <th>Payment method:</th>
-        <td>Cash</td>
-        </tr>
-
-        <tr>
-        <th>takes offline order?:</th>
-        <td>No</td>
-        </tr>
-        </table>
-        <p>Chef contact details: </p>
-        <p>Phone: 515-451-7842</p>
-        <p>Email: calebc@iastate.edu</p>
-        <p>Contact hour: Any time after noon. </p>
-        <button class="flip">Flip</button>
-            
-</div>
-</div>
-					
-					
-					<!-- <form class= "chef" action="localChefs.php" method="POST" id = "local_chef" name="localchef">
-					
-					else
-						{ ?>
-						<div class="card_front">
-						<h2>No chef's found in your area! </h2>
-						use the advanced search  <a href="advancedsearch.php">here</a>
-						</div>
-						
-					</form> -->
-				</div>
-			</div>   <!-- end of col2-->
-		</div>
-
+    
+<!-- BACK OF CARD -->
+<div class ="card flipper">
+	<div class="back" style="width:40em; height:40em">
+		<h1 style="font-weight:bold;font-size:1.5em;">Caleb Carroll</h1>
+		<h3>About chef:</h3>
+		<p>He makes tasty food</p>
+		
+		<img class="chef_profile" src="http://localhost/havyaka_culture/pictures/calebc_profile.jpg" />
+		
+		<p>Delivery not available</p><p>Pickup not available</p><p>Payments accepted:Cash</p><p>Offline orders available</p>
+		<button class="flip">Flip</button>
 	</div>
-
-	<div id="footer">
-	<center>(c) 2014 Your Company Name</center></p>
 </div>
+
+<br><br><br><br><br><br><br><br>
+    
+<div class ="card flipper">
+	<div class="back" style="width:40em; height:40em">
+		<div class="tl">
+        
+        <p class="card_title">Caleb Carroll</p>
+        
+        <p class="contact_info">
+            Phone: 515-451-7842<br>
+            Email: <a href="mailto:calebc@iastate.edu">calebc@iastate.edu</a><br>
+            Contact hours: Any time after noon.
+            </p>        
+        </div>
+        
+        
+        
+		<div class="tr">
+            <img class="chef_profile" src="http://localhost/havyaka_culture/pictures/calebc_profile.jpg" />
+        </div>
+		
+        <div class="bl">
+            <h3>About chef:</h3>
+            <p>He makes tasty food and other stuff. He likes to make food, and the  food that he makes is tasty and loved by all. He tends to ramble about all the tasty food and stuff that he likes to make so that the text can take up plenty of room.</p>
+            <h3>Favorite Dish:</h3>
+            <img class="gridimg2" src="http://localhost/havyaka_culture/pictures/3.jpg" style="width:80%" />
+        </div>
+        
+        <div class="br">
+            <button class="">Save Chef</button>
+            <button class="">Share Chef</button>
+                <p style="font-weight:bold;">Delivery not available<br><br>
+                Pickup not available<br><br>
+                Payments accepted:Cash<br><br>
+                Offline orders available</p>
+        </div>	
+            <button class="flip" style="position:absolute;bottom:0;right:0;">Flip Card</button>
+	</div>
+</div>
+    
+    
 </body>
 </html>
 

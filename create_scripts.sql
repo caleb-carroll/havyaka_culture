@@ -190,7 +190,7 @@ DROP TABLE IF EXISTS `hci573`.`chef` ;
 
 CREATE  TABLE IF NOT EXISTS `hci573`.`chef` (
   `chef_id` BIGINT NOT NULL AUTO_INCREMENT ,
-  `about_chef` VARCHAR(45) NULL ,
+  `about_chef` VARCHAR(255) NULL ,
   `contact_time_preference` VARCHAR(45) NULL ,
   `payments_accepted` VARCHAR(45) NULL ,
   `delivery_available` VARCHAR(45) NULL ,
