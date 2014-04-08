@@ -371,7 +371,7 @@ function get_chef_info($chef_id) {
 	LEFT JOIN " . FOOD_CHEF_DETAILS . " as t2 ON t1.chef_id = t2.chef_id 
 	LEFT JOIN " . FOOD . " as t3 ON t2.food_id = t3.food_id 
 	LEFT JOIN " . USERS . " as t4 on t4.user_id = t1.user_id 
-	WHERE t1.chef_id = $chef_id;";
+	WHERE t1.chef_id = $chef_id ;";
 	
 	// uncomment this to debug
 	/* echo "<br> get_chef_info query is: <br>";
@@ -382,11 +382,6 @@ function get_chef_info($chef_id) {
 	if($query = mysqli_query($link,$q)) {
 		$results = mysqli_fetch_assoc($query);
 	}
-	
-
-	
-
-
 	return $results;
 }
 
@@ -443,9 +438,14 @@ function get_chefs_by_food($food_type_id) {
 }
 
 /* display chef details and food details on the card based on the logged in user's location*/
-function get_localchef_details($user_id) {
+function get_localchef_details($user_id,$row_limit = NULL) {
 	global $link;
 
+        if ($row_limit !=NULL)
+        {
+            $row_limit_set = $row_limit;
+        } else { $row_limit_set = 50;}
+        
 	//get the logged in user's location
 	$e_loc_id= get_loggedin_user_location($user_id);
 
@@ -457,7 +457,7 @@ function get_localchef_details($user_id) {
 	$q = "SELECT t1.chef_id FROM chef as t1
 		LEFT JOIN " . USERS . " AS t2 ON t2.user_id = t1.user_id 
 		LEFT JOIN " . LOCATION . " AS t3 ON t2.e_loc_id = t3.e_loc_id 
-		WHERE  (t3.city = '$city' OR t3.state = '$state');";
+		WHERE  (t3.city = '$city' OR t3.state = '$state')  LIMIT $row_limit_set;";
 	
 	// echo "<br>q is: " . $q . "<br>";
 	
@@ -850,12 +850,19 @@ function delete_event($event_id) {
 }
 
 //retrieve event based on user's location.
-function retrieve_future_event($user_id) {
+function retrieve_future_event($user_id,$row_limit = NULL) {
 	global $link;
 	global $salt;
 	
 	$err = array();
 	$results = NULL;
+        
+        
+        if ($row_limit !=NULL)
+        {
+            $row_limit_set = $row_limit;
+        } else { $row_limit_set = 50;}
+        
 	/* 
 	* step 1: Get the logged in user's location , city, zip code or state
 	* step 2: based on the location id, get the venue details
@@ -868,7 +875,6 @@ function retrieve_future_event($user_id) {
 	$get_city_state = mysqli_query($link,"SELECT city,state from ".LOCATION. " WHERE e_loc_id= ".$e_loc_id. ";") or die(mysqli_error($link));
 	list($city,$state) = mysqli_fetch_row($get_city_state);
 
-
 	$q2 = "SELECT t1.event_date, t1.event_desc, t1.event_id, t1.event_name, t5.first_name, AES_DECRYPT(t5.email, '$salt') as email, t5.phone, t5.last_name, t3.venue_address, t3.venue_name, t4.city, t4.zipcode, t4.state
 		FROM event AS t1
 		LEFT JOIN event_type AS t2 ON t1.e_type_id = t2.e_type_id
@@ -877,7 +883,7 @@ function retrieve_future_event($user_id) {
 		LEFT JOIN user AS t5 ON t1.user_id = t5.user_id
 		WHERE event_status =1
 		AND t1.event_date > CURDATE( )
-		AND (t4.city = '".$city."' OR t4.state = '".$state. "');";
+		AND (t4.city = '".$city."' OR t4.state = '".$state. "') LIMIT $row_limit_set;";
 
 	if($event_query = mysqli_query($link,$q2)) {
 		if(mysqli_num_rows($event_query) > 0) {
