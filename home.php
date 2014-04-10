@@ -51,7 +51,7 @@ function doesCSS(p){
 	require_once 'includes/constants/card_print.php';
         require_once 'includes/constants/event_card_print.php';
         secure_page();  
-        return_meta("Home!");
+        return_meta("Home");
         $msg = NULL;
         $user_id =  $_SESSION['user_id'];
   ?>
@@ -69,21 +69,26 @@ function doesCSS(p){
       <div class="colright">
 		<div class="col1">
 			<!-- Left Column start -->
-			<?php include('includes/left_column.inc.php'); ?>			
-			
+			<?php include('includes/left_column.inc.php'); ?>
 			<!-- Left Column end -->
 		</div>
 		<div class="col2">
                     <!-- Middle Column start -->
                         <div id="carousal">
-                            <ul>
-                                <li> <img src="<?php echo BASE; ?>/pictures/1.jpg">1</img></li>
-                                 <li> <img src="<?php echo BASE; ?>/pictures/2.jpg">2</img></li>
-                                  <li> <img src="<?php echo BASE; ?>/pictures/3.jpg">3</img></li>
-                                   <li> <img src="<?php echo BASE; ?>/pictures/4.jpg">4</img></li>
-                            </ul>
-                          <p>random images goes here</p>
-               
+                         <ul>
+                            <?php                            
+                            $results = fetch_food_picture();
+                            foreach ($results as $r)
+                            {
+                                $food_image = $r['food_picture']; 
+                                $food_image_loc = htmlspecialchars($food_image);
+                                $food_image_loc = BASE.$food_image_loc;
+                               list($width, $height, $type, $attr)= getimagesize($food_image_loc);
+                            ?>
+                             <li> <img src="<?php echo $food_image_loc?>"></img></li>
+                             
+                            <?php } ?>
+                            </ul>               
                         </div>
 			<!-- Middle Column start -->
 			<style>img {width: 160px;}</style> 

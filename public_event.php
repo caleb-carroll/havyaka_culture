@@ -13,13 +13,12 @@ global $link;
 $results = array();
 //query the public events and display them randomly in the public_event section at the registration page
 
-$q = "SELECT event_name,event_desc,event_date from event where event_status=1 and event_scope = 'public' ORDER BY RAND() LIMIT 1";
+$q = "SELECT event_name,event_desc,event_date from event where event_status=1 and event_scope = 'public' and event_date > CURDATE() ORDER BY RAND() LIMIT 1";
 if($event_query = mysqli_query($link,$q)) {
 	while ($row = mysqli_fetch_assoc($event_query)) {
 		$results[] =$row;
 	}
 }
-
 ?>
 <h1> Happening Events!</h1>
 <table>

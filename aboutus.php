@@ -10,14 +10,6 @@
   <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <link rel="stylesheet" href="includes/styles/faq_style.css"/>
 
-    <script>
-    //function to execute the accordion style
-    $(function()  {
-      $('#accordion').accordion();
-    } )  ;
-
-    </script>
-
 </head>
 
 <body>
@@ -46,10 +38,6 @@
                 echo '<div class="error">'.$err.'</div>';
             }
 ?>
-    <div class="dashboard_sub_section">  
-        <?php include('includes/subnavigation.inc.php'); ?>
-     </div>
-    
 <h2>All questions about this website</h2>
 
                  <div id = "accordion">

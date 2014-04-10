@@ -23,61 +23,297 @@ $(function(){
               console.log("clicked");
               $(this).parent().closest('.flipper').toggleClass('flipped');
       });
+      
+        $("#request_new_food_link").click(function() {
+           $("#request_new_food_div").show(); 
+        });
 
-                
+        $("#cancel_food").click(function() {
+           $("#request_new_food_div").hide();
+
+           $("#request_new_food_link").show();
+        });
+
+        $("#add_selected_food").click(function(){
+            var e = document.getElementById("selected_food");
+            var food_id = e.options[e.selectedIndex].value;
+
+            var chef_id = $(this).attr('rel1');
+            var datastring = "food_id=" +food_id+ "&chef_id="+chef_id;
+
+             $.ajax(
+                 { 
+
+                     type: "POST",
+                     url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=add_selected_food",                            
+                     data: datastring,                             
+                     success:function () {                                 
+                         $('.success').fadeIn(2000).show().html('Added Successfully!').fadeOut(6000); //Show, then hide success msg
+                        $('.error').fadeOut(2000).hide(); 
+                        //refresh_content();
+                     }                         
+                 });
+           return false;
+
+
+        });
+
+         $("form#add_new_food_form").submit(function(){
+
+            var formData = new FormData($(this)[0]);
+
+            $.ajax({
+                url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=add_new_food",
+                type: 'POST',
+                data: formData,
+                async: false,
+                success: function () {
+                    $('.success').fadeIn(2000).show().html('Added Successfully!').fadeOut(6000); //Show, then hide success msg
+                        $('.error').fadeOut(2000).hide(); 
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+            return false;
+        });
+
+        $(".update_food").click(function() {
+           var food_id = $(this).attr('rel');
+           var chef_id = $(this).attr('rel1');
+           var food_description_id = "food_description_"+food_id;
+           var food_price_id = "food_price_"+food_id;
+           var food_description=document.getElementById(food_description_id).value;
+           var food_price = document.getElementById(food_price_id).value;
+
+           if(food_description == '')
+            {
+
+                            $('.error').fadeIn(400).show().html('Please enter the food description.'); 
+            }
+            else
+            {
+                var datastring = "food_description=" +food_description+ "&food_id=" +food_id+ "&chef_id="+chef_id;
+
+                console.log(food_price+chef_id);
+
+                 $.ajax(
+                 { 
+
+                     type: "POST",
+                     url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=update_food",                            
+                     data: datastring,                             
+                     success:function () {                                 
+                         $('.success').fadeIn(2000).show().html('updated Successfully!').fadeOut(6000); //Show, then hide success msg
+                        $('.error').fadeOut(2000).hide(); 
+                        //refresh_content();
+                     }                         
+                 });
+            }
+           return false;
+        });
+        $(".delete_food").click(function() {
+            var food_id = $(this).attr('rel');
+            var chef_id = $(this).attr('rel1');
+             var datastring = "food_id=" +food_id+ "&chef_id=" +chef_id;
+          alert(datastring);
+          $.ajax(
+                 { 
+
+                     type: "POST",
+                     url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=Delete_food",                            
+                     data: datastring,                             
+                     success:function () {                                 
+                         $('.success').fadeIn(2000).show().html('deleted Successfully!').fadeOut(6000); //Show, then hide success msg
+                        $('.error').fadeOut(2000).hide(); 
+                        //refresh_content();
+                     }
+
+                 });
+                 return false;
+        });
+
 });
 
 </script>
 
 <?php
 require_once 'includes/constants/sql_constants.php';
+require_once 'chefProfile.php';
 secure_page();
 $user_id = $_SESSION['user_id'];
 
 		$msg = NULL;
                 $err=NULL;
 
-if($_POST and $_GET){
-	
-	if ($_GET['cmd'] == 'update_user'){
+if($_POST and $_GET)
+{
+    if ($_GET['cmd'] == 'update_user'){
 		 
-		$first_name = $_POST['first_name'];
-		$last_name = $_POST['last_name'];
-		$phone = $_POST['phone'];
-		$email = $_POST['email'];
-		$profile_picture = NULL;
-		
-		// function to update an event 
-		if (update_user_info($user_id, $first_name, $last_name, $email, $phone, $profile_picture)) {
-			// add something here to display success/failure?
-			 $msg="Profile updated successfully";
-		}
-		else {
-			$err = "Oops!. sorry, could not update your profile, Please try again";
-		}
-	}
-	
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
+        $phone = $_POST['phone'];
+        $email = $_POST['email'];
+        $profile_picture = NULL;
+
+        // function to update an event 
+        if (update_user_info($user_id, $first_name, $last_name, $email, $phone, $profile_picture)) {
+                // add something here to display success/failure?
+                 $msg="Profile updated successfully";
+        }
+        else {
+                $err = "Oops!. sorry, could not update your profile, Please try again";
+        }
+   }
+       
 	// if the user is adding a picture, add it to the file system and reference in user table
-	if ($_GET['cmd'] == 'add_picture' || $_GET['cmd'] == 'add_event_picture'){
-		if ($_FILES["file"]["error"] > 0) {
-			echo "Error: " . $_FILES["file"]["error"] . "<br>";
-		}
-		else {
-			$file_handler = $_FILES["file"];
-			$picture = store_image($file_handler);
-                        $picture_loc = "/".$picture;
-                        if($_GET['cmd'] == 'add_picture') {
-                            // $user_info[0]['profile_picture'] = $profile_picture;
-                            update_user_info($user_id, NULL, NULL, NULL, NULL, $profile_picture_loc);
-                        } 
-                        elseif ($_GET['cmd'] == 'add_event_picture') 
-                        {
-                            echo "coming inside add_event-picture";
-                            $event_id = $_POST['event_id'];
-                            update_event_picture($picture_loc,$event_id);
-                        }
-		}
-	}
+    if ($_GET['cmd'] == 'add_picture' || $_GET['cmd'] == 'add_event_picture' || $_GET['cmd'] == 'add_food_picture'){
+            
+        if ($_FILES["file"]["error"] > 0) {
+                echo "Error: " . $_FILES["file"]["error"] . "<br>";
+        }
+        else {
+
+                $file_handler = $_FILES["file"];
+                $picture = store_image($file_handler);
+                $picture_loc = "/".$picture;
+                    if($_GET['cmd'] == 'add_picture') {
+                        // $user_info[0]['profile_picture'] = $profile_picture;
+                        update_user_info($user_id, NULL, NULL, NULL, NULL, $picture_loc);
+                    } 
+                    elseif ($_GET['cmd'] == 'add_event_picture') 
+                    {
+
+                        $event_id = $_POST['event_id'];
+                        update_event_picture($picture_loc,$event_id);
+
+                    } elseif ($_GET['cmd'] == 'add_food_picture')
+                    {
+
+                        $food_id=$_POST['food_id'];
+                        $food_update = update_foods_of_chef(NULL,$food_id,NULL,NULL,$picture_loc);
+                            if($food_update)
+                            {
+                                $msg="Food details updated successfully";
+                            } else {
+                                $err="Could not update this time, Please try again";
+                            }
+                    }
+        }
+    }
+    if($_GET['cmd'] == 'Delete_food')
+        {
+            echo "it is coming here";
+            
+            $food_id = $_POST['food_id'];
+            $chef_id = $_POST['chef_id'];
+            echo $food_id.$chef_id;
+             $q= "DELETE from ".FOOD_CHEF_DETAILS. " WHERE food_id =".$food_id." AND chef_id =".$chef_id. ";";
+
+             if($food_q = mysqli_query($link,$q))
+             {
+                 $msg="Deleted successfully!";
+             } else
+             {
+                 $err="Could not delete, please try again";
+             }
+
+            exit();
+        }
+        
+    if($_GET['cmd'] == 'add_selected_food')
+    {
+
+         $chef_id = $_POST['chef_id'];
+          $food_id = $_POST['food_id'];
+          echo $chef_id.$food_id;
+          $add_selected_food = add_selected_food($food_id,$chef_id);
+          if($add_selected_food)
+          {
+               $msg="Food details added successfully to your bucket";
+          } else
+          {
+              $err = "You have already added this food!";
+          }            
+    }
+        
+    if($_GET['cmd'] == 'update_food')
+   {
+         echo "it is coming here";
+         $chef_id=$_POST['chef_id'];
+         $food_description=filter($_POST['food_description']);
+
+         $food_id=$_POST['food_id'];              
+
+         $food_update = update_foods_of_chef($chef_id,$food_id,$food_description,NULL);
+         if($food_update)
+         {
+             $msg="Food details updated successfully";
+         } else {
+             $err="Could not update this time, Please try again";
+         }
+
+   }
+    if($_GET['cmd'] == 'add_new_food')
+    {
+       // print_r($_POST);
+       // print_r($_FILES);
+            $chef_id=$_POST['chef_id'];
+            $food_name=filter($_POST['food_name']);
+            $food_description=filter($_POST['food_description']);
+           $file_handler = $_FILES["file"];
+            $picture = store_image($file_handler);
+                  $picture_loc = "/".$picture;
+            echo $food_name .$food_description.$picture_loc;
+              $new_food_id = add_new_food($chef_id,$food_name,$food_description,$picture_loc);
+    }
+    if($_GET['cmd'] == 'update_chef_profile')
+    {
+
+        $about_chef = filter($_POST['about_chef']);
+        $contact_time_preference = $_POST['contact_time_preference'];
+        $accepted_payment_type = $_POST['accepted_payment_type'];
+        $chef_id = $_POST['chef_id'];
+        if(isset ($_POST['pickup']))
+            {
+                $pickup = $_POST['pickup']; 
+                $pickup = "yes";                    
+            } else 
+            {
+                $pickup = "no";
+            }
+             if(isset ($_POST['offline']))
+            {
+                 $offline = $_POST['offline']; 
+                $offline = "yes";                    
+            } else 
+            {
+                $offline = "no";
+            }
+             if(isset ($_POST['delivery']))
+            {
+                $delivery = $_POST['delivery']; 
+                $delivery = "yes";                    
+            } else 
+            {
+                $delivery = "no";
+            }
+           
+            if($chef_id)
+            {
+             $chef_profile_edit = create_update_chef_profile($about_chef,$contact_time_preference,$accepted_payment_type,$pickup,$offline,$delivery);
+            } else {
+                $chef_profile_edit = create_update_chef_profile($about_chef,$contact_time_preference,$accepted_payment_type,$pickup,$offline,$delivery,$user_id,$chef_id);
+            }
+            if($chef_profile_edit)
+            {
+                $msg = "Chef profile updated successfully!";
+            } else
+            {
+                $err = "Could not update your profile page, please try again";
+            }            
+        }
    }
 
     $user_info = get_user_info($user_id);
@@ -145,7 +381,7 @@ $results = get_events($user_id);
                  </div>
                    
 			<!-- Middle column start -->
-                <div class="card " id="user_profile_div"  style="width: 65%;height: 70%; overflow-y: scroll;">
+                <div class="card " id="user_profile_div"  style="width: 45%;overflow-y: scroll;">
                     <div class="front">
                         <?php 
                         if(empty($results))
@@ -155,7 +391,7 @@ $results = get_events($user_id);
                         { ?>
                             <a href="manageEvents.php" name="manage_events">Manage your Events</a>&nbsp;&nbsp;
                       <?php  }
-                        if($chef_info == NULL)
+                       /* if($chef_info == NULL)
                         {
                         ?>
                             <h4>Become and chef and show off your cooking skill!</h4>
@@ -163,7 +399,7 @@ $results = get_events($user_id);
                         <?php 
                         } else {?>
                              <a href="chefProfile.php" name="edit_chef_profile">Edit your Chef Profile</a>&nbsp;&nbsp;
-                       <?php } ?>
+                       <?php } */?>
                               
                         <p><h2>Hello &nbsp;<?php echo $user_info[0]['first_name'];?>,</h2>&nbsp;&nbsp;<br><br><img style="margin-left: 10em; width: 15em;height: 15em;" id="profile_picture" src="<?php echo $profile_pic_loc;?>" /><br><br><h3>Edit your profile here:</h3></br></p>
 
@@ -181,7 +417,12 @@ $results = get_events($user_id);
                                 <input type="submit" name="submit" value="Submit">
                         </form>
 		</div>
-	   </div>       
+	   </div>  
+            <div class="card flipper" id="chef_profile" style="width: 45%; overflow-y: scroll;">
+               
+             <?php   chef_profile_data($user_id); ?>
+                
+            </div>
        <!-- Center column end -->
 			
        </div>

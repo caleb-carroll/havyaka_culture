@@ -849,6 +849,21 @@ function delete_event($event_id) {
 	}
 }
 
+function fetch_food_picture($chef_id = NULL)
+{
+    global $link;
+    $results = array();
+    
+    $q_picture = "SELECT food_picture from ".FOOD. " WHERE food_picture IS NOT NULL ORDER BY RAND() LIMIT 5";
+   if($picture_query = mysqli_query($link,$q_picture)) {
+	while ($row = mysqli_fetch_assoc($picture_query)) {
+		$results[] =$row;
+	}
+    }
+    mysqli_free_result($picture_query);
+    return $results;
+    
+}
 //retrieve event based on user's location.
 function retrieve_future_event($user_id,$row_limit = NULL) {
 	global $link;

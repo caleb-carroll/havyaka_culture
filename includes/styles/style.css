@@ -17,7 +17,7 @@ a:hover {
 	text-decoration:none;
 }
 h1, h2, h3 {
-	margin:.8em 0 .2em 0;
+	margin:.3em 0 .2em 0;
 	padding:0;
 }
 
@@ -41,7 +41,7 @@ p {
 	width:100%;
 	border-bottom:1px solid #000;
 	margin-bottom: 3em;
-	margin-top: 4em;
+	margin-top: 2em;
 }
 
 #header h1 {
@@ -160,8 +160,9 @@ p {
 #carousal {
 	border: 2px solid black;
 	display:bloack;
+        margin-left: 3em;
 	height: 200px;
-	width: 85%;
+	width: 90%;
 	overflow: hidden;
 	border-radius: 10px;
 }
