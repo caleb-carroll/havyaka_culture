@@ -8,9 +8,9 @@ $msg = NULL;
 $err = array();
 global $link;
 $results = array();
-//query the public events and display them randomly in the public_event section at the registration page
 
-$q = "SELECT event_name, event_desc, event_date, t2.image_location AS event_image FROM " . EVENT . " as t1 LEFT JOIN " . EVENT_PICTURE . " AS t2 ON t1.event_id = t2.event_id WHERE event_status=1 AND event_scope = 'public' ORDER BY RAND() LIMIT 1";
+//query the public events and display them randomly in the public_event section at the registration page
+$q = "SELECT event_name, event_desc, event_date, t2.image_location AS event_image FROM " . EVENT . " as t1 LEFT JOIN " . EVENT_PICTURE . " AS t2 ON t1.event_id = t2.event_id WHERE event_status=1 AND event_scope = 'public' AND event_date > CURDATE() ORDER BY RAND() LIMIT 1";
 
 if($event_query = mysqli_query($link,$q)) {
 	while ($row = mysqli_fetch_assoc($event_query)) {

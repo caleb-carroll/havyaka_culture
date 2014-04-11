@@ -3,38 +3,8 @@
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
 
-// information about the SQL database -- make sure the database on your end matches the dataase name, the user and the password
-define('DB_HOST', "localhost");
-define('DB_USER', "hci573");
-define('DB_PASS', "hci573");
-define('DB_NAME', "hci573");
-
-//include_once '/includes/constants/dbc.php';
-//base in operating system
-define ("ROOT", $_SERVER['DOCUMENT_ROOT'] . "/havyaka_culture");
-
-//base URL of site
-define ("BASE", "http://".$_SERVER['HTTP_HOST']."/havyaka_culture");
-//base in operating system
-
-//tables
-define ("PSTORE_TABLE","pstore_nivi");
-
-define ("CHEF", "chef");
-define ("COMMUNITY_TYPE", "community");
-define ("EVENT", "event");
-define ("EVENT_PICTURE", "event_picture");
-define ("EVENT_TYPE", "event_type");
-define ("FOOD", "food");
-define ("FOOD_CHEF_DETAILS", "food_chef_details");
-define ("LOCATION", "location");
-define ("USERS", "user");
-define ("USER_SAVED_INFO", "user_saved_info");
-define ("VENUE", "venue");
-define ("ATTENDENCE","event_attendance");
-
-define ("GLOBAL_EMAIL", "connect.community.culture@gmail.com");
-define("REQUIRE_ACTIVIATION","1");
+include_once 'includes/swift/lib/swift_required.php';
+include_once 'includes/constants/dbc.php';
 
 $file_location = "../pictures";
 global $file_location;
@@ -45,19 +15,6 @@ global $max_file_size;
 // connect to the SQL server and select the database - we can now use $link and $db in pages that include this page
 $link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die("Couldn't make connection:" . mysqli_error() );
 $db = mysqli_select_db($link, DB_NAME) or die("Couldn't select database:" . mysqli_error() );
-
-
-//our keys -- ideally, those would be stored on a separate machine or server
-$salt = "ae4bca65f3283fe26a6d3b10b85c3a308";
-global $salt;
-
-$passsalt = "f576c07dbe00e8f07d463bc14dede9e492";
-global $passsalt;
-
-$password_store_key = sha1("dsf4dgfd5s2");
-global $password_store_key;
-
-include_once 'includes/swift/lib/swift_required.php';
 
 /*Function to super sanitize anything going near our DBs*/
 function filter($data) {
@@ -218,25 +175,28 @@ function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcod
 function  create_update_chef_profile($about_chef,$contact_time_preference,$accepted_payment_type,$pickup,$offline,$delivery,$user_id,$chef_id = NULL)
 {
     global $link;
-    
-       
+       echo $chef_id;
     if($chef_id != NULL)
     {
-        $q = "UPDATE ".CHEF. " SET about_chef ='" .$about_chef. "' contact_time_preference ='" .$contact_time_preference. "' payments_accepted ='" .$accepted_payment_type. "' pickup_available='" .$pickup. "' delivery_available='".$delivery. "' taking_offline_order='".$offline."' WHERE chef_id ='".$chef_id. "';";
+        echo "inside update";
+        $q = "UPDATE ".CHEF. " SET about_chef ='" .$about_chef. "', contact_time_preference ='" .$contact_time_preference. "', payments_accepted ='" .$accepted_payment_type. "', pickup_available='" .$pickup. "', delivery_available='".$delivery. "', taking_offline_order='".$offline."' WHERE chef_id =".$chef_id. ";";
+    echo $q;
+        
     } else {
+     
         $q = "INSERT INTO ".CHEF. " (about_chef,contact_time_preference,payments_accepted,pickup_available,delivery_available,taking_offline_order,user_id,community_id) VALUES ( '".$about_chef. "','".$contact_time_preference. "','".$accepted_payment_type. "','" .$pickup. "','" .$delivery. "','" .$offline. "',".$user_id. ",1);";
-      }
+         echo "inside inserts" .$q;
+        }
       if($q_execute = mysqli_query($link,$q))
       {
-         // echo " success";
+          echo " success";
           return true;
       }
       else 
       {
-          //echo "failure";
+          echo "failure";
           return false;
-      }
-    
+      }    
 }
 
 //get all the food names
@@ -337,17 +297,23 @@ function update_foods_of_chef($chef_id=NULL,$food_id,$food_description=NULL,$foo
 function add_new_food($chef_id,$food_name,$food_description,$picture_loc) {
 	//check if the requested new food exists in the database already using string match. if not add one to the db
 	global $link;
+        echo " parameters :".$chef_id.$food_description.$food_name;
 	$q_new_food = mysqli_query($link, "SELECT * from ".FOOD. " WHERE food_name ='" .$food_name. "';") or(die(mysqli_error($link)));
 
 	if(mysqli_num_rows($q_new_food) == 0) {
-		if( $q_food_insert = mysqli_query($link,"INSERT INTO ".FOOD. " (food_name, food_description,food_picture,community_id) VALUES ('".$food_name. "','" .$food_description. "','".$picture_loc. "',1);")) {
+            echo "inside num rows";
+		$q_food_insert = mysqli_query($link,"INSERT INTO ".FOOD. " (food_name, food_description,food_picture,community_id) VALUES ('".$food_name. "','" .$food_description. "','".$picture_loc. "',1)") or die(mysqli_error($link));
 			$food_id = mysqli_insert_id($link);
-		}
+                        echo "food_id inserted: ".$food_id;
+		
 	}
 	else {
 		$food_id = mysqli_fetch_row($q_new_food);
+                echo "food_id fetched: ".$food_id;
 	}
-
+        
+   echo "food id : chef_id : " .$food_id.$chef_id;
+   
 	$add_selected_food = add_selected_food($food_id,$chef_id);
 	if($add_selected_food) {
 		//return true;
@@ -388,7 +354,7 @@ function get_chef_info($chef_id) {
 function add_selected_food($food_id,$chef_id)
 {
 	global $link;
-
+        echo "food id : chef_id : " .$food_id.$chef_id;
 	$q_food = "SELECT * from ".FOOD_CHEF_DETAILS. " WHERE food_id= ".$food_id. " AND chef_id = ".$chef_id;
 
 	$food_query = mysqli_query($link,$q_food) or die(mysqli_error($link));
@@ -466,10 +432,6 @@ function get_localchef_details($user_id,$row_limit = NULL) {
 			$results[] = $row;
 		}
 	}
-	
-
-	
-
 	mysqli_free_result($chef_query);
 
 	return $results;
@@ -670,16 +632,16 @@ function update_user_info($user_id, $first_name, $last_name, $email, $phone, $pr
 
 /* Function to send an email message to a user */
 function send_message($email_to,$msg_subject, $message) {
-	global $password_store_key;
-
-	$key = $password_store_key;
-
-	//$result = mysql_query("SELECT AES_DECRYPT(p_pass,'$key') AS password FROM pstore_nivi WHERE p_email=AES_ENCRYPT('".GLOBAL_EMAIL."',connectcommunity1, '$key')") or die(mysql_error());
-	//$row = mysql_fetch_assoc($result);
-
-	//$pw = $row['password'];
-        $pw = 'connectcommunity1';
-	//instead, we use swift's email function
+	global $passsalt;
+        global $salt;
+      global $link;
+        
+	$result = mysqli_query($link,"SELECT AES_DECRYPT(p_pass,'$salt') AS password FROM ".PSTORE. " WHERE p_email=AES_ENCRYPT('".GLOBAL_EMAIL."','$salt')") or die(mysqli_error($link));
+	$row = mysqli_fetch_assoc($result);
+        
+	$pw = $row['password'];
+       
+	//we use swift's email function
 	$email_to = $email_to; $email_from=GLOBAL_EMAIL;$password = $pw; $subj = $msg_subject;
 	$transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, "ssl")
 	->setUsername($email_from)
@@ -849,6 +811,21 @@ function delete_event($event_id) {
 	}
 }
 
+function fetch_food_picture($chef_id = NULL)
+{
+    global $link;
+    $results = array();
+    
+    $q_picture = "SELECT food_picture from ".FOOD. " WHERE food_picture IS NOT NULL ORDER BY RAND() LIMIT 5";
+   if($picture_query = mysqli_query($link,$q_picture)) {
+	while ($row = mysqli_fetch_assoc($picture_query)) {
+		$results[] =$row;
+	}
+    }
+    mysqli_free_result($picture_query);
+    return $results;
+    
+}
 //retrieve event based on user's location.
 function retrieve_future_event($user_id,$row_limit = NULL) {
 	global $link;

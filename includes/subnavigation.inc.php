@@ -3,8 +3,8 @@
 
 if(isset($_SESSION['user_id'])) // if the user is logged in and display related navigation tabs, else display the default tabs.
 {
-    $names = array("My chef profile","My profile","My saved Info","Manage my events");
-    $links = array("chefProfile.php","userProfile.php","savedInfo.php","manageEvents.php");
+    $names = array("My profile","My saved Info","Manage my events");
+    $links = array("userProfile.php","savedInfo.php","manageEvents.php");
 
 ?>
 <ul>

@@ -3,7 +3,7 @@
 <head>
 	<title>Community Resource</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
-	<meta name="LocalEvents" content="index, follow" />
+	<meta name="LocalChefs" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/chef_style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
@@ -76,7 +76,6 @@ if(isset($_POST) and isset($_GET)) {
 	if (!empty($_GET['cmd'])) {
 		if($_GET['cmd'] == 'save') {
 			$chef_id = $_POST['chef_id'];
-			echo "hello";
 			
 			if($stmt = mysqli_prepare($link, "SELECT * FROM ".USER_SAVED_INFO. " WHERE user_id = ".$_SESSION['user_id']." AND chef_id= " .$chef_id) or die(mysqli_error($link))) {
 				//execute the query
@@ -100,7 +99,7 @@ if(isset($_POST) and isset($_GET)) {
 ?>
 
 <div id ="header">
-	<h1>Community Connect</h1>
+    <img src="pictures/logo_594749_web1.jpg" alt="Community Connect"></img><h1>Community Connect</h1><br><h3>Connect and relish your tradition!</h3></br>
 	<?php include('includes/navigation.inc.php');
 
 	// $firstname = $_SESSION['firstname'];
@@ -141,6 +140,8 @@ if(isset($_POST) and isset($_GET)) {
 			</div>
 		</div>   <!-- end of col2-->
 	</div>
+      <span class="success" style="display:none;"></span>
+                     <span class="error" style="display:none;">Please enter some text</span>
 </div>
 
 <?php include('includes/footer.inc.php'); ?>
