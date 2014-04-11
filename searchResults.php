@@ -28,11 +28,12 @@
 	<meta name="robots" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css"/>
-
+	<link rel="stylesheet" type="text/css" href="includes/styles/chef_style.css"/>
 	
 	<?php
 	
 	require_once 'includes/constants/sql_constants.php';
+	require_once 'includes/constants/card_print.php';
 	secure_page();
 	
 	if (isset($_GET['food_id'])){

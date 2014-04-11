@@ -48,8 +48,8 @@ function doesCSS(p){
                        
 
         require_once 'includes/constants/sql_constants.php';        
-	require_once 'includes/constants/card_print.php';
-        require_once 'includes/constants/event_card_print.php';
+		require_once 'includes/constants/card_print.php';
+        //require_once 'includes/constants/event_card_print.php';
         secure_page();  
         return_meta("Home!");
         $msg = NULL;

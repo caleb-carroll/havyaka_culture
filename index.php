@@ -1,10 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
-<head>
-<title>Community Resource</title>
-<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
-<meta name="home" content="index, follow" />
-<link rel="stylesheet" type="text/css" href="includes/styles/index_style.css" media="screen" />
 <script src="includes/js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 
@@ -39,7 +32,6 @@ function get_city_state(zipcode) {
 	}); 
 }
 
-
 function getCityState(results,zipcode) {
 	var a = results[0].address_components;
 	var city, state;
@@ -72,7 +64,7 @@ function compIsType(t, s) {
 </script>
 
 <?php
-require 'includes/constants/sql_constants.php';
+require_once 'includes/constants/sql_constants.php';
 
 $meta_title = "Get Started";
 
@@ -118,55 +110,54 @@ if(isset($_POST['Signup'])) {
 
 return_meta($meta_title);
 ?>
-
+<link rel="stylesheet" type="text/css" href="includes/styles/index_style.css" media="screen" />
 </head>
 
-<div class = "login_event_section">
-
-<?php
-//Show message if isset
-if(isset($msg)) {
-	echo '<div class="success">'.$msg.'</div>';
-}
-//Show error message if isset
-if(!empty($err)) {
-	echo '<div class="err">';
-	
-	foreach($err as $e) {
-		echo $e.'<br />';
-	}
-	
-	echo '</div>';
-}
-?>
-
-<body id = "register_body">
+<body>
 	<h1>Community Connect</h1> 
-	<div class="login_event_section" id="logincol">
-		<h1>Login to your account</h1>
+	
+    <div class="login">
 		<?php include_once 'login.php'; ?>
 	</div>
 
-	<div class="login_event_section" id = "eventcol">
-		<div class="public_event_display_header">
-
-		</div> 
-		
+<!--	<div class="login_event_section" id = "eventcol">
+		<?php
+		//Show message if isset
+		if(isset($msg)) {
+			echo '<div class="success">'.$msg.'</div>';
+		}
+		//Show error message if isset
+		if(!empty($err)) {
+			echo '<div class="err">';
+			
+			foreach($err as $e) {
+				echo $e.'<br />';
+			}
+			
+			echo '</div>';
+		}
+		?>
+	</div>-->
+	
+	<div class="public_event_display_header">
 		<?php include_once 'public_event.php'; ?>
-	</div>
+	</div> 
 
-	<div class="login_event_section" id="infocol">
-	information
+	<div class="information_section">
+        <p class="section_header">Information Section</p>
+        <img src="<?php echo BASE . "/pictures/default_event.jpg" ?>" class="event_image" style="max-width:15em"/>
 	</div>
 	
-	<div class="login_event_section" id="registercol">
-		<div class="register_header">
-			<h1>Sign Up Now!</h1>
-		</div>
+	<div class="login_event_section">
+        <h1>Sign Up Now!</h1>
 
 		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="register_form">
 		<ul>
 			<li>
+				<label> First Name:</label> <input class="account" type="text" name="firstname" value="<?php echo stripslashes($firstname); ?>" placeholder="John" required="required">
+			</li>
+			
+            <li>
 				<label> Username: </label> <input class="account" id="username" type="text" name="username" placeholder="John123" value ="<?php echo stripslashes($username); ?>"   required="required">
 			</li>
 			
@@ -175,11 +166,7 @@ if(!empty($err)) {
 			</li>
 			
 			<li>
-				<label> Password: </label> <input class="account" type="password" name="pass2" value="" placeholder="mypassword" required="required">
-			</li>
-			
-			<li>
-				<label> First Name:</label> <input class="account" type="text" name="firstname" value="<?php echo stripslashes($firstname); ?>" placeholder="John" required="required">
+				<label>Confirm Password: </label> <input class="account" type="password" name="pass2" value="" placeholder="mypassword" required="required">
 			</li>
 			
 			<li>
@@ -190,7 +177,7 @@ if(!empty($err)) {
 				<label> Zip Code:</label> <input class="account" id ="zipcode" type="number" name="zipcode" value="<?php echo stripslashes($zipcode); ?>" placeholder="52403">
 			</li>
 			
-			<li>
+			<!--<li>
 				<label> Community Type:</label> <select name='community_type' class='account' id='c_type'>
 				<option value="" selected></option>
 				<?php 
@@ -206,12 +193,9 @@ if(!empty($err)) {
 				}
 				?>
 				</select>
-			</li>
-			
-			<li>
-				<p><button id ="signup" type="submit" name="Signup">Sign Up</button> </p>
-			</li>
+			</li>-->
 		</ul>
+        <button id ="signup" type="submit" name="Signup">Sign Up</button>
 		</form>
 	</div> 
 </body>

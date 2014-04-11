@@ -31,13 +31,13 @@ if(isset($_POST['login']))
    //Select only ONE password from the db table if the username = username, or the user input email (after being encrypted) matches an encrypted email in the db
 	
      
-           $results = mysqli_query ($link,$sql);
+            $results = mysqli_query ($link,$sql);
             //Select only the password if a user matched
-           $row = mysqli_fetch_array($results, MYSQLI_ASSOC);
-           $pass = $row['user_password'];
-           $userid = $row['user_id'];
-           $approved = $row['approved'];
-          
+            $row = mysqli_fetch_array($results, MYSQLI_ASSOC);
+            $pass = $row['user_password'];
+            $userid = $row['user_id'];
+            $approved = $row['approved'];
+            
             if($approved == 0)
             {
                     $err[] = "You must activate your account, and may do so <a href=\"users/activate.php\">here</a>";
@@ -92,55 +92,34 @@ if(isset($_POST['login']))
 			$err[] = "This user was not found in the database.";
         }
 }
-        
-return_meta("Log in to your account");
+
 ?>
 
-<script>
-/*$(document).ready(function(){
-	$("#login_form").validate();
-});  */
-</script>
-</head>
-<body>
-
-	<?php
-	//Show message if isset
-	if(isset($msg) || !empty($_GET['msg']))
+<?php
+//Show message if isset
+if(isset($msg) || !empty($_GET['msg']))
+{
+	if(!empty($_GET['msg']))
 	{
-		if(!empty($_GET['msg']))
-		{
-			$msg = $_GET['msg'];
-		}
-		echo '<div class="success">'.$msg.'</div>';
+		$msg = $_GET['msg'];
 	}
-	//Show error message if isset
-	if(!empty($err))
+	echo '<div class="success">'.$msg.'</div>';
+}
+//Show error message if isset
+if(!empty($err))
+{
+	echo '<div class="err">';
+	foreach($err as $e)
 	{
-		echo '<div class="err">';
-		foreach($err as $e)
-		{
-		echo $e.'<br />';
-		}
-		echo '</div>';
+	echo $e.'<br />';
 	}
-	?>
+	echo '</div>';
+}
+?>
 
-	<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="login_form">
-            <ul>
-                <li>
-                    <label>Username/Email:</label><input type="text" name="user" value="<?php echo stripslashes($username); ?>" class="required" />
-                </li>
-                <li>
-                    <label> Password:</label><input type="text" name="pass" value="<?php echo stripslashes($pass2); ?>" class="required" />
-                </li>
-                <li>   
-                    <button id ="login" type="submit" name="login">Login</button> <span> <a href = 'password_reset.php'>Forgot password?</a>
-                    
-                </li>              
-                
-            </ul>
-	</form>
-
-</body>
-</html>
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="login_form">
+    <a href = 'password_reset.php'>Forgot password?</a><br>
+    <input type="text" name="user" value="<?php echo stripslashes($username); ?>" class="required" />
+    <input type="text" name="pass" value="<?php echo stripslashes($pass2); ?>" class="required" />
+    <button id ="login" type="submit">Login</button> 
+</form>
