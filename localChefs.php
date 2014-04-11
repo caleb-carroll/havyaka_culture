@@ -140,6 +140,8 @@ if(isset($_POST) and isset($_GET)) {
 			</div>
 		</div>   <!-- end of col2-->
 	</div>
+      <span class="success" style="display:none;"></span>
+                     <span class="error" style="display:none;">Please enter some text</span>
 </div>
 
 <?php include('includes/footer.inc.php'); ?>

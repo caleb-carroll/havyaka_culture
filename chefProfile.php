@@ -1,3 +1,24 @@
+ <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+ 
+<script>
+	function doesCSS(p){
+		var s = ( document.body || document.documentElement).style;
+		return !!$.grep(['','-moz-', '-webkit-'],function(v){
+			return  typeof s[v+p] === 'string'
+		}).length
+	}
+
+	$('html')
+		.toggleClass('transform',doesCSS('transform'))
+		.toggleClass('no-transform',!doesCSS('transform'));
+
+$(function(){
+      $('.flip').click(function(){
+              console.log("clicked");
+              $(this).parent().closest('.flipper').toggleClass('flipped');
+      });
+  }); 
+</script>
 
 <?php
 
@@ -41,7 +62,7 @@ function chef_profile_data($user_id)
                  <h2>Create a new Chef Profile</h2> 
                  <button class="flip">Create your food bucket</button> &nbsp;<br></br>
              <?php } ?>
-            <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=update_chef_profile" method="post"> 
+                 <form action="userProfile.php?cmd=update_chef_profile" method="post"> 
                 <input type='hidden' name='chef_id' value='<?php echo $chef_info[0]['chef_id'];?>' ></input>
 
                    About yourself as a chef: <textarea style="width:400px; height: 100px;"  name="about_chef"><?php echo $chef_info[0]['about_chef'];?></textarea><br>				
@@ -79,18 +100,19 @@ function chef_profile_data($user_id)
             <div id="request_new_food_div" style="display:none;">   
 
                    <h3>Add a food to your profile. (This should be one, you started taking orders!)</h3>
-                   <form action="<?php echo basename($_SERVER['PHP_SELF']);?>" id ="add_new_food_form" method="post" enctype="multipart/form-data">
-                   <input type="hidden" name="chef_id" value="<?php echo $chef_info[0]['chef_id'];?>"></input>
-                       Food Name: <input class="input_box" name="food_name" id="new_food_name" placeholder="Enter the food Name">
-                       Food description: <input class="input_box" name="food_description" id="new_food_description" placeholder="Enter the food Name"></input>
+                   <form action="userProfile.php" id ="add_new_food_form" method="post" enctype="multipart/form-data">
+                       <fieldset>
+                           <input type="hidden" id="chef_id" name ="chef_id" value="<?php echo $chef_id;?>">
+                            Food Name: <input class="input_box" name="food_name" id="new_food_name" placeholder="Enter the food Name">
+                            Food description:<textarea name="food_description" id="new_food_description"></textarea>
 
-                    <h3> Add a colorful picture to your food!</h3>
-                      <input type="file" name="file" id="food_pic"><br>
-                      <input type="submit" name="submit" value="Update"> &nbsp;<button name="cancel_food" id="cancel_food">Cancel</button>
-              </form>
+                            <h3> Add a colorful picture to your food!</h3>
+                            <input type="file" name="file" id="food_pic"><br>                          
+                       </fieldset>
+                 </form>
             </div>
                 <br>
-                  <form action="<?php echo basename($_SERVER['PHP_SELF']);?>" method="post">    
+                <form action="userProfile.php" method="post">    
                         <div id="food_from_db">
                             <select id ="selected_food" class="dropdown">
                                 <option selected value="default">Please Select a Food Type</option>
@@ -102,8 +124,8 @@ function chef_profile_data($user_id)
 
                                 <?php } ?>
                              </select>
-                            <button rel="<?php echo $current_food['food_id'];?>" rel1="<?php echo $chef_info[0]['chef_id'];?>" id="add_selected_food">Add this food to your bucket </button> &nbsp;&nbsp;&nbsp; <h4>Not found anything you prepare?</h4>
-                            <a class="link_class" id="request_new_food_link" href="#" >Request one Now!</a>
+                            <input type="button" name="add_selected_food" rel="<?php echo $current_food['food_id'];?>" rel1="<?php echo $chef_info[0]['chef_id'];?>" id="add_selected_food" value="Add this food to your bucket"> &nbsp;&nbsp;&nbsp; <h4>Not found anything you prepare?</h4>
+                            <input type="button" class="request_new_food_button" id="request_new_food_link" value="Request one Now!">                        
                         </div>
                   </form>
                 <?php if(isset($food_chef))
@@ -124,7 +146,7 @@ function chef_profile_data($user_id)
                                         list($width, $height, $type, $attr)= getimagesize($food_picture_loc);
                                 ?>
                                 <tr>
-                                    <form action="<?php echo basename($_SERVER['PHP_SELF']);?>" method="post">
+                                <form action="userProfile.php" method="post">
 
                                              <td id="food_name_<?php echo $food_id;?>"> <?php echo $r['food_name'];?></td>
 
@@ -136,7 +158,7 @@ function chef_profile_data($user_id)
 
                                              <button class="update_food" rel="<?php echo $r['food_id'];?>" rel1=<?php echo $chef_info[0]['chef_id'];?> id="update_food_"<?php echo $r['food_id'];?> >Update this food</button>
                                     </form>
-                                     <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_food_picture" method="post" enctype="multipart/form-data">
+                                <form action="userProfile.php?cmd=add_food_picture" method="post" enctype="multipart/form-data">
                                          <input  type="hidden" name="food_id" value="<?php echo $r['food_id'];?>">                                                   
                                          <input type="file" name="file" id="food_pic"><br>
                                          <input type="submit" name="submit" value="Update">

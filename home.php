@@ -9,6 +9,10 @@
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
         <link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js" type="text/javascript"><!--mce:0--></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <link rel="stylesheet" href="/resources/demos/style.css"></link>
 
 </head>
     <script>
@@ -41,19 +45,50 @@ function doesCSS(p){
 			$(this).parent().closest('.flipper').toggleClass('flipped');
                         
 		});
+                
+                $("#information_dialog").dialog({
+                      autoOpen: true,
+                      height: 500,
+                      width: 650
+                  });
 	});
     
     </script>
      <?php
-                       
-
         require_once 'includes/constants/sql_constants.php';        
 	require_once 'includes/constants/card_print.php';
         require_once 'includes/constants/event_card_print.php';
         secure_page();  
+        
+        if (isset($_SESSION['homepage']))
+            $_SESSION['homepage']++;
+        else
+           $_SESSION['homepage'] = 1;
+        
+          $user_id =  $_SESSION['user_id'];
+           
+        $hash_pass= crypt($passsalt,'connectcommunity1');
+          echo $hash_pass;
+        
+        //check if the user is logged in for the first time, if so, display the information dialog box
+        
+          $q = mysqli_query($link,"SELECT num_logins from " .USERS. " WHERE user_id =".$user_id) or die(mysqli_error($link));
+          
+          list($num_login) = mysqli_fetch_row($q);
+         
+          if(($num_login == 1) &&  ($_SESSION['homepage'] == 1))
+          {   
+              ?>
+            <div id ="information_dialog">
+                <p>
+                    Welcome to Community connect!
+                </p>
+            </div>
+          <?php }
+          
         return_meta("Home");
         $msg = NULL;
-        $user_id =  $_SESSION['user_id'];
+      
   ?>
     <body>
         <div id ="header">

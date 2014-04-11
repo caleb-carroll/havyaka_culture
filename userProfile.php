@@ -7,7 +7,7 @@
   <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
  
 <script>
-	function doesCSS(p){
+	/*function doesCSS(p){
 		var s = ( document.body || document.documentElement).style;
 		return !!$.grep(['','-moz-', '-webkit-'],function(v){
 			return  typeof s[v+p] === 'string'
@@ -17,15 +17,36 @@
 	$('html')
 		.toggleClass('transform',doesCSS('transform'))
 		.toggleClass('no-transform',!doesCSS('transform'));
-
+*/
 $(function(){
-      $('.flip').click(function(){
+    /*  $('.flip').click(function(){
               console.log("clicked");
               $(this).parent().closest('.flipper').toggleClass('flipped');
-      });
+      }); */
+      $( "#add_new_food_form" ).dialog({
+            autoOpen: false,
+            height: 500,
+            width: 650,
+            modal: true,
+            buttons: {
+            "Add food": function() {
+                 alert('!');
+                 var formData = new FormData($(this)[0]);                 
+                 alert(formData);
+                 add_new_food(formData);               
+                $( this ).dialog( "close" );
+            },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      },
+      close: function() {
+         $( this ).dialog( "close" );
+      }
+    });
       
         $("#request_new_food_link").click(function() {
-           $("#request_new_food_div").show(); 
+               $( "#add_new_food_form" ).dialog( "open" );         
         });
 
         $("#cancel_food").click(function() {
@@ -50,7 +71,8 @@ $(function(){
                      success:function () {                                 
                          $('.success').fadeIn(2000).show().html('Added Successfully!').fadeOut(6000); //Show, then hide success msg
                         $('.error').fadeOut(2000).hide(); 
-                        //refresh_content();
+                       // $("#chef_profile").load('chef_profile.php');
+                       refresh_content();
                      }                         
                  });
            return false;
@@ -58,10 +80,11 @@ $(function(){
 
         });
 
-         $("form#add_new_food_form").submit(function(){
+       function add_new_food(formData) {
+       //  $("form#add_new_food_form").submit(function(){
 
-            var formData = new FormData($(this)[0]);
-
+         //   var formData = new FormData($(this)[0]);
+            alert('1');
             $.ajax({
                 url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=add_new_food",
                 type: 'POST',
@@ -70,6 +93,8 @@ $(function(){
                 success: function () {
                     $('.success').fadeIn(2000).show().html('Added Successfully!').fadeOut(6000); //Show, then hide success msg
                         $('.error').fadeOut(2000).hide(); 
+                         //$("#chef_profile").load('chef_profile.php');
+                          refresh_content();
                 },
                 cache: false,
                 contentType: false,
@@ -77,15 +102,13 @@ $(function(){
             });
 
             return false;
-        });
-
+         // });
+        }
         $(".update_food").click(function() {
            var food_id = $(this).attr('rel');
            var chef_id = $(this).attr('rel1');
            var food_description_id = "food_description_"+food_id;
-           var food_price_id = "food_price_"+food_id;
            var food_description=document.getElementById(food_description_id).value;
-           var food_price = document.getElementById(food_price_id).value;
 
            if(food_description == '')
             {
@@ -96,7 +119,7 @@ $(function(){
             {
                 var datastring = "food_description=" +food_description+ "&food_id=" +food_id+ "&chef_id="+chef_id;
 
-                console.log(food_price+chef_id);
+                console.log(chef_id);
 
                  $.ajax(
                  { 
@@ -106,8 +129,9 @@ $(function(){
                      data: datastring,                             
                      success:function () {                                 
                          $('.success').fadeIn(2000).show().html('updated Successfully!').fadeOut(6000); //Show, then hide success msg
-                        $('.error').fadeOut(2000).hide(); 
-                        //refresh_content();
+                        $('.error').fadeOut(2000).hide();
+                        // $("#chef_profile").load('chef_profile.php');
+                        refresh_content();
                      }                         
                  });
             }
@@ -127,7 +151,8 @@ $(function(){
                      success:function () {                                 
                          $('.success').fadeIn(2000).show().html('deleted Successfully!').fadeOut(6000); //Show, then hide success msg
                         $('.error').fadeOut(2000).hide(); 
-                        //refresh_content();
+                        // $("#chef_profile").load('chef_profile.php');
+                        refresh_content();
                      }
 
                  });
@@ -135,6 +160,10 @@ $(function(){
         });
 
 });
+function refresh_content()
+{
+     $("#chef_profile").load('get_chef_load.php');
+}
 
 </script>
 
@@ -202,7 +231,8 @@ if($_POST and $_GET)
                     }
         }
     }
-    if($_GET['cmd'] == 'Delete_food')
+    
+   if($_GET['cmd'] == 'Delete_food')
         {
             echo "it is coming here";
             
@@ -257,7 +287,7 @@ if($_POST and $_GET)
    }
     if($_GET['cmd'] == 'add_new_food')
     {
-       // print_r($_POST);
+     //   print_r($_POST);
        // print_r($_FILES);
             $chef_id=$_POST['chef_id'];
             $food_name=filter($_POST['food_name']);
@@ -265,12 +295,13 @@ if($_POST and $_GET)
            $file_handler = $_FILES["file"];
             $picture = store_image($file_handler);
                   $picture_loc = "/".$picture;
-            echo $food_name .$food_description.$picture_loc;
+            echo "food details " .$food_name .$food_description.$picture_loc;
               $new_food_id = add_new_food($chef_id,$food_name,$food_description,$picture_loc);
     }
+    
     if($_GET['cmd'] == 'update_chef_profile')
     {
-
+        echo "inside update chef profile";
         $about_chef = filter($_POST['about_chef']);
         $contact_time_preference = $_POST['contact_time_preference'];
         $accepted_payment_type = $_POST['accepted_payment_type'];
@@ -299,10 +330,10 @@ if($_POST and $_GET)
             {
                 $delivery = "no";
             }
-           
-            if($chef_id)
+           echo $chef_id;
+            if($chef_id == NULL)
             {
-             $chef_profile_edit = create_update_chef_profile($about_chef,$contact_time_preference,$accepted_payment_type,$pickup,$offline,$delivery);
+             $chef_profile_edit = create_update_chef_profile($about_chef,$contact_time_preference,$accepted_payment_type,$pickup,$offline,$delivery,$user_id);
             } else {
                 $chef_profile_edit = create_update_chef_profile($about_chef,$contact_time_preference,$accepted_payment_type,$pickup,$offline,$delivery,$user_id,$chef_id);
             }
@@ -382,6 +413,8 @@ $results = get_events($user_id);
                    
 			<!-- Middle column start -->
                 <div class="card " id="user_profile_div"  style="width: 45%;overflow-y: scroll;">
+                      <span class="success" style="display:none;"></span>
+                      <span class="error" style="display:none;">Please enter some text</span>
                     <div class="front">
                         <?php 
                         if(empty($results))
@@ -420,12 +453,15 @@ $results = get_events($user_id);
 	   </div>  
             <div class="card flipper" id="chef_profile" style="width: 45%; overflow-y: scroll;">
                
-             <?php   chef_profile_data($user_id); ?>
+             <?php                //include_once 'chefProfile.php';
+             chef_profile_data($user_id); 
+             ?>
                 
             </div>
        <!-- Center column end -->
 			
        </div>
+        
     </div>
 </div>
 
