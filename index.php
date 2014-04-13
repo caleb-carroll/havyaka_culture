@@ -1,5 +1,6 @@
 <script src="includes/js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
 
 <script>
 $(document).ready(function(){
@@ -147,6 +148,7 @@ return_meta($meta_title);
 	<div class="page_content_holder">
 	
 		<!-- Beginning of public event display section -->
+		<h1>Public Events!</h1>
 		<div class="public_event_section">
 			<?php include_once 'public_event.php'; ?>
 		</div> 
@@ -192,6 +194,7 @@ return_meta($meta_title);
 		<!--- End of registration section -->
 		
 		
-		<?php include('includes/footer.inc.php'); ?>
+		
 	</div>
 </body>
+	<?php include('includes/footer.inc.php'); ?>
