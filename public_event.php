@@ -25,13 +25,13 @@ if($event_query = mysqli_query($link,$q)) {
 <?php
 foreach ($results as $r) {
 	if (empty($r['event_image'])){
-        $r['event_image']="/pictures/default_event.jpg";
-    }
-    ?>
-    <p class="event_name"><?php echo $r['event_name']; ?></p>
-    <p class="event_date"><?php echo $r['event_date']; ?></p>
+		$r['event_image']="/pictures/default_event.jpg";
+	}
+	?>
+	<p class="event_name"><?php echo $r['event_name']; ?></p>
+	<p class="event_date"><?php echo $r['event_date']; ?></p>
 	<p class="event_description"><?php echo $r['event_desc']; ?></p>
-    <img src="<?php echo BASE . $r['event_image']; ?>" class="event_image" style="max-width:15em"/>
+	<img src="<?php echo BASE . $r['event_image']; ?>" class="event_image" style="max-width:15em"/>
 <?php 
 } 
 ?>

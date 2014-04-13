@@ -63,6 +63,14 @@ tl = top left, br = bottom right, etc
 	bottom: 75%; 
 	/*background: pink; */
 }
+.bl { 
+	position: absolute; 
+	top: 33%; 
+	left: 1em; 
+	right: 41%; 
+	bottom: 1em; 
+	/*background: yellow; */
+}
 .tr { 
 	position: absolute; 
 	top: 1em; 
@@ -70,14 +78,6 @@ tl = top left, br = bottom right, etc
 	right: 1em; 
 	bottom: 60%; 
 	/*background: lightblue; */
-}
-.bl { 
-	position: absolute; 
-	top: 25%; 
-	left: 1em; 
-	right: 41%; 
-	bottom: 1em; 
-	/*background: yellow; */
 }
 .br { 
 	position: absolute; 

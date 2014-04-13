@@ -1,5 +1,4 @@
-/* login section css */
-
+/* 
 #logincol {
 	margin-top: 2em;
 	margin-left: 60em;
@@ -9,7 +8,8 @@
 	height: 200px;
 	margin-bottom: 1em;
 }
-/* register section css*/
+
+
 #registercol {
 	position:absolute;
 	margin-top: 19em;
@@ -80,7 +80,6 @@
 	text-decoration: none;    
 }
 
-/* login section css */
 #logincol #login_form ul{
 	list-style: none;
 	padding: .5em;
@@ -117,4 +116,61 @@
 	float:right;
 	width: 300px;
 	margin-right: 5px;
+} */
+
+label {
+	display:block;
+	font-size: .9em;
+	padding-top: .5em;
+}
+
+.account {
+	width:16em;
+}
+
+.login {
+	/* float:right; */
+}
+
+.page_content_holder{
+	position:relative;
+	height:100%;
+	width:100%;
+	/* background: green; */
+}
+
+.registration_section{
+	position: absolute; 
+	top: 1em; 
+	/* left: 75%;  */
+	right: 1em; 
+	bottom: 0%; 
+	min-width: 10em;
+	max-height:30em;
+	padding:.5em;
+	background: pink;
+	z-index:3;
+}
+
+.public_event_section{
+	position: absolute; 
+	top: 1em; 
+	left: 1em; 
+	right: 25%; 
+	bottom: 50%; 
+	padding:.5em;
+	background: lightblue;
+	overflow:hidden;
+	z-index: 1;
+}
+
+.information_section{
+	position: absolute; 
+	top: 50%; 
+	left: 1em; 
+	right: 25%; 
+	bottom: 1em; 
+	padding:.5em;
+	background: yellow;
+	z-index:2;
 }

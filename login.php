@@ -6,7 +6,7 @@ $username = NULL;
 $pass2 = NULL;
 $msg = NULL;
 $email = NULL;
-$err = array();
+//$err = array();
 
 //See if form was submitted, if so, execute...
 if(isset($_POST['login']))
@@ -15,7 +15,6 @@ if(isset($_POST['login']))
 	//Assigning vars and sanitizing user input
 	$username = filter($_POST['user']);
 	$pass2 = filter($_POST['pass']);
-        
 
 	if(empty($username) || strlen($username) < 4)
 	{
@@ -26,71 +25,69 @@ if(isset($_POST['login']))
 		$err[] = "You seem to have forgotten your password.";
 	}
 
-       $sql = "SELECT user_password, user_id, approved FROM ".USERS." WHERE username = '$username' OR email = AES_ENCRYPT('$email', '$salt');";
+	$sql = "SELECT user_password, user_id, approved FROM ".USERS." WHERE username = '$username' OR email = AES_ENCRYPT('$email', '$salt');";
 
-   //Select only ONE password from the db table if the username = username, or the user input email (after being encrypted) matches an encrypted email in the db
+//Select only ONE password from the db table if the username = username, or the user input email (after being encrypted) matches an encrypted email in the db
+	$results = mysqli_query ($link,$sql);
+	//Select only the password if a user matched
+	$row = mysqli_fetch_array($results, MYSQLI_ASSOC);
+	$pass = $row['user_password'];
+	$userid = $row['user_id'];
+	$approved = $row['approved'];
 	
-     
-            $results = mysqli_query ($link,$sql);
-            //Select only the password if a user matched
-            $row = mysqli_fetch_array($results, MYSQLI_ASSOC);
-            $pass = $row['user_password'];
-            $userid = $row['user_id'];
-            $approved = $row['approved'];
-            
-            if($approved == 0)
-            {
-                    $err[] = "You must activate your account, and may do so <a href=\"users/activate.php\">here</a>";
-            }
-            if(empty($err))
-            {
+	if($approved == 0)
+	{
+		$err[] = "You must activate your account, and may do so <a href=\"users/activate.php\">here</a>";
+	}
+	if(empty($err))
+	{
+		//If someone was found, check to see if passwords match
+		if(mysqli_num_rows($results) > 0)
+		{
+			if(hash_pass($pass2) === $pass)
+			{
 
-                    //If someone was found, check to see if passwords match
-                    if(mysqli_num_rows($results) > 0)
-                    {
-                            if(hash_pass($pass2) === $pass)
-                            {
+					$user_info = mysqli_query($link,"SELECT user_id, first_name, username, user_level FROM ".USERS." WHERE user_id = '$userid' LIMIT 1") or die("Unable to get user info");
+					list($id, $firstname, $username, $level) = mysqli_fetch_row($user_info);
+					
+					session_start();
+					//REALLY start new session (wipes all prior data)
+					session_regenerate_id(true);
 
-                                    $user_info = mysqli_query($link,"SELECT user_id, first_name, username, user_level FROM ".USERS." WHERE user_id = '$userid' LIMIT 1") or die("Unable to get user info");
-                                    list($id, $firstname, $username, $level) = mysqli_fetch_row($user_info);
-                                    
-                                    session_start();
-                                    //REALLY start new session (wipes all prior data)
-                                    session_regenerate_id(true);
+					//update the timestamp and key for session verification
+					$stamp = time();
+					$ckey = generate_key();
+					mysqli_query($link,"UPDATE ".USERS." SET `ctime`='$stamp', `ckey` = '$ckey', `num_logins` = num_logins+1, `last_login` = now() WHERE user_id='$id'") or die(mysqli_error($link));
 
-                                    //update the timestamp and key for session verification
-                                    $stamp = time();
-                                    $ckey = generate_key();
-                                    mysqli_query($link,"UPDATE ".USERS." SET `ctime`='$stamp', `ckey` = '$ckey', `num_logins` = num_logins+1, `last_login` = now() WHERE user_id='$id'") or die(mysqli_error($link));
+					//Assign session variables to information specific to user
+					$_SESSION['user_id'] = $id;
+					$_SESSION['firstname'] = $firstname;
+					$_SESSION['user_name'] = $username;
+					$_SESSION['user_level'] = $level;
+					$_SESSION['stamp'] = $stamp;
+					$_SESSION['key'] = $ckey;
+					$_SESSION['logged'] = true;
+					//And some added encryption for session security
+					$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
 
-                                    //Assign session variables to information specific to user
-                                    $_SESSION['user_id'] = $id;
-                                    $_SESSION['firstname'] = $firstname;                             
-                                    $_SESSION['user_name'] = $username;
-                                    $_SESSION['user_level'] = $level;
-                                    $_SESSION['stamp'] = $stamp;
-                                    $_SESSION['key'] = $ckey;
-                                    $_SESSION['logged'] = true;
-                                    //And some added encryption for session security
-                                    $_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
-
-                                    //Build a message for display where we want it
-                                    $msg = "Logged in successfully!";
+					//Build a message for display where we want it
+					$msg = "Logged in successfully!";
 
 
-                                    header("Location: ".BASE."/home.php");
-                        } //end passwords matched
+					header("Location: ".BASE."/home.php");
+			} //end passwords matched
 			else
 			{
 				//Passwords don't match, issue an error
 				$err[] = "Invalid User";
 			}
-                }
-     } 	else
-        {
-			//No rows found in DB matching username or email, issue error
-			$err[] = "This user was not found in the database.";
-        }
+		}
+    } 
+	else
+	{
+		//No rows found in DB matching username or email, issue error
+		$err[] = "This user was not found in the database.";
+	}
 }
 
 ?>
@@ -118,8 +115,11 @@ if(!empty($err))
 ?>
 
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="login_form">
-    <a href = 'password_reset.php'>Forgot password?</a><br>
-    <input type="text" name="user" value="<?php echo stripslashes($username); ?>" class="required" />
-    <input type="text" name="pass" value="<?php echo stripslashes($pass2); ?>" class="required" />
-    <button id ="login" type="submit">Login</button> 
+	<p><a href = 'password_reset.php'>Forgot password?</a></p>
+	<label for="user">Username</label>
+	<input type="text" name="user" value="<?php echo stripslashes($username); ?>" class="required" />
+	<label for="pass">Password</label>
+	<input type="text" name="pass" value="<?php echo stripslashes($pass2); ?>" class="required" />
+	<br>
+	<button id ="login" name="login" type="submit">Login</button> 
 </form>

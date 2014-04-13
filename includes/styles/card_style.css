@@ -59,7 +59,7 @@ http://home.jejaju.com/play/flipCards/simple */
 	padding:0px;
 	margin:2em;
 	width:40em;
-	height:40em;
+	height:30em;
 	/* added overflow auto until I figure out how we want to size these cards */
  	/*overflow-y: scroll;*/
 	background-position: top right;

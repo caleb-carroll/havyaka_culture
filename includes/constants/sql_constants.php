@@ -49,6 +49,7 @@ function return_meta($title = NULL, $keywords = NULL, $description = NULL) {
 	<meta name="url" content="'.BASE.'" />
 	<meta name="copyright" content="Copyright '.date("Y").' Community Connect. All rights reserved." />
 	<meta name="author" content="Your site name here" />
+	<meta charset="utf-8">
 	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
 	<link rel="stylesheet" type="text/css" media="all" href="'.BASE.'/includes/styles/style.css" />
 	
@@ -557,12 +558,12 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 		else {
 			$err[] ="Something happened!, please try again!";
 		}
+		mysqli_free_result($q1);
 	}
 	
 
 	
 
-	mysqli_free_result($query);
 
 	return $err;
 }
