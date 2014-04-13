@@ -48,13 +48,7 @@ $(function(){
         $("#request_new_food_link").click(function() {
                $( "#add_new_food_form" ).dialog( "open" );         
         });
-
-        $("#cancel_food").click(function() {
-           $("#request_new_food_div").hide();
-
-           $("#request_new_food_link").show();
-        });
-
+       
         $("#add_selected_food").click(function(){
             var e = document.getElementById("selected_food");
             var food_id = e.options[e.selectedIndex].value;
@@ -164,7 +158,6 @@ function refresh_content()
 {
      $("#chef_profile").load('get_chef_load.php');
 }
-
 </script>
 
 <?php
@@ -173,8 +166,8 @@ require_once 'chefProfile.php';
 secure_page();
 $user_id = $_SESSION['user_id'];
 
-		$msg = NULL;
-                $err=NULL;
+        $msg = NULL;
+        $err=NULL;
 
 if($_POST and $_GET)
 {

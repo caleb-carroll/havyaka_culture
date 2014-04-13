@@ -89,7 +89,7 @@ if(isset($_POST['login']))
      } 	else
         {
 			//No rows found in DB matching username or email, issue error
-			$err[] = "This user was not found in the database.";
+			$err[] = "This user was not found in our database.";
         }
 }
 

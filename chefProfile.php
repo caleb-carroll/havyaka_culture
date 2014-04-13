@@ -52,43 +52,42 @@ function chef_profile_data($user_id)
             $food_names = get_all_food_names();
 
 ?>
+<div class="back">
+    <?php if(!empty($chef_info_filter))
+     { ?>
+     <button class="flip">Edit your food bucket</button> &nbsp;<br></br>
+     <h2>Edit your Chef Profile</h2> 
+     <?php } else {?>                                
+         <h2>Create a new Chef Profile</h2> 
+         <button class="flip">Create your food bucket</button> &nbsp;<br></br>
+     <?php } ?>
+         <form action="userProfile.php?cmd=update_chef_profile" method="post"> 
+        <input type='hidden' name='chef_id' value='<?php echo $chef_info[0]['chef_id'];?>' ></input>
 
-        <div class="back">
-            <?php if(!empty($chef_info_filter))
-             { ?>
-             <button class="flip">Edit your food bucket</button> &nbsp;<br></br>
-             <h2>Edit your Chef Profile</h2> 
-             <?php } else {?>                                
-                 <h2>Create a new Chef Profile</h2> 
-                 <button class="flip">Create your food bucket</button> &nbsp;<br></br>
-             <?php } ?>
-                 <form action="userProfile.php?cmd=update_chef_profile" method="post"> 
-                <input type='hidden' name='chef_id' value='<?php echo $chef_info[0]['chef_id'];?>' ></input>
+           About yourself as a chef: <textarea style="width:400px; height: 100px;"  name="about_chef"><?php echo $chef_info[0]['about_chef'];?></textarea><br>				
+           Contact Hours: <select name="contact_time_preference" id="contact_time_preference">                                            
+                               <option value="morning" <?php if($chef_info[0]['contact_time_preference'] == "morning") echo "selected";?>>Morning</option>
+                               <option value="noon" <?php if($chef_info[0]['contact_time_preference'] == "noon") echo "selected";?>>Noon</option>
+                               <option value="evening" <?php if($chef_info[0]['contact_time_preference'] == "evening") echo "selected";?>>Evening</option>
+                               <option value="anytime" <?php if($chef_info[0]['contact_time_preference'] == "evening") echo "selected";?>>Any time</option>
+                          </select> 
+                <br>
+            Accepted payment method's : <select name="accepted_payment_type" id="accepted_payment_type">                                            
+                            <option value="cash" <?php if($chef_info[0]['payments_accepted'] == "cash") echo "selected";?>>Cash</option>
+                            <option value="check" <?php if($chef_info[0]['payments_accepted'] == "Check") echo "selected";?>>Check</option>
+                            <option value="cash or check" <?php if($chef_info[0]['payments_accepted'] == "Cash or Check") echo "selected";?>>Cash or Check</option>
+                            <option value="paypal" <?php if($chef_info[0]['payments_accepted'] == "Paypal") echo "selected";?>>Paypal</option>
+                            <option value="other" <?php if($chef_info[0]['payments_accepted'] == "Other") echo "selected";?>>Other</option>
+                      </select> 
+    <br>
+               <!-- marks these checkboxes as checked or unchecked based on what we find in the DB -->
+               <input style="width:20px; height: 20px;" type="checkbox" name='pickup' value="pickup" <?php if($chef_info[0]['pickup_available'] == "Yes") echo "checked"; else echo "unchecked";?>>Offer pickup?</input><br>
+                <input style="width:20px; height: 20px;" type="checkbox" name='offline' value="offline" <?php if($chef_info[0]['taking_offline_order'] == "Yes") echo "checked"; else echo "unchecked";?>>Take offline orders?</input><br>
+                <input style="width:20px; height: 20px;" type="checkbox" name='delivery' value="delivery" <?php if($chef_info[0]['delivery_available'] == "Yes") echo "checked"; else echo "unchecked";?>>Offer delivery?</input><br>
 
-                   About yourself as a chef: <textarea style="width:400px; height: 100px;"  name="about_chef"><?php echo $chef_info[0]['about_chef'];?></textarea><br>				
-                   Contact Hours: <select name="contact_time_preference" id="contact_time_preference">                                            
-                                       <option value="morning" <?php if($chef_info[0]['contact_time_preference'] == "morning") echo "selected";?>>Morning</option>
-                                       <option value="noon" <?php if($chef_info[0]['contact_time_preference'] == "noon") echo "selected";?>>Noon</option>
-                                       <option value="evening" <?php if($chef_info[0]['contact_time_preference'] == "evening") echo "selected";?>>Evening</option>
-                                       <option value="anytime" <?php if($chef_info[0]['contact_time_preference'] == "evening") echo "selected";?>>Any time</option>
-                                  </select> 
-                        <br>
-                    Accepted payment method's : <select name="accepted_payment_type" id="accepted_payment_type">                                            
-                                    <option value="cash" <?php if($chef_info[0]['payments_accepted'] == "cash") echo "selected";?>>Cash</option>
-                                    <option value="check" <?php if($chef_info[0]['payments_accepted'] == "Check") echo "selected";?>>Check</option>
-                                    <option value="cash or check" <?php if($chef_info[0]['payments_accepted'] == "Cash or Check") echo "selected";?>>Cash or Check</option>
-                                    <option value="paypal" <?php if($chef_info[0]['payments_accepted'] == "Paypal") echo "selected";?>>Paypal</option>
-                                    <option value="other" <?php if($chef_info[0]['payments_accepted'] == "Other") echo "selected";?>>Other</option>
-                              </select> 
-           <br>
-                       <!-- marks these checkboxes as checked or unchecked based on what we find in the DB -->
-                       <input style="width:20px; height: 20px;" type="checkbox" name='pickup' value="pickup" <?php if($chef_info[0]['pickup_available'] == "Yes") echo "checked"; else echo "unchecked";?>>Offer pickup?</input><br>
-                        <input style="width:20px; height: 20px;" type="checkbox" name='offline' value="offline" <?php if($chef_info[0]['taking_offline_order'] == "Yes") echo "checked"; else echo "unchecked";?>>Take offline orders?</input><br>
-                        <input style="width:20px; height: 20px;" type="checkbox" name='delivery' value="delivery" <?php if($chef_info[0]['delivery_available'] == "Yes") echo "checked"; else echo "unchecked";?>>Offer delivery?</input><br>
-
-                        <input type="submit" name="submit" value="Update"></input>
-             </form>             
-        </div>
+                <input type="submit" name="submit" value="Update"></input>
+     </form>             
+ </div>
         <div class="front">
             <button class="flip">Back to Chef Profile</button> &nbsp;<br></br>
              <?php if(!empty($food_chef))
