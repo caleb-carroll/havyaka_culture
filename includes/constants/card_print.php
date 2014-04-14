@@ -139,18 +139,24 @@ function print_chef_card($chef_info_array) {
 function print_event_card ($r) {
 	global  $link;
 
-	//generate individual ids
-	//get the picture of the event
-	//  
 	$event_id = $r['event_id'];
-	$zipcode = "zipcode_".$event_id;
-	$event_id_div = "eventid_".$event_id;
-	$save_event = "saveevent_".$event_id;
-	$flip = "flip_".$event_id;
-	$show_more = "show_more_".$event_id;
+	$zipcode = $r['zipcode'];
+	$event_name = $r['event_name'];
+	$event_desc = $r['event_desc'];
+	$event_date = $r['event_date'];
+	$venue_name = $r['venue_name'];
+	$venue_address = $r['venue_address'];
+	$city = $r['city'];
+	$state = $r['state'];
+	$first_name = $r['first_name'];
+	$last_name = $r['last_name'];
+	$email = $r['email'];
+	$phone = $r['phone'];
+
 	$attending_radio = "attending_radio_".$event_id;
 	$map_canvas = "map_canvas_".$event_id;
-
+	$save_event = "saveevent_".$event_id;
+	
 	$q3 = "SELECT image_location FROM event_picture WHERE event_id = ".$event_id. " LIMIT 1";
 	$query = mysqli_query($link,$q3) or (die(mysqli_error($link)));
 	$row_image = mysqli_fetch_row($query);
@@ -159,11 +165,11 @@ function print_event_card ($r) {
 	$media_loc = BASE.$media_loc;
 	list($width, $height, $type, $attr)= getimagesize($media_loc);
 
-	//back of the card: I am attending option, list users attending add to calender, google map      
-	$q = "select u.username from user as u inner join event_attendance as et on u.user_id = et.user_id and et.event_id = ".$event_id;
+	//back of the card: I am attending option, list users attending add to calender, google map
+	$q = "SELECT u.username, u.first_name, u.last_name FROM " . USERS . " AS u INNER JOIN " . ATTENDENCE . " AS et ON u.user_id = et.user_id AND et.event_id = ".$event_id;
 
 	$query1 = mysqli_query($link,$q) or (die(mysqli_error($link)));
-
+	$user_list = array();
 	While($row = mysqli_fetch_assoc($query1)) {
 		$user_list[]=$row;
 	}
@@ -171,68 +177,77 @@ function print_event_card ($r) {
 ?>
 	<div class ="card flipper">
 		<div class="back">
-			<table>
-				<input type="hidden" class='event_id' id= "<?php echo $event_id_div;?>" rel="<?php echo $r['event_id']; ?>" name ='event_id' value=<?php echo $r['event_id']; ?> ></input>
-				<input type="hidden" class="zipcode" id= "<?php echo $zipcode;?>" rel="<?php echo $r['zipcode']; ?>"  name="zipcode" value=<?php echo $r['zipcode']; ?>></input>
-
-				<tr>
-				<td>Event Name: </td>
-				<td><?php echo $r['event_name']; ?> </td>
-				</tr>
+			<input type="hidden" class='event_id' rel="<?php echo $event_id; ?>" name ='event_id'></input>
+			<input type="hidden" class="zipcode" rel="<?php echo $zipcode; ?>"  name="zipcode"></input>
+			
+			<div class="event_tl">
+				<p class="event_name"><?php echo $event_name; ?></p>
+				<p class="event_date">on: <?php echo $event_date; ?></p>
 				
-				<tr>
-				<td>Event Details: </td>
-				<td> <?php echo $r['event_desc']; ?></td>
-				<td><img class="gridimg2" src="<?php echo $media_loc;?>" /></td>
-				</tr>
+				<p class="venue_location"><?php 
+				echo $venue_name . "<br>";
+				echo $venue_address . "<br>";
+				echo $city . ", " . $state . " " . $zipcode; ?>
+				</p>
+				<p class="event_description"><?php echo $event_desc; ?></p>
 				
-				<tr>
-				<td>Date:</td>
-				<td> <?php echo $r['event_date']; ?> </td>
-				</tr>
-
-				<tr>
-				<td>Event Address: </td>
-				<td><?php echo $r['venue_name']; ?> <br> <?php echo $r['venue_address']; ?> <br> <?php echo $r['city']; ?> : <span><?php echo $r['state']; ?> - </span><?php echo $r['zipcode']; ?> </td>
-				</tr>
-				
-				<tr>
-				<td>Event contact details: </td>
-				<td><?php echo $r['first_name']; ?><?php echo $r['last_name']; ?> <br><?php echo $r['email']; ?> <br> <?php echo $r['phone']; ?> </td>
-				</tr>
-				
-				<tr>
-				<td><input type="checkbox"  class="attending_radio" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $attending_radio;?>" name="attending" value="attending" >I am attending!</input></td>
-				<td><button class = "save_event" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $save_event;?>" type="submit" name="save_event">Save</button></td>
-				<td><label name="flip" rel="<?php echo $r['event_id']; ?>" rel1="<?php echo $r['zipcode']; ?>" class="flip" id= "<?php echo $flip;?>" >Flip</label></td>
-				</tr>
-			</table>
+			</div>
+			<div class="event_bl">
+				<p class="contact_info">For more information, contact:<br>
+				<?php echo $first_name . " " . $last_name . "<br>" . $email . "<br>" . $phone; ?></p>
+			</div>
+			
+			<div class="event_right">
+				<p class="image_holder"><img class="event_image" src="<?php echo $media_loc;?>" /></p>
+				<br>
+				<input type="checkbox"  class="attending_radio" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $attending_radio;?>" name="attending" value="attending" >I am attending!</input>
+				<button class = "save_event" rel="<?php echo $event_id; ?>" id= "<?php echo $save_event;?>" type="submit" name="save_event">Save</button>
+			</div>
+			<button class="flip" style="position:absolute;bottom:1%;right:1%;">Flip Card</button>
+			
+			
 		</div>
 		
 		<div class="front">
-			<h3>Friends attending <b><?php echo $r['event_name']; ?></b> function:</h3>
-			<?php
+			<p class="event_name"><?php echo $event_name; ?></p>
+			<p class="event_date">on: <?php echo $event_date; ?></p>
+			
+			
+			<p><?php 
+			// adapt text to the number of attendees for the event
+			$number_attendees = count($user_list);
+			echo $number_attendees;
+			switch ($number_attendees) {
+			case 0:
+				echo " attendees so far.";
+				break;
+			case 1:
+				echo " friend attending:";
+				break;
+			default:
+				echo " friends attending:"; 
+				break;
+			}
+			echo "<br>";
+			?>
+			<textarea readonly rows=10 cols=25><?php
+			// prints out the list of users attending
 			if(!empty($user_list)) {
-					foreach($user_list as $user) {
-						$username = $user['username'];
-						?>
-						
-						<div><?php echo $username; ?><br></div>
-						<?php
-						
-					}
-			} 
-			else { ?>
-				<h3>No attendances</h3>  
-	<?php	} ?>
-				
-			<div id="<?php echo $map_canvas;?>" rel="<?php echo $r['event_id']; ?>" class = "map_canvas" style="width:100%; height: 100%; margin-left:0px;" >
-				<?php 
-				//  include 'google_map_api.php';
-				?>
-			</div>
-				
-			<label name="flip" class="flip" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $flip;?>" >Flip</label>
+				foreach($user_list as $user) {
+					echo $user['first_name'] . " " . $user['last_name'] . PHP_EOL;
+				}
+			}
+			else {
+				echo "You can be the first!";
+			} ?>
+			</textarea>
+			</p>
+			<!-- div that holds the google map for the card -->
+			<!-- <div id="<?php echo $map_canvas;?>" rel="<?php echo $event_id; ?>" class = "map_canvas">
+			</div> -->
+			<div class="map_canvas" style="background:lightgrey; position:absolute; top:7em; left:50%; right:1em; padding:.5em; margin:.25em;">Placeholder for Google Map</div>
+			
+			<button class="flip" style="position:absolute;bottom:0;right:0;">Flip Card</button>
 		</div>
 	</div>
 	<?php

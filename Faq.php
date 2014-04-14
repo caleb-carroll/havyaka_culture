@@ -79,10 +79,31 @@
                            <h3>Do you have issues using this website?:</h3>
                         <div>
                              <p class = "para">
-                              <a href="ContactForm.php">Contact us</a> and let us know your comments and questions. <br>
-                              We will be in touch with you.
-                         </p>
-                  </div>
+                                <a href="ContactForm.php">Contact us</a> and let us know your comments and questions. <br>
+                                We will be in touch with you.
+                             </p>
+                       </div>
+                            <h3>Do you have issues using this website?:</h3>
+                        <div>
+                             <p class = "para">
+                                <a href="ContactForm.php">Contact us</a> and let us know your comments and questions. <br>
+                                We will be in touch with you.
+                             </p>
+                       </div>
+                             <h3>Do you have issues using this website?:</h3>
+                        <div>
+                             <p class = "para">
+                                <a href="ContactForm.php">Contact us</a> and let us know your comments and questions. <br>
+                                We will be in touch with you.
+                             </p>
+                       </div>
+                              <h3>Do you have issues using this website?:</h3>
+                        <div>
+                             <p class = "para">
+                                <a href="ContactForm.php">Contact us</a> and let us know your comments and questions. <br>
+                                We will be in touch with you.
+                             </p>
+                       </div>
              </div>
         </div>
     </div>

@@ -1,116 +1,31 @@
-<html>
 <link rel="stylesheet" type="text/css" href="test.css" media="screen" />
 
-<body>
-<div class ="card flipper">
-	<div class="front" style="width:40em; height:40em">
-		<input type="hidden" value=1 ></input>
-		<p style="display:block; position:absolute; top: 1em; left: 1em; font-size:1.5em; font-weight:bold">Foods by Caleb Carroll</p>
-		<p style="display:inline-block; position:absolute; top: 1em; right: 5px;">Phone: 515-451-7842</p>
-		<p style="display:inline-block; position:absolute; top: 2em; right: 5px;">Email: <a href="mailto:calebc@iastate.edu">calebc@iastate.edu</a></p>
-		<p style="display:inline-block; position:absolute; top: 3em; right: 5px;">Contact hour: Any time after noon.</p>
-		<br><br><br>
+<div class="login_event_section">
+    <h1>Sign Up Now!</h1>
 
-        <table class="food_table">
-        <tr>
-        <td>
-        Rice - $1
-        <br><br>
-        Tasty and filling<br><br><br><br>
-  </td>
-        <td><img class="gridimg2" src="http://localhost/havyaka_culture/pictures/4.jpg" style="height:8em; float:right;" />
-      
-        </td>
-        </tr>
-
-
-        <tr>
-        <td>
-        Beans - $2
-        <br><br>
-        Musical and bland<br><br><br><br>
-  </td>
-        <td><img class="gridimg2" src="http://localhost/havyaka_culture/pictures/4.jpg" style="height:8em; float:right;" /></td>
-      
-        </tr>
-
-
-        <tr>
-        <td>
-        Lentils - $3
-        <br><br>
-        Lentily<br><br><br><br>
- </td>
-        <td><img class="gridimg2" src="http://localhost/havyaka_culture/pictures/3.jpg" style="height:8em; float:right;" /></td>
-       
-        </tr>
-
-        </table>
-
-        <button class="save_chef" rel="1" type="submit">Save</button>
-        <button class="flip">Flip</button>
-    </div>
-</div>
-
-<br><br><br><br><br><br><br><br>
-
-    
-    
-<!-- BACK OF CARD -->
-<div class ="card flipper">
-	<div class="back" style="width:40em; height:40em">
-		<h1 style="font-weight:bold;font-size:1.5em;">Caleb Carroll</h1>
-		<h3>About chef:</h3>
-		<p>He makes tasty food</p>
-		
-		<img class="chef_profile" src="http://localhost/havyaka_culture/pictures/calebc_profile.jpg" />
-		
-		<p>Delivery not available</p><p>Pickup not available</p><p>Payments accepted:Cash</p><p>Offline orders available</p>
-		<button class="flip">Flip</button>
-	</div>
-</div>
-
-<br><br><br><br><br><br><br><br>
-    
-<div class ="card flipper">
-	<div class="back" style="width:40em; height:40em">
-		<div class="tl">
+    <form action="" method="post" id="register_form">
+        <label for="firstname">First</label>
+        <input class="account" type="text" name="firstname" value="" placeholder="John" required="required">
         
-        <p class="card_title">Caleb Carroll</p>
-        
-        <p class="contact_info">
-            Phone: 515-451-7842<br>
-            Email: <a href="mailto:calebc@iastate.edu">calebc@iastate.edu</a><br>
-            Contact hours: Any time after noon.
-            </p>        
-        </div>
-        
-        
-        
-		<div class="tr">
-            <img class="chef_profile" src="http://localhost/havyaka_culture/pictures/calebc_profile.jpg" />
-        </div>
-		
-        <div class="bl">
-            <h3>About chef:</h3>
-            <p>He makes tasty food and other stuff. He likes to make food, and the  food that he makes is tasty and loved by all. He tends to ramble about all the tasty food and stuff that he likes to make so that the text can take up plenty of room.</p>
-            <h3>Favorite Dish:</h3>
-            <img class="gridimg2" src="http://localhost/havyaka_culture/pictures/3.jpg" style="width:80%" />
-        </div>
-        
-        <div class="br">
-            <button class="">Save Chef</button>
-            <button class="">Share Chef</button>
-                <p style="font-weight:bold;">Delivery not available<br><br>
-                Pickup not available<br><br>
-                Payments accepted:Cash<br><br>
-                Offline orders available</p>
-        </div>	
-            <button class="flip" style="position:absolute;bottom:0;right:0;">Flip Card</button>
-	</div>
-</div>
-    
-    
-</body>
-</html>
+        <label for="lastname">Last</label>
+        <input class="account" type="text" name="lastname" value="" placeholder="Smith" required="required">
 
+        <label> Zip Code:</label> 
+        <input class="account" id ="zipcode" type="number" name="zipcode" value="" placeholder="52403">
+
+        <label> Email: </label>
+        <input class="account" type="email" name="email" value="" placeholder="jobhnm@aol.com" required="required">
+
+        <label> Username: </label> 
+        <input class="account" id="username" type="text" name="username" placeholder="John123" value =""   required="required">
+
+        <label> Password: </label> 
+        <input class="account" type="password" name="pass1" value="" placeholder="mypassword" required="required">
+
+        <label>Confirm Password: </label> 
+        <input class="account" type="password" name="pass2" value="" placeholder="mypassword" required="required">
+        
+        <br>
+        <button type="submit" class="signup_button">Sign Up</button>
+    </form>
+</div> 

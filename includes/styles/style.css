@@ -45,7 +45,6 @@ p {
 }
 
 #header h1 {
-	margin-left: 12em;
 	margin-top: 1em;
 	color: brown;
 	font-size: 40px;
@@ -246,6 +245,7 @@ p {
 	float:left;
 	width:100%;
 	border-top:1px solid #000;
+	bottom:0px;
 }
 #footer p {
 	padding:10px;

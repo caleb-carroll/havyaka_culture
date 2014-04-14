@@ -11,8 +11,6 @@ if($food_query = mysqli_query($link, $q)) {
 		$foods[] = $row;
 	}
 }
-
-
 ?>
 
 

@@ -1,5 +1,6 @@
 <script src="includes/js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
 
 <script>
 $(document).ready(function(){
@@ -7,7 +8,7 @@ $(document).ready(function(){
 });
 
 function refresh_content() {
-	$("#eventcol").fadeIn(450).show().load('public_event.php');
+	$(".public_event_section").fadeIn(450).show().load('public_event.php');
 }
 
 setInterval( refresh_content, 6000 );
@@ -80,7 +81,7 @@ $err = array();
 $e_loc_id = NULL;
 
 //Check if the user signed up, add user to the user table.
-if(isset($_POST['Signup'])) {
+if(isset($_POST['register'])) {
 	$firstname = filter($_POST['firstname']);
 	$username = filter($_POST['username']);
 	$password = filter($_POST['pass1']);
@@ -90,8 +91,8 @@ if(isset($_POST['Signup'])) {
 	$date = date('Y-m-d');
 	$user_ip = $_SERVER['REMOTE_ADDR'];
 	$activation_code = rand(1000,9999);
-	$community_type = $_POST['community_type'];
-
+	$community_type = 'havyaka'; //$_POST['community_type'];
+	
 	$err = array();
 	//defined in config.inc.php
 	$err = add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type );
@@ -106,6 +107,7 @@ if(isset($_POST['Signup'])) {
 		</script>
 		<?php
 	}
+
 }
 
 return_meta($meta_title);
@@ -114,19 +116,22 @@ return_meta($meta_title);
 </head>
 
 <body>
-	<h1>Community Connect</h1> 
-	
-    <div class="login">
-		<?php include_once 'login.php'; ?>
+	<div id="header">
+		<h1>Community Connect</h1>
+		<div class="login">
+			<?php include_once 'login.php'; ?>
+		</div>
 	</div>
-
-<!--	<div class="login_event_section" id = "eventcol">
+	
+	<!-- Beginning of error display section -->
+	<div class="login_event_section">
 		<?php
 		//Show message if isset
 		if(isset($msg)) {
 			echo '<div class="success">'.$msg.'</div>';
 		}
 		//Show error message if isset
+		
 		if(!empty($err)) {
 			echo '<div class="err">';
 			
@@ -137,65 +142,59 @@ return_meta($meta_title);
 			echo '</div>';
 		}
 		?>
-	</div>-->
-	
-	<div class="public_event_display_header">
-		<?php include_once 'public_event.php'; ?>
-	</div> 
-
-	<div class="information_section">
-        <p class="section_header">Information Section</p>
-        <img src="<?php echo BASE . "/pictures/default_event.jpg" ?>" class="event_image" style="max-width:15em"/>
 	</div>
+	<!-- End of error display section -->
 	
-	<div class="login_event_section">
-        <h1>Sign Up Now!</h1>
+	<div class="page_content_holder">
+	
+		<!-- Beginning of public event display section -->
+		<h1>Public Events!</h1>
+		<div class="public_event_section">
+			<?php include_once 'public_event.php'; ?>
+		</div> 
+		<!-- End of public event display section -->
+		
+		<!-- Beginning of information section -->
+		<div class="information_section" >
+			<p class="section_header">Information Section</p>
+			<img src="<?php echo BASE . "/pictures/default_event.jpg" ?>" class="event_image" style="max-width:15em"/>
+		</div>
+		<!-- End of information section -->
+		
+		<!--- Begining of registration section -->
+		<div class="registration_section" style="border:solid;">
+			<h1>Register Now!</h1>
+			
+			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="register_form">
+				<label for="firstname">First</label>
+				<input class="account" type="text" name="firstname" required="required">
+				
+				<label for="lastname">Last</label>
+				<input class="account" type="text" name="lastname" required="required">
 
-		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="register_form">
-		<ul>
-			<li>
-				<label> First Name:</label> <input class="account" type="text" name="firstname" value="<?php echo stripslashes($firstname); ?>" placeholder="John" required="required">
-			</li>
-			
-            <li>
-				<label> Username: </label> <input class="account" id="username" type="text" name="username" placeholder="John123" value ="<?php echo stripslashes($username); ?>"   required="required">
-			</li>
-			
-			<li>
-				<label> Password: </label> <input class="account" type="password" name="pass1" value="" placeholder="mypassword" required="required">
-			</li>
-			
-			<li>
-				<label>Confirm Password: </label> <input class="account" type="password" name="pass2" value="" placeholder="mypassword" required="required">
-			</li>
-			
-			<li>
-				<label> Email: </label><input class="account" type="email" name="email" value="<?php echo stripslashes($email); ?>" placeholder="jobhnm@aol.com" required="required">
-			</li>
-			
-			<li>
-				<label> Zip Code:</label> <input class="account" id ="zipcode" type="number" name="zipcode" value="<?php echo stripslashes($zipcode); ?>" placeholder="52403">
-			</li>
-			
-			<!--<li>
-				<label> Community Type:</label> <select name='community_type' class='account' id='c_type'>
-				<option value="" selected></option>
-				<?php 
-				$val = $_POST['community_type']?:'';
-				$q = "SELECT community_name,community_id from ".COMMUNITY_TYPE. " WHERE 1";
-				echo $q;
-				$query = mysqli_query($link,$q);
+				<label> Zip Code:</label> 
+				<input class="account" id ="zipcode" type="number" name="zipcode">
 
-				while ($row = mysqli_fetch_assoc($query))
-				{
-				$selected = ($val == $row['community_name'] ? 'selected="selected"' : '');
-				echo '<option value ="' . $row['community_name'] . '" '. $selected .'>' . $row['community_name'] . '</option>';
-				}
-				?>
-				</select>
-			</li>-->
-		</ul>
-        <button id ="signup" type="submit" name="Signup">Sign Up</button>
-		</form>
-	</div> 
+				<label> Email: </label>
+				<input class="account" type="email" name="email" required="required">
+
+				<label> Username: </label> 
+				<input class="account" id="username" type="text" name="username" required="required">
+
+				<label> Password: </label> 
+				<input class="account" type="password" name="pass1" required="required">
+
+				<label>Confirm Password: </label> 
+				<input class="account" type="password" name="pass2" required="required">
+				
+				<br>
+				<button type="submit" name="register">Register</button>
+			</form>
+		</div> 
+		<!--- End of registration section -->
+		
+		
+		
+	</div>
 </body>
+	<?php include('includes/footer.inc.php'); ?>

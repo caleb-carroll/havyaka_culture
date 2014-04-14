@@ -49,6 +49,7 @@ function return_meta($title = NULL, $keywords = NULL, $description = NULL) {
 	<meta name="url" content="'.BASE.'" />
 	<meta name="copyright" content="Copyright '.date("Y").' Community Connect. All rights reserved." />
 	<meta name="author" content="Your site name here" />
+	<meta charset="utf-8">
 	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
 	<link rel="stylesheet" type="text/css" media="all" href="'.BASE.'/includes/styles/style.css" />
 	
@@ -553,6 +554,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 				$rs_activ = mysqli_query($link, "UPDATE ".USERS." SET approved='1' WHERE
 				user_id='". $user_id. "'") or die(mysqli_error($link));
 			}
+			//mysqli_free_result($q1);
 		}
 		else {
 			$err[] ="Something happened!, please try again!";
@@ -562,7 +564,6 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 
 	
 
-	mysqli_free_result($query);
 
 	return $err;
 }
@@ -728,14 +729,15 @@ function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_
 		
 
 	$q = "INSERT INTO " . EVENT . "(event_name, event_date, event_desc, event_scope, e_type_id,event_status, user_id, venue_id, community_id, e_recurring_id) VALUES ('$event_name', '$event_date', '$event_desc', '$event_scope', '$e_type_id','1', '$user_id', '$venue_id', '$community_id', '$e_recurring_id')";
-	echo $q;
+	// echo $q;
+	
 	if (mysqli_query($link,$q)){
-		echo "Event added successfully";
+		// echo "Event added successfully";
 		
 		return true;
 	}
 	else {
-		echo "Event failed to add";
+		// echo "Event failed to add";
 		
 		return false;
 	}
