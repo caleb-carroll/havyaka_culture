@@ -128,50 +128,40 @@ $(function(){
                 });
                 
                 
-              /*  $("#add_event").click(function() {
-                    var event_name = $("#event_name").val();
-                    var event_desc = $("#event_desc").val();
-                    var event_date = $(".datepicker").val();
-                    var event_type = $("#event_type").val();
-                    var event_scope = $("#event_scope").val();
-                    var venue_name = $("#venue_name").val();
-                    var venue_address = $("#venue_address").val();
-                    var event_zipcode = $("#event_zipcode").val();
-                    
-                     if(event_name == '' || event_desc == '' || event_date == '' || venue_name == '' || venue_address == '' || event_zipcode == '')
-                        {
-                                        //here, we change the html content of all divs with class="error" and show them
-                                        //there should be only 1 such div but the code would affect multiple if they were present in the page
-                                        $('.error').fadeIn(400).show().html('Please complete all fields.').fadeOut(6000); 
-                        }
-                        else
-                        {
-                    
-                            var datastring = "event_name=" +event_name+ "&event_desc=" +event_desc+ "&event_date=" +event_date+ "&event_type_id=" +event_type+ "&event_scope=" +event_scope+ "&venue_name=" +venue_name+ "&venue_address="+venue_address+ "&event_zipcode="+event_zipcode;
-                          console.log(datastring);
-                             $.ajax(
-                                       {
-                                               type: "POST",
-                                               url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=add_event", 
-                                               data: datastring,
-                                               success: function()
-                                               {
-                                                    $('.success').fadeIn(2000).show().html('Event created successfully!').fadeOut(6000); //Show, then hide success msg
-                                                   $('.error').fadeOut(2000).hide(); //If showing error, fade out   
-                                                   $(':input','#create_event_form').not(':button, :submit, :reset, :hidden')
-                                                    .val('')
-                                                    .removeAttr('checked')
-                                                    .removeAttr('selected');
-                                                    //window.location.reload();
-                                               }
-                                       }
-                               );
-                       }
-
-                                               
-                       return false;
-                    
-                }); */
+	$("#add_event").click(function() {
+		var datastring = $("#create_event_form").serialize();
+		
+		event_name = $('#event_name').val();
+		event_location = $('#event_location').val();
+		event_type = $('#event_type').val();
+		event_scope = $('#event_scope').val();
+		event_date = $('#event_date').val();
+		event_desc = $('#event_desc').val();
+		zipcode = $('#zipcode').val();
+		
+		console.log(datastring);
+			
+		$.ajax({
+			type: "POST",
+			url: "<?php echo BASE; ?>/event_interactions.php?cmd=add_event", 
+			data: datastring,
+			success: function(response){
+				var parsed_response = JSON.parse(response || "null");
+				
+				$('.success').fadeIn(2000).show().html("event added! ").fadeOut(6000); //Show, then hide success msg
+				$('.error').fadeOut(2000).hide(); //If showing error, fade out   
+				$('#create_event_div').hide('slide',500);
+				
+				$(':input','#create_event_form').not(':button, :submit, :reset, :hidden')
+					.val('')
+					.removeAttr('checked')
+					.removeAttr('selected');
+					//window.location.reload();
+			}
+		}); 
+		
+		return false;
+	});
 })
 
 </script>
@@ -361,7 +351,69 @@ $event_types = get_event_types();
         <?php include('includes/subnavigation.inc.php'); ?>
      </div>   
                  <div id="event_holder">
-                            
+	<!-- begin add event card -->
+	<div class="card flipper" id="create_event_div" >
+		<div class="back">
+			<h3>Create a new event!</h3>
+			<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event" id="create_event_form" method="post">
+				<input type='text' id="user_id" name="user_id" value="<?php echo $user_id;?>" style="display:none">
+				<table>
+				<tr>
+				<td width="25%">Event Name</td>
+				<td><input type="text" id="event_name" name="event_name" value="test"></td>
+				</tr>
+				
+				<tr>
+				<td>Event Venue Name</td>
+				<td><input type="text" id="venue_name" name="venue_name" value="test"></td>
+				</tr>
+				
+				<tr>
+				<td>Event Location Address</td>
+				<td><input type="text" id="venue_address" name="venue_address" value="test"></td>
+				</tr>
+				
+				<tr>
+				<td>Zipcode</td>
+				<td><input type="text" id="event_zipcode" name="event_zipcode" value="12345"></td>
+				</tr>
+				
+				<tr>
+				<td>Event Date</td>
+				<td><input type="text" class="datepicker" value="2014-04-20" name="event_date"></td>
+				</tr>
+				
+				<tr>
+				<td>Event Type</td>
+				<td><select name ="event_type" id="event_type">
+					<?php
+					foreach($event_types as $r) 
+					{
+					?>
+					<option value="<?php echo $r['e_type_id']; ?>"><?php echo $r['event_type']; ?></option>
+
+					<?php } ?>
+					</select> 
+				</td>
+				</tr>
+				
+				<tr>
+				<td>Event Scope</td>
+				<td><select name="event_scope" id="event_scope"><option value="public">Public</option><option value="private">Private</option></select>
+				</td>
+				</tr>
+				
+				<tr>
+				<td>Event Details</td>
+				<td><textarea id="event_desc" name="event_desc" >test</textarea><td>
+				</tr>
+				
+				</table>
+				<button type="submit" id="add_event">Add Event</button> &nbsp; <button type="submit" id="cancel_event">Cancel Event</button>
+			</form>
+		</div>
+	</div>
+	<!-- END Add Events Card -->
                     <br></br> <button name="create_event" id="create_event_button">Create an event</button>
                     <div class="card flipper" id="create_event_div" >
 

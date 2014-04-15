@@ -177,7 +177,7 @@ function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcod
 function  create_update_chef_profile($about_chef,$contact_time_preference,$accepted_payment_type,$pickup,$offline,$delivery,$user_id,$chef_id = NULL)
 {
     global $link;
-       echo $chef_id;
+    echo $chef_id;
     if($chef_id != NULL)
     {
         echo "inside update";
@@ -759,14 +759,14 @@ function update_event($event_name, $event_date, $event_desc, $event_scope, $e_ty
 
 	//get the e_loc_id
 
-	 $e_loc_id = insert_zipcode_location($event_zipcode);
+	$e_loc_id = insert_zipcode_location($event_zipcode);
 
 	//insert venue details into venue table
 	//I am not sure why we need to store venue phone, email and owner name. may be we can skip these info,if we both agree
 	$q_venue = mysqli_query($link,"INSERT INTO " .VENUE. " (venue_name,venue_address,e_loc_id) VALUES ('$venue_name','$venue_address',$e_loc_id)") or die(mysqli_error($link));
 
 	 $venue_id = mysqli_insert_id($link);
-	echo $venue_id;     
+	// echo $venue_id;
 
 	$q = "UPDATE " . EVENT . " SET event_name='$event_name', event_date='$event_date', event_desc='$event_desc', event_scope='$event_scope', e_type_id='$e_type_id', venue_id='$venue_id', e_recurring_id='$e_recurring_id' WHERE event_id = $event_id";
 	
@@ -1131,7 +1131,7 @@ function insert_zipcode_location ($zipcode) {
 function update_event_picture($image_location,$event_id) {
 	global $link;
 	
-	echo $image_location;
+	// echo $image_location;
 	//Check if the event_picture is inserted before or first time inserting.
 
 	if($q_event = mysqli_query($link,"SELECT * from ".EVENT_PICTURE. " WHERE event_id = ".$event_id)) {
@@ -1175,7 +1175,7 @@ function get_event_picture($event_id) {
 function get_attendance_count_list($event_id) {
 	global $link;
 	
-	if ($q_att = mysqli_query($link,"SELECT count(event_attendance_id) as e_count FROM `event_attendance` where event_id = ".$event_id)) {
+	if ($q_att = mysqli_query($link,"SELECT count(event_attendance_id) as e_count FROM " . ATTENDANCE . " where event_id = ".$event_id)) {
 		// if picture is not inserted, insert one.
 		if(mysqli_num_rows($q_att) == 0) {
 

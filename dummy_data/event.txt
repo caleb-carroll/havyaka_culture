@@ -1,2 +1,0 @@
-NULL	Havyaka party	2014-05-05	This event is a celebration of the Havyaka Community	1	public	1	1	1	1
-NULL	Community Lunch	2014-06-06	Join together to eat lunch!	1	public	1	1	1	1

@@ -146,21 +146,6 @@ return_meta($meta_title);
 	<!-- End of error display section -->
 	
 	<div class="page_content_holder">
-	
-		<!-- Beginning of public event display section -->
-		<h1>Public Events!</h1>
-		<div class="public_event_section">
-			<?php include_once 'public_event.php'; ?>
-		</div> 
-		<!-- End of public event display section -->
-		
-		<!-- Beginning of information section -->
-		<div class="information_section" >
-			<p class="section_header">Information Section</p>
-			<img src="<?php echo BASE . "/pictures/default_event.jpg" ?>" class="event_image" style="max-width:15em"/>
-		</div>
-		<!-- End of information section -->
-		
 		<!--- Begining of registration section -->
 		<div class="registration_section" style="border:solid;">
 			<h1>Register Now!</h1>
@@ -192,6 +177,21 @@ return_meta($meta_title);
 			</form>
 		</div> 
 		<!--- End of registration section -->
+	
+		<!-- Beginning of public event display section -->
+		<h1>Public Events!</h1>
+		<div class="public_event_section">
+			<?php include_once 'public_event.php'; ?>
+		</div> 
+		<!-- End of public event display section -->
+		
+		<!-- Beginning of information section -->
+		<div class="information_section" >
+			<p class="section_header">Information Section</p>
+			<img src="<?php echo BASE . "/pictures/default_event.jpg" ?>" class="event_image" style="max-width:15em"/>
+		</div>
+		<!-- End of information section -->
+		
 		
 		
 		

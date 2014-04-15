@@ -230,17 +230,17 @@ function print_event_card ($r) {
 			}
 			echo "<br>";
 			?>
-			<textarea readonly rows=10 cols=25><?php
+			<span style="border:none"><?php
 			// prints out the list of users attending
 			if(!empty($user_list)) {
 				foreach($user_list as $user) {
-					echo $user['first_name'] . " " . $user['last_name'] . PHP_EOL;
+					echo $user['first_name'] . " " . $user['last_name'] . "<br>";
 				}
 			}
 			else {
 				echo "You can be the first!";
 			} ?>
-			</textarea>
+			</span>
 			</p>
 			<!-- div that holds the google map for the card -->
 			<!-- <div id="<?php echo $map_canvas;?>" rel="<?php echo $event_id; ?>" class = "map_canvas">
