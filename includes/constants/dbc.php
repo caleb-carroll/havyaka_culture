@@ -34,7 +34,7 @@ define ("VENUE", "venue");
 define ("ATTENDENCE","event_attendance");
 
 define ("GLOBAL_EMAIL", "connect.community.culture@gmail.com");
-define("REQUIRE_ACTIVIATION","1");
+define("REQUIRE_ACTIVIATION","0");
 
 //our keys -- ideally, those would be stored on a separate machine or server
 $salt = "ae4bca65f3283fe26a6d3b10b85c3a308";

@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/constants/sql_constants.php';
+include_once 'includes/constants/sql_constants.php';
 
 //Pre-assign our variables to avoid undefined indexes
 $username = NULL;
@@ -14,31 +14,38 @@ if(isset($_POST['login']))
 
 	//Assigning vars and sanitizing user input
 	$username = filter($_POST['user']);
-	$pass2 = filter($_POST['pass']);
+	$pass2 = filter($_POST['pass']);       
 
 	if(empty($username) || strlen($username) < 4)
 	{
-		$err[] = "You must enter a username";
+		$err[] = "Please enter your username";
 	}
 	if(empty($pass2) || strlen($pass2) < 4)
 	{
 		$err[] = "You seem to have forgotten your password.";
 	}
+        
+        $user_name_check = mysqli_query($link,"SELECT username from ".USERS. " WHERE username ='$username'") or die(mysqli_error($link));
+        if(mysqli_num_rows($user_name_check) != 0)
+        {
 
-	$sql = "SELECT user_password, user_id, approved FROM ".USERS." WHERE username = '$username' OR email = AES_ENCRYPT('$email', '$salt');";
+            $sql = "SELECT user_password, user_id, approved FROM ".USERS." WHERE username = '$username' OR email = AES_ENCRYPT('$email', '$salt');";
 
-//Select only ONE password from the db table if the username = username, or the user input email (after being encrypted) matches an encrypted email in the db
-	$results = mysqli_query ($link,$sql);
-	//Select only the password if a user matched
-	$row = mysqli_fetch_array($results, MYSQLI_ASSOC);
-	$pass = $row['user_password'];
-	$userid = $row['user_id'];
-	$approved = $row['approved'];
+            //Select only ONE password from the db table if the username = username, or the user input email (after being encrypted) matches an encrypted email in the db
+            $results = mysqli_query ($link,$sql);
+            //Select only the password if a user matched
+            $row = mysqli_fetch_array($results, MYSQLI_ASSOC);
+            $pass = $row['user_password'];
+            $userid = $row['user_id'];
+            $approved = $row['approved'];
 	
-	if($approved == 0)
-	{
-		$err[] = "You must activate your account, and may do so <a href=\"users/activate.php\">here</a>";
-	}
+            if($approved == 0)
+            {
+                    $err[] = "You must activate your account, and may do so <a href=\"users/activate.php\">here</a>";
+            }
+        } else {
+            $err[] = "Invalid username. Please check again!";
+        }
 	if(empty($err))
 	{
 		//If someone was found, check to see if passwords match
@@ -80,55 +87,54 @@ if(isset($_POST['login']))
 			{
 				//Passwords don't match, issue an error
 				$err[] = "Invalid User";
+                                header("Location: ".BASE."/index.php");
 			}
-<<<<<<< HEAD
-                }
-     } 	else
-        {
-			//No rows found in DB matching username or email, issue error
-			$err[] = "This user was not found in our database.";
-        }
-=======
+
 		}
-    } 
+        } 
 	else
 	{
-		//No rows found in DB matching username or email, issue error
-		$err[] = "This user was not found in the database.";
+		//$err[] = "Invalid username. Please check again!";
 	}
->>>>>>> 75b475f503fab5eeb73148fc1ec9bb81feb47ab2
-}
 
-?>
-
-<?php
-//Show message if isset
-if(isset($msg) || !empty($_GET['msg']))
-{
-	if(!empty($_GET['msg']))
-	{
-		$msg = $_GET['msg'];
-	}
-	echo '<div class="success">'.$msg.'</div>';
-}
-//Show error message if isset
-if(!empty($err))
-{
-	echo '<div class="err">';
-	foreach($err as $e)
-	{
-	echo $e.'<br />';
-	}
-	echo '</div>';
 }
 ?>
 
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="login_form">
-	<p><a href = 'password_reset.php'>Forgot password?</a></p>
-	<label for="user">Username</label>
-	<input type="text" name="user" value="<?php echo stripslashes($username); ?>" class="required" />
-	<label for="pass">Password</label>
-	<input type="text" name="pass" value="<?php echo stripslashes($pass2); ?>" class="required" />
-	<br>
-	<button id ="login" name="login" type="submit">Login</button> 
-</form>
+            <?php 
+            if(isset($msg))
+                {
+                        echo '<div class="success" >'.$msg.'</div>';
+                } elseif (isset($err))
+                {
+                    if(!empty($err))
+                     {
+                        echo '<div class="err">';
+                        foreach($err as $e)
+                        {
+                        echo $e.'<br />';
+                        }
+                        echo '</div>';
+                    }
+                }
+            ?>
+                <div class="card " id="user_profile_div">
+                    
+                      <span class="success" style="display:none;"></span>
+                      <span class="error" style="display:none;">Please enter some text</span>
+                      
+                      <div class="front">
+
+                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="login_form">
+                                    <p><a href = 'password_reset.php'>Forgot password?</a></p>
+                                    <label for="user">Username</label>
+                                    <input type="text" name="user" value="<?php echo stripslashes($username); ?>" class="required" />
+                                    <label for="pass">Password</label>
+                                    <input type="password" name="pass" value="<?php echo stripslashes($pass2); ?>" class="required" />
+                                    <br>
+                                    <button id ="login" name="login" type="submit">Login</button> 
+                            </form>
+                      </div>
+                      
+            </div>
+</body>
+</html>

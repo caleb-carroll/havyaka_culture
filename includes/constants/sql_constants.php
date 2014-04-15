@@ -3,8 +3,7 @@
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
 
-include_once 'includes/swift/lib/swift_required.php';
-include_once 'includes/constants/dbc.php';
+include_once 'dbc.php';
 
 $file_location = "../pictures";
 global $file_location;
@@ -15,6 +14,8 @@ global $max_file_size;
 // connect to the SQL server and select the database - we can now use $link and $db in pages that include this page
 $link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die("Couldn't make connection:" . mysqli_error() );
 $db = mysqli_select_db($link, DB_NAME) or die("Couldn't select database:" . mysqli_error() );
+
+include_once '/../swift/lib/swift_required.php';
 
 /*Function to super sanitize anything going near our DBs*/
 function filter($data) {
@@ -407,7 +408,7 @@ function get_chefs_by_food($food_type_id) {
 /* display chef details and food details on the card based on the logged in user's location*/
 function get_localchef_details($user_id,$row_limit = NULL) {
 	global $link;
-
+        $results = array();
         if ($row_limit !=NULL)
         {
             $row_limit_set = $row_limit;
@@ -432,7 +433,10 @@ function get_localchef_details($user_id,$row_limit = NULL) {
 		while($row = mysqli_fetch_assoc($chef_query)) {
 			$results[] = $row;
 		}
-	}
+	} else 
+        {
+            $results[] = NULL;
+        }
 	mysqli_free_result($chef_query);
 
 	return $results;
@@ -523,9 +527,10 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 
 					User ID: ".$username."<br />
 					Email: ".$email."<br />
-					Password: ".$_POST['password']."</p>
+					Password: ".$password."<br>
+                                        Activation code: ".$activation_code."</p>
 
-					<p>You must activate your account before you can actually do anything:<br />
+					<p>You must activate your account before you can actually do anything. <br>You can do that by clicking on the below link or entering the activation code in the website:<br />
 					".BASE."/users/activate.php?user=".$md5_id."&activ_code=".$activation_code."</p>
 
 					<p>Thank You<br/>

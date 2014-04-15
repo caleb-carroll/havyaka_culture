@@ -128,7 +128,6 @@ function doesCSS(p){
 			<!-- Middle Column start -->
 			<style>img {width: 160px;}</style> 
                         <div id ="chef_holder">
-				<h2>Chefs in your area!</h2>
 				
 				<?php
 				// This section gets all chefs for the appropriate food types, then prints them into a card
@@ -136,14 +135,19 @@ function doesCSS(p){
 				$chefs_list = get_localchef_details($user_id,2);
 				
 				// prints a card for each chef associated with a food type
-				foreach ($chefs_list as $chef) {
-					
-					// gets the chef info and loads it into an array
-					$chef_info_array = get_chef_info($chef['chef_id']);
-					
-					// uses the chef info array to print cards
-					print_chef_card($chef_info_array);
-				}
+                               if(!empty($chef_list)) { 
+                                   
+                                   echo "<h2>Chefs in your area!</h2>";
+				
+                                    foreach ($chefs_list as $chef) {
+
+                                            // gets the chef info and loads it into an array
+                                            $chef_info_array = get_chef_info($chef['chef_id']);
+
+                                            // uses the chef info array to print cards
+                                            print_chef_card($chef_info_array);
+                                    }
+                               } 
 				?>
                                  <div class="more_link">
                                 <a href="localChefs.php">More Chefs>></a>
