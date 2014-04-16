@@ -59,12 +59,12 @@ if($_GET){
 			LINES TERMINATED BY '\n';";
 			
 			$install = mysqli_query($link, $dummy_sql) /* or die(mysql_error()) */;
-                        if($install && $q_insert_pstore){
-			    echo "<p>Dummy data inserted into " . $table[$i] . " successfully<p>";
+			if($install && $q_insert_pstore){
+				echo "<p>Dummy data inserted into " . $table[$i] . " successfully<p>";
 			}
 			else{
-                            echo "<p>" . $dummy_sql . "</p>";
-                            echo "<p>Dummy data install failed.<p>";
+				echo "<p>" . $dummy_sql . "</p>";
+				echo "<p>Dummy data install failed.<p>";
 			}
 			
 		}

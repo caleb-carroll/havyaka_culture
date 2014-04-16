@@ -85,7 +85,7 @@ $(function(){
 	$("#change_food_pic_form").hide();
 
 	// creates a jquery datepicker on all editable date areas
-	$( '.datepicker').datepicker();
+	$( '.datepicker').datepicker({dateFormat: "yy-mm-dd" });
 	
 	// flips cards over to edit/cancel editing
 	$('.flip').click(function(){
@@ -94,15 +94,15 @@ $(function(){
 	
 	
 	$("#create_event_button").click(function() {
-		$("#create_event_div").show();
-		$("#create_event_button").hide(); 
+		$("#create_event_button").fadeOut(700); 
+		$('#create_event_div').show('slide', {direction: "up"}, 900);
 		return false;
 	});
 	
-	$("#cancel_event").click(function() {
+	$("#cancel_add_event").click(function() {
 		$(this).closest('form').find("input[type=text], textarea").val("");
-		$("#create_event_div").hide();
-		$("#create_event_button").show();
+		$("#create_event_button").fadeIn(700);
+		$('#create_event_div').hide('slide', {direction: "up"}, 900);
 		return false;
 	});
 	
@@ -134,10 +134,11 @@ $(function(){
 	});
 	
 	$('.delete_event_button').click(function() {
-		var datastring = $(this).closest('.update_event_form').find('input:text[name=event_id]').val()
 		var card_id = $(this).closest('.flipper').attr('id');
+		var datastring = $('#' + card_id).find('input:text[name=event_id]').val()
 		
 		datastring = "event_id=" + datastring;
+		console.log(datastring);
 		
 		// ajax call to delete the event
 		$.ajax({
@@ -147,6 +148,7 @@ $(function(){
 			success: function(response){
 				// results will return with success=true or false
 				// to be implemented later
+				console.log(response);
 				var results = JSON.parse(response);
 				
 				// Show a message at the top of the page that the event was deleted.
@@ -211,28 +213,22 @@ $(function(){
 	
 	$("#add_event").click(function() {
 		var datastring = $("#create_event_form").serialize();
-		
-		event_name = $('#event_name').val();
-		event_location = $('#event_location').val();
-		event_type = $('#event_type').val();
-		event_scope = $('#event_scope').val();
-		event_date = $('#event_date').val();
-		event_desc = $('#event_desc').val();
-		zipcode = $('#zipcode').val();
-		
 		console.log(datastring);
-			
+		
+		get_city_state($("#create_event_div").find('.get_event_zipcode').val());
+		
 		$.ajax({
 			type: "POST",
 			url: "<?php echo BASE; ?>/event_interactions.php?cmd=add_event", 
 			data: datastring,
 			success: function(response){
+				// console.log(response);
 				var parsed_response = JSON.parse(response || "null");
 				
 				$('.success').fadeIn(2000).show().html("event added! ").fadeOut(6000); //Show, then hide success msg
 				$('.error').fadeOut(2000).hide(); //If showing error, fade out   
-				$('#create_event_div').hide('slide',500);
-				
+				$('#create_event_div').hide('slide', {direction: "up"}, 900);
+				$("#create_event_button").fadeIn(700);
 				$(':input','#create_event_form').not(':button, :submit, :reset, :hidden')
 					.val('')
 					.removeAttr('checked')
@@ -254,24 +250,6 @@ $msg = NULL;
 $err=NULL;
 
 if($_POST and $_GET){
-	if ($_GET['cmd'] == 'update_user'){
-		 
-		$first_name = $_POST['first_name'];
-		$last_name = $_POST['last_name'];
-		$phone = $_POST['phone'];
-		$email = $_POST['email'];
-		$profile_picture = NULL;
-		
-		// function to update an event 
-		if (update_user_info($user_id, $first_name, $last_name, $email, $phone, $profile_picture)) {
-			// add something here to display success/failure?
-			 $msg="Profile updated successfully";
-		}
-		else {
-			$err = "Oops!. sorry, could not update your profile, Please try again";
-		}
-	}
-	
 	// if the user is adding a picture, add it to the file system and reference in user table
 	if ($_GET['cmd'] == 'add_picture' || $_GET['cmd'] == 'add_event_picture'){
 		echo "1";
@@ -293,46 +271,6 @@ if($_POST and $_GET){
 				$event_id = $_POST['event_id'];
 				update_event_picture($picture_loc,$event_id);
 			}
-		}
-	}
-	
-	// to do: create form that calls this code
-	if ($_GET['cmd'] == 'add_event'){
-		$event_name = filter($_POST['event_name']);
-		$event_date =filter($_POST['event_date']);
-		$event_desc = filter($_POST['event_desc']);
-		$event_scope = filter($_POST['event_scope']);
-		$e_type_id = filter($_POST['event_type']);
-		$venue_name = filter($_POST['venue_name']);
-		$venue_address = filter($_POST['venue_address']);
-		$event_zipcode = filter($_POST['event_zipcode']);
-		$e_recurring_id = 1;
-		$community_id = 1;
-		
-		// function to add an event 
-		if (add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $user_id, $venue_name,$venue_address,$event_zipcode, $community_id, $e_recurring_id)) {
-			?>
-			<script>
-				get_city_state(<?php echo $event_zipcode;?>);
-			</script>  
-			
-			<?php 
-			$msg="Event is created successfully";
-		}
-		else {
-			 $err = "Oops!. sorry, could not create an event, Please try again";
-		} 
-	}
-	
-	if ($_GET['cmd'] == 'delete_event'){
-		$event_id = $_POST['event_id'];
-		
-		// function to add an event 
-		if (delete_event($event_id)) {
-			$msg = "Event updated successfully!";
-		}
-		else {
-			$err = "Oops!. sorry, could not update this event, Please try again";
 		}
 	}
 	
@@ -402,13 +340,14 @@ $results = get_events($user_id);
 			</div>
 			<div id="event_holder">
 			
-			<!-- begin add event card -->
+	<!-- begin add event card -->
+			<button name="create_event" id="create_event_button" style="display:block">Create an event</button>
 			<div class="card flipper manage_event" id="create_event_div" >
 				<div class="back">
 					<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event" id="create_event_form" method="post">
 							<div class="event_edit_left">
 							<h3>Create a new event!</h3>
-								<input style="display:none" type="text" name="event_id" value="">
+								<input style="display:none" type="text" name="user_id" value="<?php echo $user_id ?>">
 								
 								<label for="event_name">Event Name</label>
 								<input type="text" name="event_name" class="get_event_name" value="">
@@ -432,7 +371,6 @@ $results = get_events($user_id);
 								<input type="text" name="event_zipcode" class="get_event_zipcode" value="" >
 							</div>
 							<div class="event_edit_right">
-								<p class="image_holder"><img class="event_image" src="" /></p>
 								
 								<label for="event_type">Event Type</label>
 								<select name="event_type" class="get_event_type">
@@ -452,11 +390,14 @@ $results = get_events($user_id);
 								<label for="event_desc">Event Description</label>
 								<textarea name="event_desc" class="get_event_desc" cols=20 rows=3></textarea>
 							</div>
+							<div class="event_edit_bottom">
+								<button name="cancel_add" id="cancel_add_event">Cancel</button>
+								<button name="add_event" id="add_event">Add Event</button>
+							</div>
 					</form>
 				</div>
 			</div>
-			<br></br> <button name="create_event" id="create_event_button">Create an event</button>
-			<!-- END Add Events Card -->
+	<!-- END Add Events Card -->
 
 		<!-- begin existing events cards -->
 			<?php
@@ -523,7 +464,13 @@ $results = get_events($user_id);
 								<input type="text" name="event_zipcode" class="get_event_zipcode" value="<?php echo $zipcode ?>" >
 							</div>
 							<div class="event_edit_right">
-								<p class="image_holder"><img class="event_image" src="<?php echo $event_image_loc; ?>" /></p>
+								<p class="image_holder"><img class="event_image" style="max-height:20%" src="<?php echo $event_image_loc; ?>" /></p>
+									<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event_picture" method="post" enctype="multipart/form-data">
+										<input style="display:none" type="text" name="event_id" value="<?php echo $event_id ?>">
+										<label for="file">Filename:</label>
+										<input type="file" name="file" id="file_event" style="max-width:100%">
+										<input type="submit" name="submit" value="Update">
+									</form>
 								
 								<label for="event_type">Event Type</label>
 								<select name="event_type" class="get_event_type">
