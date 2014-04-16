@@ -228,7 +228,8 @@ function get_foods_of_chef($chef_id) {
 		where t1.food_id=t2.food_id and t2.chef_id = ".$chef_id;
 	
 	$results =array();
-		$query = mysqli_query($link,$q) or die (mysqli_query($link));
+        
+		$query = mysqli_query($link,$q) or die (mysqli_error($link));
 			if(mysqli_num_rows($query) !=0) {
 				while ($row = mysqli_fetch_assoc($query)) {
 					$results[] =$row;
@@ -724,23 +725,27 @@ function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_
 	//get the e_loc_id
 	$e_loc_id = insert_zipcode_location($event_zipcode);
 
-	//insert venue details into venue table
-	//I am not sure why we need to store venue phone, email and owner name. may be we can skip these info,if we both agree
-	$q_venue = mysqli_query($link,"INSERT INTO " .VENUE. " (venue_name,venue_address,e_loc_id) VALUES ('$venue_name','$venue_address',$e_loc_id)") or die(mysqli_error($link));
+        $q_venue_check = mysqli_query($link,"SELECT venue_id from ".VENUE. " where venue_name like '".$venue_name. "' and venue_address like '".$venue_address."' AND e_loc_id =".$e_loc_id. " LIMIT 1;") or die(mysqli_error($link));
+	
+        if(mysqli_num_rows($q_venue_check) !=0)
+        {            
+            $row = mysqli_fetch_assoc($q_venue_check);
+            $venue_id = $row['venue_id'];
+            echo $venue_id;
+        }  else {
 
-	$venue_id = mysqli_insert_id($link);
-		
-
+            //insert venue details into venue table
+            $q_venue = mysqli_query($link,"INSERT INTO " .VENUE. " (venue_name,venue_address,e_loc_id) VALUES ('$venue_name','$venue_address',$e_loc_id)") or die(mysqli_error($link));
+            $venue_id = mysqli_insert_id($link);		
+        }
+        
 	$q = "INSERT INTO " . EVENT . "(event_name, event_date, event_desc, event_scope, e_type_id,event_status, user_id, venue_id, community_id, e_recurring_id) VALUES ('$event_name', '$event_date', '$event_desc', '$event_scope', '$e_type_id','1', '$user_id', '$venue_id', '$community_id', '$e_recurring_id')";
-	// echo $q;
 	
 	if (mysqli_query($link,$q)){
-		// echo "Event added successfully";
 		
 		return true;
 	}
 	else {
-		// echo "Event failed to add";
 		
 		return false;
 	}
@@ -760,11 +765,17 @@ function update_event($event_name, $event_date, $event_desc, $event_scope, $e_ty
 	$e_loc_id = insert_zipcode_location($event_zipcode);
 
 	//insert venue details into venue table
-	//I am not sure why we need to store venue phone, email and owner name. may be we can skip these info,if we both agree
-	$q_venue = mysqli_query($link,"INSERT INTO " .VENUE. " (venue_name,venue_address,e_loc_id) VALUES ('$venue_name','$venue_address',$e_loc_id)") or die(mysqli_error($link));
+         $q_venue_check = mysqli_query($link,"SELECT venue_id from ".VENUE. " where venue_name like '".$venue_name. "' and venue_address like '".$venue_address."' AND e_loc_id =".$e_loc_id. " LIMIT 1;") or die(mysqli_error($link));
+	if(mysqli_num_rows($q_venue_check) !=0)
+        {
+            $row = mysqli_fetch_assoc($q_venue_check);
+            $venue_id = $row['venue_id'];
+        }  else {
+            $q_venue = mysqli_query($link,"INSERT INTO " .VENUE. " (venue_name,venue_address,e_loc_id) VALUES ('$venue_name','$venue_address',$e_loc_id)") or die(mysqli_error($link));
 
-	 $venue_id = mysqli_insert_id($link);
-	// echo $venue_id;
+             $venue_id = mysqli_insert_id($link);
+            // echo $venue_id;
+        }
 
 	$q = "UPDATE " . EVENT . " SET event_name='$event_name', event_date='$event_date', event_desc='$event_desc', event_scope='$event_scope', e_type_id='$e_type_id', venue_id='$venue_id', e_recurring_id='$e_recurring_id' WHERE event_id = $event_id";
 	

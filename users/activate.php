@@ -61,7 +61,7 @@ if (isset($_POST['activate']))
                     email= AES_ENCRYPT('$user_email', '$salt') AND activation_code = '$activ' ") or die(mysqli_error($link));
 
                       
-                    $msg = "Account activated successfully!  You may now <a href=\"".BASE."/index.php\">login</a>.";
+                    $msg = "<h3>Account activated successfully!  You may now <a href=\"".BASE."/index.php\">login</a>.</h3>";
             }
         }
 }
