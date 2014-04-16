@@ -1,7 +1,6 @@
 <?php 
 require_once 'includes/constants/sql_constants.php';
 
-
 // select food_name from " . FOOD . " LIMIT 6
 $q = "SELECT food_id, food_name FROM " . FOOD . " LIMIT 5";
 

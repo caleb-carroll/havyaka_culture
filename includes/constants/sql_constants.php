@@ -52,8 +52,6 @@ function return_meta($title = NULL, $keywords = NULL, $description = NULL) {
 	<meta name="author" content="Your site name here" />
 	<meta charset="utf-8">
 	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
-	<link rel="stylesheet" type="text/css" media="all" href="'.BASE.'/includes/styles/style.css" />
-	
 	';
 
 	echo $meta;

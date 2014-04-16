@@ -1,6 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
-<script type="text/javascript" src="includes\js\jquery-1.10.2.js"></script>
 <link rel="stylesheet" type="text/css" href="includes/styles/footer_style.css"/>
 <div id="footer">
 	<center>(c) 2014 Community Connect</center>
