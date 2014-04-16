@@ -46,7 +46,7 @@ function getCityState(results,zipcode) {
 	}
 	
 	var datastring = "zipcode= "+zipcode+ "&city= " +city+"&state= "+state;
-	alert(datastring);
+	
 	$.ajax({
 		type: "POST",
 		url: "updateaddress.php?cmd=updatecitystate", 
@@ -99,8 +99,10 @@ if(isset($_POST['register'])) {
 	
 	if ( count($err) == 0) {
 		$msg = "Registration successful!";
+                
 		$meta_title = "Registration successful!";
 		//if the registration is successful then get the city and state name using zipcode and update the table
+                
 		?>
 		<script>
 			get_city_state('<?php echo $zipcode;?>');

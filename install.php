@@ -36,10 +36,14 @@ if($_GET){
 	
 	/* Adds dummy data to our database for testing purposes. */
 	if ($_GET['cmd'] == 'dummy_data'){
-		$table = array("location", "community", "user", "chef", "event_type", "food", "venue", "event_recurrence","event", "food_chef_details", "user_saved_info", "event_attendance", "event_picture");
+                $table = array(LOCATION, COMMUNITY_TYPE, USERS, CHEF, EVENT_TYPE, FOOD, VENUE, EVENT_RECURRENCE, EVENT, FOOD_CHEF_DETAILS, USER_SAVED_INFO, ATTENDENCE, EVENT_PICTURE);
+		//$table = array("location", "community", "user", "chef", "event_type", "food", "venue", "event_recurrence","event", "food_chef_details", "user_saved_info", "event_attendance", "event_picture","pstore");
 		
-		$select = mysqli_select_db($link, DB_NAME);
-		
+		$select = mysqli_select_db($link, DB_NAME);		
+                
+                $q_insert_pstore = mysqli_query($link,"INSERT INTO ".PSTORE. " (p_id,p_email,p_pass) VALUES(1,AES_ENCRYPT('connect.community.culture@gmail.com','ae4bca65f3283fe26a6d3b10b85c3a308'),AES_ENCRYPT('connectcommunity1','ae4bca65f3283fe26a6d3b10b85c3a308')");
+		 
+                
 		for ($i = 0; $i < count($table); $i++){
 			$name = $table[$i];
 			/* 
@@ -57,12 +61,12 @@ if($_GET){
 			LINES TERMINATED BY '\n';";
 			
 			$install = mysqli_query($link, $dummy_sql) /* or die(mysql_error()) */;
-			if($install){
-				echo "<p>Dummy data inserted into " . $table[$i] . " successfully<p>";
+                        if($install && $q_insert_pstore){
+			    echo "<p>Dummy data inserted into " . $table[$i] . " successfully<p>";
 			}
 			else{
-				echo "<p>" . $dummy_sql . "</p>";
-				echo "<p>Dummy data install failed.<p>";
+                            echo "<p>" . $dummy_sql . "</p>";
+                            echo "<p>Dummy data install failed.<p>";
 			}
 			
 		}
