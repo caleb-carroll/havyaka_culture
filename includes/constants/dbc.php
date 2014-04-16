@@ -31,13 +31,8 @@ define ("LOCATION", "location");
 define ("USERS", "user");
 define ("USER_SAVED_INFO", "user_saved_info");
 define ("VENUE", "venue");
-<<<<<<< HEAD
 define ("ATTENDANCE","event_attendance");
 define ("EVENT_RECURRENCE","event_recurrence");
-=======
-define ("ATTENDENCE","event_attendance");
-define ("EVENT_RECURRENCE", "event_recurrence");
->>>>>>> 09f80ea08f082f33cf0d26f52c0007e942196bc3
 
 define ("GLOBAL_EMAIL", "connect.community.culture@gmail.com");
 define("REQUIRE_ACTIVIATION","0");
