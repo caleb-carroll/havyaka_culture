@@ -544,7 +544,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 
 				$result = send_message($email,$msg,$message);
 				if($result) {
-					echo "message sent";
+					echo "<h3>Registration is successfull!. You may now <a href=\"".BASE."/users/activate.php\">Activate </a> your account.</h3>";
 				}
 				else {
 					echo "message is not sent";
@@ -638,13 +638,13 @@ function update_user_info($user_id, $first_name, $last_name, $email, $phone, $pr
 function send_message($email_to,$msg_subject, $message) {
 	global $passsalt;
         global $salt;
-      global $link;
+        global $link;
         
-	$result = mysqli_query($link,"SELECT AES_DECRYPT(p_pass,'$salt') AS password FROM ".PSTORE. " WHERE p_email=AES_ENCRYPT('".GLOBAL_EMAIL."','$salt')") or die(mysqli_error($link));
-	$row = mysqli_fetch_assoc($result);
+	//$result = mysqli_query($link,"SELECT AES_DECRYPT(p_pass,'$salt') AS password FROM ".PSTORE. " WHERE p_email=AES_ENCRYPT('".GLOBAL_EMAIL."','$salt')") or die(mysqli_error($link));
+	//$row = mysqli_fetch_assoc($result);
         
-	$pw = $row['password'];
-       
+	//$pw = $row['password'];
+        $pw = "connectcommunity1";
 	//we use swift's email function
 	$email_to = $email_to; $email_from=GLOBAL_EMAIL;$password = $pw; $subj = $msg_subject;
 	$transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, "ssl")
