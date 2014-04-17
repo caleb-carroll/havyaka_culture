@@ -92,6 +92,7 @@ $(function(){
 		$(this).parent().closest('.flipper').toggleClass('flipped');
 	});
 	
+	$('.card').show('slide', {direction: "left"}, 400);
 	
 	$("#create_event_button").click(function() {
 		$("#create_event_button").fadeOut(700); 

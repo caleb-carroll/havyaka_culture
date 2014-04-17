@@ -1,5 +1,46 @@
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script>
+function doesCSS(p){
+	var s = ( document.body || document.documentElement).style;
+	return !!$.grep(['','-moz-', '-webkit-'],function(v){
+		return  typeof s[v+p] === 'string';
+	}).length;
+}
+
+$('html')
+	.toggleClass('transform',doesCSS('transform'))
+	.toggleClass('no-transform',!doesCSS('transform'));
+	
+$(function(){
+	// $('.card').hide('slide', {direction: "right"}, 300);
+	$('.card').show('slide', {direction: "left"}, 400);
+	$('.flip').hide();
+	$('.save_event').hide();
+	$('.attending_radio').hide();
+	$('#attending_label').hide();
+	
+	//$('.attending_radio').$('label').hide();
+	
+	$('.flip').click(function(){
+		// console.log("clicked");
+		$(this).parent().closest('.flipper').toggleClass('flipped');
+		
+		console.log($(this).parentsUntil('.flipper').find('.map_canvas').css('visibility'));
+/*  		if ($(this).parent().find('.map_canvas').css('visibility') == 'hidden')
+			$(this).parent().find('.map_canvas').css('visibility', 'visible');
+		else
+			$(this).parent().find('.map_canvas').css('visibility', 'hidden'); */
+	});
+	
+});
+</script>
+
 <?php
 require_once 'includes/constants/sql_constants.php';
+require_once 'includes/constants/card_print.php';
 
 //Pre-assign our variables to avoid undefined indexes
 $username = NULL;
@@ -17,59 +58,12 @@ $q = "SELECT t1.event_id, t1.event_date, t1.event_desc, t1.event_id, t1.event_na
 	LEFT JOIN " . LOCATION . " AS t4 ON t3.e_loc_id = t4.e_loc_id
 	LEFT JOIN " . USERS . " AS t5 ON t1.user_id = t5.user_id
 	WHERE t1.event_status=1 AND t1.event_scope = 'public' AND t1.event_date > CURDATE() ORDER BY RAND() LIMIT 1;";
-	
-	//echo "query is: " . $q;
+			
 if($event_query = mysqli_query($link,$q)) {
 	$results = mysqli_fetch_assoc($event_query);
 	mysqli_free_result($event_query);
 }
-	//print_r($results);
-	$event_id = $results['event_id'];
-	$zipcode = $results['zipcode'];
-	$event_name = $results['event_name'];
-	$event_desc = $results['event_desc'];
-	$event_date = $results['event_date'];
-	$venue_name = $results['venue_name'];
-	$venue_address = $results['venue_address'];
-	$city = $results['city'];
-	$state = $results['state'];
-	$first_name = $results['first_name'];
-	$last_name = $results['last_name'];
-	$email = $results['email'];
-	$phone = $results['phone'];
-	
-	$q3 = "SELECT image_location FROM " . EVENT_PICTURE . " WHERE event_id = ".$event_id. " LIMIT 1";
-	$query = mysqli_query($link,$q3) or (die(mysqli_error($link)));
-	$row_image = mysqli_fetch_row($query);
-	$image = $row_image[0];
-	
-	if (empty($image)){
-		$media_loc = "/pictures/default_event.jpg";
-	}
-	else {
-		$media_loc = htmlspecialchars($image);
-	}
-	$media_loc = BASE.$media_loc;
+
+print_event_card($results);
 ?>
 
-<div class="event_tl">
-	<p class="event_name"><?php echo $event_name; ?></p>
-	<p class="event_date">on: <?php echo $event_date; ?></p>
-	
-	<p class="venue_location"><?php 
-	echo $venue_name . "<br>";
-	echo $venue_address . "<br>";
-	echo $city . ", " . $state . " " . $zipcode; ?>
-	</p>
-	<p class="event_description"><?php echo $event_desc; ?></p>
-</div>
-
-<div class="event_bl">
-	<p class="contact_info">For more information, contact:<br>
-	<?php echo $first_name . " " . $last_name . "<br>" . $email . "<br>" . $phone; ?></p>
-</div>
-
-<div class="event_right">
-	<p class="image_holder"><img class="event_image" src="<?php echo $media_loc;?>" /></p>
-	<br>
-</div>

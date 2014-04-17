@@ -2,17 +2,39 @@
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
 
 <script>
 $(document).ready(function(){
-	$('#username').focus();
+	$('#login_name').focus();
 });
 
 function refresh_content() {
-	$(".public_event_section").fadeIn(450).show().load('public_event.php');
+	$('.card').fadeOut(700, function(){
+		$(".public_event_refresh").load('public_event.php');
+	});
+	
 }
 
-// setInterval( refresh_content, 6000 );
+function doesCSS(p){
+	var s = ( document.body || document.documentElement).style;
+	return !!$.grep(['','-moz-', '-webkit-'],function(v){
+		return  typeof s[v+p] === 'string';
+	}).length;
+}
+
+$('html')
+	.toggleClass('transform',doesCSS('transform'))
+	.toggleClass('no-transform',!doesCSS('transform'));
+
+$(function(){
+	$('.flip').click(function(){
+		// console.log("clicked");
+		$(this).parent().closest('.flipper').toggleClass('flipped');
+	});
+});
+
+setInterval(refresh_content, 7000 );
 
 function get_city_state(zipcode) {
 	var zip = zipcode;
@@ -67,6 +89,7 @@ function compIsType(t, s) {
 
 <?php
 require_once 'includes/constants/sql_constants.php';
+include_once 'includes/constants/card_print.php';
 
 $meta_title = "Get Started";
 
@@ -180,20 +203,23 @@ return_meta($meta_title);
 			</form>
 		</div> 
 		<!--- End of registration section -->
-	
-		<!-- Beginning of public event display section -->
-		<h1>Public Events!</h1>
-		<div class="public_event_section">
-			<?php include_once 'public_event.php'; ?>
-		</div> 
-		<!-- End of public event display section -->
 		
 		<!-- Beginning of information section -->
 		<div class="information_section" >
-			<p class="section_header">Information Section</p>
-			<img src="<?php echo BASE . "/pictures/default_event.jpg" ?>" class="event_image" style="max-width:15em"/>
+			<h1>Welcome!</h1>
+			<!-- Need to select a picture to display on this section. Use class "event_image" -->
+			<p>Welcome to the Community Connect site! Sign up to buy and sell traditional Havyaka foods, or to create and participate in Havyaka community events.
 		</div>
 		<!-- End of information section -->
+	
+		<!-- Beginning of public event display section -->
+		<div class="public_event_section">
+			<h1>Public Events!</h1>
+			<div class="public_event_refresh">
+				<?php include 'public_event.php';?>
+			</div> 
+		</div> 
+		<!-- End of public event display section -->
 		
 		
 		

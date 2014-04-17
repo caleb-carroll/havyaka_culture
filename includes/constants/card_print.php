@@ -183,7 +183,7 @@ function print_event_card ($r) {
 	}
 
 ?>
-	<div class ="card flipper">
+	<div class ="card flipper" style="display:none">
 		<div class="back">
 			<input type="hidden" class='event_id' rel="<?php echo $event_id; ?>" name ='event_id'></input>
 			<input type="hidden" class="zipcode" rel="<?php echo $zipcode; ?>"  name="zipcode"></input>
@@ -208,7 +208,7 @@ function print_event_card ($r) {
 			<div class="event_right">
 				<p class="image_holder"><img class="event_image" src="<?php echo $media_loc;?>" /></p>
 				<br>
-				<input type="checkbox"  class="attending_radio" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $attending_radio;?>" name="attending" value="attending" >I am attending!</input>
+				<input type="checkbox"  class="attending_radio" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $attending_radio;?>" name="attending" value="attending" ><label id="attending_label">I am attending!</label></input>
 				<button class = "save_event" rel="<?php echo $event_id; ?>" id= "<?php echo $save_event;?>" type="submit" name="save_event">Save</button>
 			</div>
 			<button class="flip" style="position:absolute;bottom:1%;right:1%;">Flip Card</button>

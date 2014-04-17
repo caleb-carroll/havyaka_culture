@@ -89,17 +89,19 @@ if(isset($_POST['login'])) {
 
 	<div id="login_form">
 		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="login_form">
-			<ul id="login_list" style="list-style-position:outside; list-style-type: none;">
-				<li style="float:left;padding-left:10px;">
+			<ul id="login_list">
+				<li>
 					<label for="user">Username</label>
-					<div style='display:inline-block'>
-						<input type="text" name="user" value="<?php echo stripslashes($username); ?>" class="required" /></p>
+					<div>
+						<input id="login_name" type="text" name="user" value="<?php echo stripslashes($username); ?>" class="required" tabindex="1"/>
 					</div>
 				</li>
-				<li style="float:left;padding-left:10px;">
-					<label for="pass">Password</label><a href = 'password_reset.php'>Forgot password?</a>
-					<div style='display:inline-block'>
-					<input type="password" name="pass" value="<?php echo stripslashes($pass2); ?>" class="required" /></p>
+				<li>
+					<label for="pass">Password</label>
+					<a href = 'password_reset.php' style='font-size: .9em; margin-left: 5px;'>Forgot password?</a>
+					<div>
+						<input type="password" name="pass" value="<?php echo stripslashes($pass2); ?>" class="required" tabindex="2" />
+					</div>
 				</li>
 				<button id ="login" name="login" type="submit">Login</button> 
 			</ul>
