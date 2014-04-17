@@ -3,8 +3,8 @@
 	<center>(c) 2014 Community Connect</center>
 	<p>
 	<?php
-	$names = array("Home","About Us","FAQs","Contact Us");
-	$links = array("home.php","aboutus.php","FAQ.php","contactform.php");
+	$names = array("About Us","FAQs","Contact Us");
+	$links = array("aboutus.php","FAQ.php","contactform.php");
 	?>
 	<ul>
 	<?php
