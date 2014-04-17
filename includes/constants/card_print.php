@@ -160,9 +160,17 @@ function print_event_card ($r) {
 	$q3 = "SELECT image_location FROM event_picture WHERE event_id = ".$event_id. " LIMIT 1";
 	$query = mysqli_query($link,$q3) or (die(mysqli_error($link)));
 	$row_image = mysqli_fetch_row($query);
+	
+	// get image for event, if event image isn't specified, use a default image
 	$image = $row_image[0];
-	$media_loc = htmlspecialchars($image);
+	if (empty($image)){
+		$media_loc = "/pictures/default_event.jpg";
+	}
+	else {
+		$media_loc = htmlspecialchars($image);
+	}
 	$media_loc = BASE.$media_loc;
+	
 	list($width, $height, $type, $attr)= getimagesize($media_loc);
 
 	//back of the card: I am attending option, list users attending add to calender, google map

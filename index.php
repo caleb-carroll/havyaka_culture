@@ -1,6 +1,7 @@
 <script src="includes/js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
 
 <script>
 $(document).ready(function(){
@@ -11,7 +12,7 @@ function refresh_content() {
 	$(".public_event_section").fadeIn(450).show().load('public_event.php');
 }
 
-setInterval( refresh_content, 6000 );
+// setInterval( refresh_content, 6000 );
 
 function get_city_state(zipcode) {
 	var zip = zipcode;
@@ -99,10 +100,10 @@ if(isset($_POST['register'])) {
 	
 	if ( count($err) == 0) {
 		$msg = "Registration successful!";
-                
+		
 		$meta_title = "Registration successful!";
 		//if the registration is successful then get the city and state name using zipcode and update the table
-                
+		
 		?>
 		<script>
 			get_city_state('<?php echo $zipcode;?>');
@@ -120,7 +121,7 @@ return_meta($meta_title);
 <body>
 	<div id="header">
 		<h1>Community Connect</h1>
-		<div class="login">
+		<div class="login_holder">
 			<?php include_once 'login.php'; ?>
 		</div>
 	</div>
