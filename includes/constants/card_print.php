@@ -160,9 +160,17 @@ function print_event_card ($r) {
 	$q3 = "SELECT image_location FROM event_picture WHERE event_id = ".$event_id. " LIMIT 1";
 	$query = mysqli_query($link,$q3) or (die(mysqli_error($link)));
 	$row_image = mysqli_fetch_row($query);
+	
+	// get image for event, if event image isn't specified, use a default image
 	$image = $row_image[0];
-	$media_loc = htmlspecialchars($image);
+	if (empty($image)){
+		$media_loc = "/pictures/default_event.jpg";
+	}
+	else {
+		$media_loc = htmlspecialchars($image);
+	}
 	$media_loc = BASE.$media_loc;
+	
 	list($width, $height, $type, $attr)= getimagesize($media_loc);
 
 	//back of the card: I am attending option, list users attending add to calender, google map
@@ -175,7 +183,7 @@ function print_event_card ($r) {
 	}
 
 ?>
-	<div class ="card flipper">
+	<div class ="card flipper" style="display:none">
 		<div class="back">
 			<input type="hidden" class='event_id' rel="<?php echo $event_id; ?>" name ='event_id'></input>
 			<input type="hidden" class="zipcode" rel="<?php echo $zipcode; ?>"  name="zipcode"></input>
@@ -200,7 +208,7 @@ function print_event_card ($r) {
 			<div class="event_right">
 				<p class="image_holder"><img class="event_image" src="<?php echo $media_loc;?>" /></p>
 				<br>
-				<input type="checkbox"  class="attending_radio" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $attending_radio;?>" name="attending" value="attending" >I am attending!</input>
+				<input type="checkbox"  class="attending_radio" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $attending_radio;?>" name="attending" value="attending" ><label id="attending_label">I am attending!</label></input>
 				<button class = "save_event" rel="<?php echo $event_id; ?>" id= "<?php echo $save_event;?>" type="submit" name="save_event">Save</button>
 			</div>
 			<button class="flip" style="position:absolute;bottom:1%;right:1%;">Flip Card</button>

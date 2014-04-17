@@ -48,7 +48,7 @@ p {
 	float:center;
 	width:100%;
 	border-bottom:1px solid #000;
-	margin-bottom: 3em;
+	margin-bottom: 1em;
 	margin-top: 2em;
 }
 
@@ -64,7 +64,9 @@ p {
 	margin:0;
 }
 
-#header ul {
+
+/* Link styling for header */
+.navigation ul {
 	clear:left;
 	float:left;
 	width:100%;
@@ -73,15 +75,8 @@ p {
 	margin:10px 10px 10px 20px;
 	padding:0;
 }
-/* #header ul li {
-	display:inline;
-	list-style:none;
-        font-size: 25px;
-	margin:8px 8px 8px 70px;
-	padding:0;
-} */
-/* Link styling for header */
-#header ul li a {
+
+.navigation li a {
 	float:left;
 	margin:.25em;
 	padding:3px 8px;
@@ -90,18 +85,18 @@ p {
 	line-height:1.3em;
 }
 
-#header ul li a:hover {
+.navigation li a:hover {
 	background:#369;
 	color:#fff;
 }
 
-#header ul li .active,
-#header ul li .active:hover {
+.navigation li .active,
+.navigation li .active:hover {
 	color:#fff;
 	background:#000;
 }
 
-#header ul li a span {
+.navigation li a span {
 	display:block;
 }
 

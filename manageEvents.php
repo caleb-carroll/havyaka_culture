@@ -92,6 +92,7 @@ $(function(){
 		$(this).parent().closest('.flipper').toggleClass('flipped');
 	});
 	
+	$('.card').show('slide', {direction: "left"}, 400);
 	
 	$("#create_event_button").click(function() {
 		$("#create_event_button").fadeOut(700); 
@@ -166,12 +167,12 @@ $(function(){
 	
 	// button for updating events
 	$('.update_event_button').click(function() {
-		// datastring for ajax call
-		var datastring = $(this).closest(".update_event_form").serialize();
-		// console.log(datastring);
-		
 		// gets the closest event card in order to know which one to update
 		var card_id = $(this).closest('.flipper').attr('id');
+		
+		// datastring for ajax call
+		var datastring = $("#" + card_id).find(".update_event_form").serialize();
+		console.log("datastring is: " + datastring);
 		
 		// The below function makes an asyncronous call to google to get the city and state associated with the provided zip code. It then updates the database when a match is found.
 		get_city_state($("#" + card_id).find('.get_event_zipcode').val());

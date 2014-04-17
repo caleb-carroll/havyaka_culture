@@ -728,42 +728,67 @@ function add_event($event_name, $event_date, $event_desc, $event_scope, $e_type_
 }
 
 /* Function to update events */
-function update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_name, $venue_address,$event_zipcode, $e_recurring_id, $event_id){
+function update_event($event_name, $event_date, $event_desc, $event_scope, $e_type_id, $venue_name, $venue_address, $venue_city, $venue_state, $venue_zipcode, $e_recurring_id, $event_id){
 	global $link;
 	
 	// check if the zipcode already in the location table, if not insert and get the e_loc_id
 	// insert the venue name, address, e_loc_id into venue table and get the last inserted venue_id
 	//then insert the event details into event table.
 
-	//get the e_loc_id
-
-	$e_loc_id = insert_zipcode_location($event_zipcode);
+	// create new location or update existing location
+	$q = "INSERT INTO " . LOCATION . "(city, state, zipcode) VALUES ('$venue_city', '$venue_state', '$venue_zipcode') ON DUPLICATE KEY UPDATE city='$venue_city', state='$venue_state'";
+	// echo $q . "|||";
+	
+	mysqli_query($link,$q) or die(mysqli_error($link));
+	
+	// get the location id for the location updated above
+	$e_loc_id = mysqli_insert_id($link);
+	if ($e_loc_id == 0) {
+		$e_loc_id = insert_zipcode_location($venue_zipcode);
+	}
 
 	//insert venue details into venue table
-         $q_venue_check = mysqli_query($link,"SELECT venue_id from ".VENUE. " where venue_name like '".$venue_name. "' and venue_address like '".$venue_address."' AND e_loc_id =".$e_loc_id. " LIMIT 1;") or die(mysqli_error($link));
-	if(mysqli_num_rows($q_venue_check) !=0)
-        {
-            $row = mysqli_fetch_assoc($q_venue_check);
-            $venue_id = $row['venue_id'];
-        }  else {
-            $q_venue = mysqli_query($link,"INSERT INTO " .VENUE. " (venue_name,venue_address,e_loc_id) VALUES ('$venue_name','$venue_address',$e_loc_id)") or die(mysqli_error($link));
+	$q_venue_check = mysqli_query($link,"SELECT venue_id from ".VENUE. " where venue_name like '".$venue_name. "' and venue_address like '".$venue_address."' AND e_loc_id =".$e_loc_id. " LIMIT 1;") or die(mysqli_error($link));
+	if(mysqli_num_rows($q_venue_check) !=0) {
+		$row = mysqli_fetch_assoc($q_venue_check);
+		$venue_id = $row['venue_id'];
+	} 
+	else {
+		$q_venue = mysqli_query($link,"INSERT INTO " .VENUE. " (venue_name,venue_address,e_loc_id) VALUES ('$venue_name','$venue_address',$e_loc_id)") or die(mysqli_error($link));
+	 $venue_id = mysqli_insert_id($link);
+		// echo $venue_id;
+	}
 
-             $venue_id = mysqli_insert_id($link);
-        }
-
+	// query to update the event
 	$q = "UPDATE " . EVENT . " SET event_name='$event_name', event_date='$event_date', event_desc='$event_desc', event_scope='$event_scope', e_type_id='$e_type_id', venue_id='$venue_id', e_recurring_id='$e_recurring_id' WHERE event_id = $event_id";
 	
+	mysqli_query($link,$q) or die(mysqli_error($link));
 	
-	if (mysqli_query($link,$q)){
-		
-		return true;
-		// echo "Event updated successfully";
+	// Query for updated event details, including location information and users
+	$select = "SELECT t1.event_id, t1.venue_id, t1.event_name, t3.venue_name, t3.venue_address, t4.city, t4.state, t4.zipcode, t2.event_type, t1.event_date, t1.event_desc,t1.event_scope, t1.user_id";
+	
+	$from = " FROM " . EVENT . " AS t1 
+		LEFT JOIN " . USERS . " AS t5 ON t1.user_id = t5.user_id
+		LEFT JOIN " . EVENT_TYPE . " AS t2 ON t1.e_type_id = t2.e_type_id
+		LEFT JOIN " . VENUE . " AS t3 ON t1.venue_id = t3.venue_id
+		LEFT JOIN " . LOCATION . " AS t4 ON t3.e_loc_id = t4.e_loc_id";
+	
+	// returns only the updated event id
+	$where = " WHERE event_id = " . $event_id;
+	
+	// build the query
+	$q = $select . $from . $where . ";";
+	// echo $q . "|||";
+	
+	// execute the query
+	if($event_query = mysqli_query($link,$q)) {
+		while ($row = mysqli_fetch_assoc($event_query)) {
+			$results[] =$row;
+			// print_r($results);
+		}
 	}
-	else {
-		
-		return false;
-		// echo "Event update failed";
-	}
+	
+	return $results;
 }
 
 

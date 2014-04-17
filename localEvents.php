@@ -32,6 +32,7 @@ function doesCSS(p){
 $('html')
 	.toggleClass('transform',doesCSS('transform'))
 	.toggleClass('no-transform',!doesCSS('transform'));
+
 	
 $(function(){
 	$('.flip').click(function(){
@@ -47,6 +48,7 @@ $(function(){
 });
 		
 $(function(){
+	$('.card').show('slide', {direction: "up"}, 700);
 	//$(".show_more").click =setTimeout('initialize()');
 
 	// $(".front").hide();
