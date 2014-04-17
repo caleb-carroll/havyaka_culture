@@ -1,21 +1,27 @@
 <!DOCTYPE html>
- <!-- this is the freequently asked questions page. Here, I have tried to use Accordion jquery function to fold and unfold the sections -->
+
 <html>
 
 <head>
 <meta charset="utf-8">
   <title>Faq's</title>
-   <script src="<?php echo BASE; ?> /includes/js/jquery-1.10.2.js"></script>
-    <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+
+<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
+<link rel="stylesheet" type="text/css" href="includes/styles/jquery-ui-1.10.4.custom.css"></link> 
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css"></link>    
   <link rel="stylesheet" href="includes/styles/faq_style.css"/>
+  
+<link rel="stylesheet" type="text/css" href="styles/left_coulmn_style.css"/>
 
     <script>
     //function to execute the accordion style
-    $(function()  {
-      $('#accordion').accordion();
-    } )  ;
-
+   $(function() {
+    $( "#accordion" ).accordion({
+      collapsible: true
+    });
+  });
     </script>
 
 </head>
@@ -46,11 +52,8 @@
                 echo '<div class="error">'.$err.'</div>';
             }
 ?>
-    <div class="dashboard_sub_section">  
-        <?php include('includes/subnavigation.inc.php'); ?>
-     </div>
-    
-<h2>All questions about this website</h2>
+   
+        <h2>Get to know this Website</h2>
 
                  <div id = "accordion">
                         <h3>What is Community Connect?</h3>
@@ -69,41 +72,43 @@
                               &nbsp;1.&nbsp;You can become a chef and market yourself.<br>                               
                          </p>
                         </div>
-                        <div>
-                                <h4>What is Card UI interface?</h4>                        
+                                <h3>What is Card UI interface?</h3>        
+                        <div>                
                                  <p class = "para">
                                     Card UI interface is future of the web!. Here, card flips over to display more information.
                                  </p>
                             </div>
+                                <h3>How does card your work?</h3>
                         <div>
-                            <h4>How does card your work?</h4>
+                            
                           <p class = "para">
                               You see the information in the front of the card, to view more, click on the relavent button to see more information on the back of the card.      
                          </p>
                         </div>
-                           
+                           <h3>What kind of Events are here?</h3>
                         <div>
-                            <h4>What kind of Events are here?</h4>
+                            
                           <p class = "para">
                               Events related to your community, culture or religion
                          </p>
-                        </div>                          
+                        </div>     
+                           <h3>Who are these chefs?</h3>
                         <div>
-                             <h4>Who are these chefs?</h4>
+                             
                              <p class = "para">
                                 These chefs are just like you, they cook and deliver.
                              </p>
                        </div>
-                            
+                            <h3>Can I post events or become chef?</h3>
                         <div>
-                            <h4>Can I post events or become chef?</h4>
+                            
                              <p class = "para">
                                Absolutely!  use your My dashboard to create new events or become a chef
                              </p>
                        </div>
-                            
+                            <h3>What are the safety measures taken by the chef?</h3>
                         <div>
-                             <h4>What are the safety measures taken by the chef?</h4>
+                             
                              <p class = "para">
                                 All chef's are required to maintain the hygiene while cooking. And, they need to make sure the foods are safe and healthy.
                              </p>

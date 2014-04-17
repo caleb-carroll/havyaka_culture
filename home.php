@@ -4,7 +4,7 @@
 	<title>Community Resource</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="home" content="index, follow" />        
-	<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href ="includes/styles/style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/chef_style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js" type="text/javascript"><!--mce:0--></script>
@@ -55,7 +55,6 @@ function doesCSS(p){
      <?php
         require_once 'includes/constants/sql_constants.php';        
 		require_once 'includes/constants/card_print.php';
-        //require_once 'includes/constants/event_card_print.php';
         secure_page();  
         
         if (isset($_SESSION['homepage']))
@@ -174,7 +173,7 @@ function doesCSS(p){
                         <?php  
                         // front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
                         $results = retrieve_future_event($user_id,2);  
-                        if(($results))
+                        if(!empty($results))
                          { ?>
                             <br><div id="event_holder" style="margin-top:0em; margin-left: 15px; position: relative; float: top;">
                                 <h2> Events in your area!</h2>

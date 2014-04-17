@@ -33,6 +33,7 @@ p {
 	margin:.4em 0 .8em 0;
 	padding:0;
 }
+
 .link_class {
 	color:brown;
 }
@@ -133,12 +134,12 @@ p {
 /* 2 Column  settings */
 
 .leftmenu .col1 {
-	width:12%;
+	width:15%;
 	left: 31%;
 	margin-top: 15px;
 }
 .leftmenu .col2 {
-	width:77%;
+	width:74%;
 	left:31%;
 	margin-left: 15px;
 	padding:1em;
@@ -203,6 +204,7 @@ p {
 	border: 1px solid black;
         background-color: #B8CFE6;
 	height: 700px;
+        overflow-y: scroll;
 	border-radius: 15px;
 }
 #left_column .category_heading {

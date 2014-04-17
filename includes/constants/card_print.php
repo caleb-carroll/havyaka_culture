@@ -153,6 +153,7 @@ function print_event_card ($r) {
 	$email = $r['email'];
 	$phone = $r['phone'];
 
+   
 	$attending_radio = "attending_radio_".$event_id;
 	$map_canvas = "map_canvas_".$event_id;
 	$save_event = "saveevent_".$event_id;
