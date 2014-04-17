@@ -50,8 +50,6 @@
 <body>
 
 <div id="header">
-	<h1>The Title / Logo of the Webiste</h1>
-	<h2>Some catchy sounding phrase</h2>
 	
 	<?php include('includes/navigation.inc.php'); ?>
 </div>

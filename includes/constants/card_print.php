@@ -166,7 +166,7 @@ function print_event_card ($r) {
 	list($width, $height, $type, $attr)= getimagesize($media_loc);
 
 	//back of the card: I am attending option, list users attending add to calender, google map
-	$q = "SELECT u.username, u.first_name, u.last_name FROM " . USERS . " AS u INNER JOIN " . ATTENDENCE . " AS et ON u.user_id = et.user_id AND et.event_id = ".$event_id;
+	$q = "SELECT u.username, u.first_name, u.last_name FROM " . USERS . " AS u INNER JOIN " . ATTENDANCE . " AS et ON u.user_id = et.user_id AND et.event_id = ".$event_id;
 
 	$query1 = mysqli_query($link,$q) or (die(mysqli_error($link)));
 	$user_list = array();

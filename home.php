@@ -7,12 +7,10 @@
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/chef_style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
-        <link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js" type="text/javascript"><!--mce:0--></script>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <link rel="stylesheet" href="/resources/demos/style.css"></link>
 
 </head>
     <script>
@@ -22,7 +20,7 @@
                 $("#carousal ul").animate({marginLeft:-480},1000,function() {
                     $(this).find("li:last").after($(this).find("li:first"));
                     $(this).css({marginLeft:0});
-                })
+                });
             },5000);
         });
         
@@ -68,21 +66,39 @@ function doesCSS(p){
           $user_id =  $_SESSION['user_id'];
            
         $hash_pass= crypt($passsalt,'connectcommunity1');
-          echo $hash_pass;
         
         //check if the user is logged in for the first time, if so, display the information dialog box
         
           $q = mysqli_query($link,"SELECT num_logins from " .USERS. " WHERE user_id =".$user_id) or die(mysqli_error($link));
           
           list($num_login) = mysqli_fetch_row($q);
-         
-          if(($num_login == 1) &&  ($_SESSION['homepage'] == 1))
+          
+         //if the user is logged for first 2 times or he is landing in the home page for the first time, will display the information dialog
+          //($num_login <= 2) && : add this to below if statement in the future.
+          if(($_SESSION['homepage'] == 1))
           {   
               ?>
-            <div id ="information_dialog">
+            <div id ="information_dialog" title = "Welcome to Community Connect!">               
                 <p>
-                    Welcome to Community connect!
+                    <h3 style="color: darkmagenta;font-style: italic;">Find Local Events, chef OR Add your own event, become a chef. </h3>
+                     All related to your community!
                 </p>
+                <p>
+                    <center>This website is built on card UI interface.</center>
+                    <div class="card flipper" style="width:85%;height: 50%; margin-top: 1em;">
+                        <div class="back">
+                            <h3 style="color: darkmagenta;font-style: italic;">This is the sample card. </h3>
+                        <button class="flip">flip</button><br>
+                        <p>If you click on the "flip" button above the card flips and displays the contents in the back of the card.</p>
+                        </div>
+                        <div class="front">
+                            <h3 style="color: darkmagenta;font-style: italic;">This the back of the card.</h3>
+                            <button class="flip">flip</button><br>
+                        <p>If you click on the "flip" button above the card flips back and displays front of the card.</p>
+                        </div>
+                    </div>
+                </p>
+                Enjoy your stay in <h3>Community Connect!</h3>
             </div>
           <?php }
           
@@ -127,60 +143,59 @@ function doesCSS(p){
                         </div>
 			<!-- Middle Column start -->
 			<style>img {width: 160px;}</style> 
-                        <div id ="chef_holder">
+                  <?php
+                    // This section gets all chefs for the appropriate food types, then prints them into a card
+                    // functions below are defined in sql_constants
+                    $chefs_list = get_localchef_details($user_id,2);
+                  
+                  if(!empty($chef_list)) { ?>
+                        <div id ="chef_holder">				
 				
-				<?php
-				// This section gets all chefs for the appropriate food types, then prints them into a card
-				// functions below are defined in sql_constants
-				$chefs_list = get_localchef_details($user_id,2);
-				
-				// prints a card for each chef associated with a food type
-                               if(!empty($chef_list)) { 
+				// prints a card for each chef associated with a food type                              
                                    
                                    echo "<h2>Chefs in your area!</h2>";
 				
-                                    foreach ($chefs_list as $chef) {
+                                   <?php foreach ($chefs_list as $chef) {
 
                                             // gets the chef info and loads it into an array
                                             $chef_info_array = get_chef_info($chef['chef_id']);
 
                                             // uses the chef info array to print cards
                                             print_chef_card($chef_info_array);
-                                    }
-                               } 
+                                    } ?>
+                                    <div class="more_link">
+                                            <a href="localChefs.php">More Chefs>></a>
+                                    </div>                            
+                             </div>
+                        <?php } else {?>
+                        <div id ="chef_holder" style="display:none;">	</div>	
+                      <?php  } 
 				?>
-                                 <div class="more_link">
-                                <a href="localChefs.php">More Chefs>></a>
-                            </div>
-			</div>
-                        <!-- end of col2-->
-                           
-                            <br><div id="event_holder" style="margin-top:30em; margin-left: 15px;">
+                        <?php  
+                        // front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
+                        $results = retrieve_future_event($user_id,2);  
+                        if(($results))
+                         { ?>
+                            <br><div id="event_holder" style="margin-top:0em; margin-left: 15px; position: relative; float: top;">
                                 <h2> Events in your area!</h2>
-
                                <form class= "event" action="localEvents.php" method="POST" id = "local_events" name="localevents">      
-                                <?php  
-                                        // front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
-                                 $results = retrieve_future_event($user_id,2);  
-                                if(($results))
-                                  {
+                                <?php                                         
                                      $i =0;
                                        foreach ($results as $r) 
                                         {
                                                print_event_card($r);
                                         }
-                                  }
-                                        ?>
+                                 ?>
 
                              </form>  
-                         <span class="success" style="display:none;"></span>
-                         <span class="error" style="display:none;">Please enter some text</span>
+                                <span class="success" style="display:none;"></span>
+                                <span class="error" style="display:none;">Please enter some text</span>
 
                                 <div class="more_link">
                                     <a href="localEvents.php">More events>></a>
                                 </div>                  
-                   </div>
-
+                            </div>                                
+                   <?php  } ?>
             </div>                          <!-- Middle Column end -->
        </div>
                <!-- for future reference Right column start 

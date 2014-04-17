@@ -63,6 +63,7 @@ http://home.jejaju.com/play/flipCards/simple */
 	/* added overflow auto until I figure out how we want to size these cards */
  	/*overflow-y: scroll;*/
 	background-position: top right;
+        background: url('img_css/background.jpg');
 	border-radius: 25px;
 }
 .card >div {

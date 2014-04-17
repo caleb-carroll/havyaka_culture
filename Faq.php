@@ -69,6 +69,45 @@
                               &nbsp;1.&nbsp;You can become a chef and market yourself.<br>                               
                          </p>
                         </div>
+                        <div>
+                                <h4>What is Card UI interface?</h4>                        
+                                 <p class = "para">
+                                    Card UI interface is future of the web!. Here, card flips over to display more information.
+                                 </p>
+                            </div>
+                        <div>
+                            <h4>How does card your work?</h4>
+                          <p class = "para">
+                              You see the information in the front of the card, to view more, click on the relavent button to see more information on the back of the card.      
+                         </p>
+                        </div>
+                           
+                        <div>
+                            <h4>What kind of Events are here?</h4>
+                          <p class = "para">
+                              Events related to your community, culture or religion
+                         </p>
+                        </div>                          
+                        <div>
+                             <h4>Who are these chefs?</h4>
+                             <p class = "para">
+                                These chefs are just like you, they cook and deliver.
+                             </p>
+                       </div>
+                            
+                        <div>
+                            <h4>Can I post events or become chef?</h4>
+                             <p class = "para">
+                               Absolutely!  use your My dashboard to create new events or become a chef
+                             </p>
+                       </div>
+                            
+                        <div>
+                             <h4>What are the safety measures taken by the chef?</h4>
+                             <p class = "para">
+                                All chef's are required to maintain the hygiene while cooking. And, they need to make sure the foods are safe and healthy.
+                             </p>
+                       </div>
                            <h3>Do you have more questions?:</h3>
                         <div>
                           <p class = "para">
@@ -82,28 +121,7 @@
                                 <a href="ContactForm.php">Contact us</a> and let us know your comments and questions. <br>
                                 We will be in touch with you.
                              </p>
-                       </div>
-                            <h3>Do you have issues using this website?:</h3>
-                        <div>
-                             <p class = "para">
-                                <a href="ContactForm.php">Contact us</a> and let us know your comments and questions. <br>
-                                We will be in touch with you.
-                             </p>
-                       </div>
-                             <h3>Do you have issues using this website?:</h3>
-                        <div>
-                             <p class = "para">
-                                <a href="ContactForm.php">Contact us</a> and let us know your comments and questions. <br>
-                                We will be in touch with you.
-                             </p>
-                       </div>
-                              <h3>Do you have issues using this website?:</h3>
-                        <div>
-                             <p class = "para">
-                                <a href="ContactForm.php">Contact us</a> and let us know your comments and questions. <br>
-                                We will be in touch with you.
-                             </p>
-                       </div>
+                       </div>                            
              </div>
         </div>
     </div>

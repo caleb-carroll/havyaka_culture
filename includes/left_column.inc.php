@@ -1,3 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
+<script type="text/javascript" src="includes\js\jquery-1.10.2.js"></script>
+<link rel="stylesheet" type="text/css" href="styles/style.css"/>
+
+<head>
+    
+       <script>
+    //function to execute the accordion style
+    $(function()  {
+      $('#accordion').accordion();
+    });
+
+    </script>
+</head>
 <?php 
 require_once 'includes/constants/sql_constants.php';
 
@@ -17,7 +32,7 @@ if($food_query = mysqli_query($link, $q)) {
 <!-- Column 1 start -->
 <div id = "left_column">
 	<div class="category_heading">
-		<center>Food Categories</center>
+		<center class='left_menu'>Food Categories</center>
 		<div class="categories">
 			<p>
 			<ul>
@@ -33,10 +48,49 @@ if($food_query = mysqli_query($link, $q)) {
 		</div>
 	</div>
 	
-	<!--<div class="ad_search_heading">
-		<center>Advanced Search</center>
-		<div class="search_option">
-			<p>search options</p>
-		</div>
-	</div> -->
+    <div class="information">
+		<center>Quick Faq's</center>
+			<div id = "accordion">
+                            <div>
+                                <h4>What is Card UI interface?</h4>                        
+                                 <p class = "para">
+                                    Card UI interface is future of the web!. Here, card flips over to display more information.
+                                 </p>
+                            </div>
+                        <div>
+                            <h4>How does card your work?</h4>
+                          <p class = "para">
+                              You see the information in the front of the card, to view more, click on the relavent button to see more information on the back of the card.      
+                         </p>
+                        </div>
+                           
+                        <div>
+                            <h4>What kind of Events are here?</h4>
+                          <p class = "para">
+                              Events related to your community, culture or religion
+                         </p>
+                        </div>                          
+                        <div>
+                             <h4>Who are these chefs?</h4>
+                             <p class = "para">
+                                These chefs are just like you, they cook and deliver.
+                             </p>
+                       </div>
+                            
+                        <div>
+                            <h4>Can I post events or become chef?</h4>
+                             <p class = "para">
+                               Absolutely!  use your My dashboard to create new events or become a chef
+                             </p>
+                       </div>
+                            
+                        <div>
+                             <h4>What are the safety measures taken by the chef?</h4>
+                             <p class = "para">
+                                All chef's are required to maintain the hygiene while cooking. And, they need to make sure the foods are safe and healthy.
+                             </p>
+                       </div>
+                             
+             </div>
+	</div>
 </div>
