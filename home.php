@@ -130,14 +130,11 @@ function doesCSS(p){
         $msg = NULL;
       
   ?>
-    <body>
-       
+    <body>      
         
         <?php
           include_once ('includes/header.inc.php');
         include('includes/navigation.inc.php'); ?>
-       </div>  
-        
         
   <div class="content leftmenu">      
         
