@@ -130,6 +130,7 @@ function doesCSS(p){
   ?>
     <body>
         <div id ="header">
+             <img src="pictures/logo_594749_web2.jpg"></img>
             <h1>Community Connect</h1> 
       
         
