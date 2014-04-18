@@ -6,6 +6,8 @@
 	<meta name="home" content="index, follow" />        
         <link rel="stylesheet" type="text/css" href ="includes/styles/style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/chef_style.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js" type="text/javascript"><!--mce:0--></script>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
@@ -129,12 +131,11 @@ function doesCSS(p){
       
   ?>
     <body>
-        <div id ="header">
-             <img src="pictures/logo_594749_web2.jpg"></img>
-            <h1>Community Connect</h1> 
-      
+       
         
-        <?php include('includes/navigation.inc.php'); ?>
+        <?php
+          include_once ('includes/header.inc.php');
+        include('includes/navigation.inc.php'); ?>
        </div>  
         
         
