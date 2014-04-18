@@ -6,151 +6,151 @@
   <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
  
 <script>
-	/*function doesCSS(p){
-		var s = ( document.body || document.documentElement).style;
-		return !!$.grep(['','-moz-', '-webkit-'],function(v){
-			return  typeof s[v+p] === 'string'
-		}).length
-	}
+/*function doesCSS(p){
+	var s = ( document.body || document.documentElement).style;
+	return !!$.grep(['','-moz-', '-webkit-'],function(v){
+		return  typeof s[v+p] === 'string'
+	}).length
+}
 
-	$('html')
-		.toggleClass('transform',doesCSS('transform'))
-		.toggleClass('no-transform',!doesCSS('transform'));
+$('html')
+	.toggleClass('transform',doesCSS('transform'))
+	.toggleClass('no-transform',!doesCSS('transform'));
 */
 $(function(){
-    /*  $('.flip').click(function(){
-              console.log("clicked");
-              $(this).parent().closest('.flipper').toggleClass('flipped');
-      }); */
-      $( "#add_new_food_form" ).dialog({
-            autoOpen: false,
-            height: 500,
-            width: 650,
-            modal: true,
-            buttons: {
-            "Add food": function() {
-                 alert('!');
-                 var formData = new FormData($(this)[0]);                 
-                 alert(formData);
-                 add_new_food(formData);               
-                $( this ).dialog( "close" );
-            },
-        Cancel: function() {
-          $( this ).dialog( "close" );
-        }
-      },
-      close: function() {
-         $( this ).dialog( "close" );
-      }
-    });
-      
-        $("#request_new_food_link").click(function() {
-               $( "#add_new_food_form" ).dialog( "open" );         
-        });
-       
-        $("#add_selected_food").click(function(){
-            var e = document.getElementById("selected_food");
-            var food_id = e.options[e.selectedIndex].value;
+/*  $('.flip').click(function(){
+		  console.log("clicked");
+		  $(this).parent().closest('.flipper').toggleClass('flipped');
+  }); */
+  $( "#add_new_food_form" ).dialog({
+		autoOpen: false,
+		height: 500,
+		width: 650,
+		modal: true,
+		buttons: {
+		"Add food": function() {
+			 alert('!');
+			 var formData = new FormData($(this)[0]);                 
+			 alert(formData);
+			 add_new_food(formData);               
+			$( this ).dialog( "close" );
+		},
+	Cancel: function() {
+	  $( this ).dialog( "close" );
+	}
+  },
+  close: function() {
+	 $( this ).dialog( "close" );
+  }
+});
+  
+	$("#request_new_food_link").click(function() {
+		   $( "#add_new_food_form" ).dialog( "open" );         
+	});
+   
+	$("#add_selected_food").click(function(){
+		var e = document.getElementById("selected_food");
+		var food_id = e.options[e.selectedIndex].value;
+		
+		var chef_id = $(this).attr('rel1');
+		var datastring = "food_id=" +food_id+ "&chef_id="+chef_id;
+		console.log(datastring);
+		 $.ajax(
+			 { 
 
-            var chef_id = $(this).attr('rel1');
-            var datastring = "food_id=" +food_id+ "&chef_id="+chef_id;
-
-             $.ajax(
-                 { 
-
-                     type: "POST",
-                     url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=add_selected_food",                            
-                     data: datastring,                             
-                     success:function () {                                 
-                         $('.success').fadeIn(2000).show().html('Added Successfully!').fadeOut(6000); //Show, then hide success msg
-                        $('.error').fadeOut(2000).hide(); 
-                       // $("#chef_profile").load('chef_profile.php');
-                       refresh_content();
-                     }                         
-                 });
-           return false;
+				 type: "POST",
+				 url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=add_selected_food",                            
+				 data: datastring,                             
+				 success:function () {                                 
+					 $('.success').fadeIn(2000).show().html('Added Successfully!').fadeOut(6000); //Show, then hide success msg
+					$('.error').fadeOut(2000).hide(); 
+				   // $("#chef_profile").load('chef_profile.php');
+				   refresh_content();
+				 }                         
+			 });
+	   return false;
 
 
-        });
+	});
 
-       function add_new_food(formData) {
-       //  $("form#add_new_food_form").submit(function(){
+   function add_new_food(formData) {
+   //  $("form#add_new_food_form").submit(function(){
 
-         //   var formData = new FormData($(this)[0]);
-            alert('1');
-            $.ajax({
-                url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=add_new_food",
-                type: 'POST',
-                data: formData,
-                async: false,
-                success: function () {
-                    $('.success').fadeIn(2000).show().html('Added Successfully!').fadeOut(6000); //Show, then hide success msg
-                        $('.error').fadeOut(2000).hide(); 
-                         //$("#chef_profile").load('chef_profile.php');
-                          refresh_content();
-                },
-                cache: false,
-                contentType: false,
-                processData: false
-            });
+	 //   var formData = new FormData($(this)[0]);
+		alert('1');
+		$.ajax({
+			url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=add_new_food",
+			type: 'POST',
+			data: formData,
+			async: false,
+			success: function () {
+				$('.success').fadeIn(2000).show().html('Added Successfully!').fadeOut(6000); //Show, then hide success msg
+					$('.error').fadeOut(2000).hide(); 
+					 //$("#chef_profile").load('chef_profile.php');
+					  refresh_content();
+			},
+			cache: false,
+			contentType: false,
+			processData: false
+		});
 
-            return false;
-         // });
-        }
-        $(".update_food").click(function() {
-           var food_id = $(this).attr('rel');
-           var chef_id = $(this).attr('rel1');
-           var food_description_id = "food_description_"+food_id;
-           var food_description=document.getElementById(food_description_id).value;
+		return false;
+	 // });
+	}
+	$(".update_food").click(function() {
+	   var food_id = $(this).attr('rel');
+	   var chef_id = $(this).attr('rel1');
+	   var food_description_id = "food_description_"+food_id;
+	   var food_description=document.getElementById(food_description_id).value;
 
-           if(food_description == '')
-            {
+	   if(food_description == '')
+		{
 
-                            $('.error').fadeIn(400).show().html('Please enter the food description.'); 
-            }
-            else
-            {
-                var datastring = "food_description=" +food_description+ "&food_id=" +food_id+ "&chef_id="+chef_id;
+						$('.error').fadeIn(400).show().html('Please enter the food description.'); 
+		}
+		else
+		{
+			var datastring = "food_description=" +food_description+ "&food_id=" +food_id+ "&chef_id="+chef_id;
 
-                console.log(chef_id);
+			console.log(chef_id);
 
-                 $.ajax(
-                 { 
+			 $.ajax(
+			 { 
 
-                     type: "POST",
-                     url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=update_food",                            
-                     data: datastring,                             
-                     success:function () {                                 
-                         $('.success').fadeIn(2000).show().html('updated Successfully!').fadeOut(6000); //Show, then hide success msg
-                        $('.error').fadeOut(2000).hide();
-                        // $("#chef_profile").load('chef_profile.php');
-                        refresh_content();
-                     }                         
-                 });
-            }
-           return false;
-        });
-        $(".delete_food").click(function() {
-            var food_id = $(this).attr('rel');
-            var chef_id = $(this).attr('rel1');
-             var datastring = "food_id=" +food_id+ "&chef_id=" +chef_id;
-          alert(datastring);
-          $.ajax(
-                 { 
+				 type: "POST",
+				 url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=update_food",                            
+				 data: datastring,                             
+				 success:function () {                                 
+					 $('.success').fadeIn(2000).show().html('updated Successfully!').fadeOut(6000); //Show, then hide success msg
+					$('.error').fadeOut(2000).hide();
+					// $("#chef_profile").load('chef_profile.php');
+					refresh_content();
+				 }                         
+			 });
+		}
+	   return false;
+	});
+	$(".delete_food").click(function() {
+		var food_id = $(this).attr('rel');
+		var chef_id = $(this).attr('rel1');
+		 var datastring = "food_id=" +food_id+ "&chef_id=" +chef_id;
+	  alert(datastring);
+	  $.ajax(
+			 { 
 
-                     type: "POST",
-                     url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=Delete_food",                            
-                     data: datastring,                             
-                     success:function () {                                 
-                         $('.success').fadeIn(2000).show().html('deleted Successfully!').fadeOut(6000); //Show, then hide success msg
-                        $('.error').fadeOut(2000).hide(); 
-                        // $("#chef_profile").load('chef_profile.php');
-                        refresh_content();
-                     }
+				 type: "POST",
+				 url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=Delete_food",                            
+				 data: datastring,                             
+				 success:function () {                                 
+					 $('.success').fadeIn(2000).show().html('deleted Successfully!').fadeOut(6000); //Show, then hide success msg
+					$('.error').fadeOut(2000).hide(); 
+					// $("#chef_profile").load('chef_profile.php');
+					refresh_content();
+				 }
 
-                 });
-                 return false;
-        });
+			 });
+			 return false;
+	});
 
 });
 function refresh_content()

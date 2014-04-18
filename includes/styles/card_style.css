@@ -87,3 +87,7 @@ http://home.jejaju.com/play/flipCards/simple */
 	border:1px solid brown;
 	border-bottom:3px solid blue;
 }
+
+.event_card{
+	display:none;
+}

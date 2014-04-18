@@ -1,6 +1,5 @@
 <?php
 require_once 'includes/constants/sql_constants.php';
-// print_r($_GET['cmd']);
 if(isset($_GET['cmd'])){
 	if ($_GET['cmd'] == 'save_chef'){
 		$chef_id = $_POST['chef_id'];

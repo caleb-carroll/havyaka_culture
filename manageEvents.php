@@ -92,19 +92,17 @@ $(function(){
 		$(this).parent().closest('.flipper').toggleClass('flipped');
 	});
 	
-	$('.card').show('slide', {direction: "left"}, 400);
+	$('.manage_event').show('slide', {direction: "left"}, 400);
 	
 	$("#create_event_button").click(function() {
 		$("#create_event_button").fadeOut(700); 
 		$('#create_event_div').show('slide', {direction: "up"}, 900);
-		return false;
 	});
 	
 	$("#cancel_add_event").click(function() {
 		$(this).closest('form').find("input[type=text], textarea").val("");
 		$("#create_event_button").fadeIn(700);
 		$('#create_event_div').hide('slide', {direction: "up"}, 900);
-		return false;
 	});
 	
 	$("#saved_event_button").click(function() {
@@ -343,7 +341,7 @@ $results = get_events($user_id);
 			
 	<!-- begin add event card -->
 			<button name="create_event" id="create_event_button" style="display:block">Create an event</button>
-			<div class="card flipper manage_event" id="create_event_div" >
+			<div class="card flipper" id="create_event_div" style="display:none">
 				<div class="back">
 					<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event" id="create_event_form" method="post">
 							<div class="event_edit_left">
@@ -392,8 +390,8 @@ $results = get_events($user_id);
 								<textarea name="event_desc" class="get_event_desc" cols=20 rows=3></textarea>
 							</div>
 							<div class="event_edit_bottom">
-								<button name="cancel_add" id="cancel_add_event">Cancel</button>
-								<button name="add_event" id="add_event">Add Event</button>
+								<button type="button" name="cancel_add" id="cancel_add_event">Cancel</button>
+								<button type="button" name="add_event" id="add_event">Add Event</button>
 							</div>
 					</form>
 				</div>
@@ -436,9 +434,9 @@ $results = get_events($user_id);
 					}
 					?>
 					
-					<div class="card flipper" id="event_<?php echo $event_id; ?>">
+					<div class="card flipper manage_event" id="event_<?php echo $event_id; ?>">
 			<!-- Event editing section below -->
-						<div class="front manage_event">
+						<div class="front">
 							<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=update_event" method="post" class='update_event_form'>
 							<div class="event_edit_left">
 								<input style="display:none" type="text" name="event_id" value="<?php echo $event_id ?>">
@@ -502,7 +500,7 @@ $results = get_events($user_id);
 			<!-- END Event editing section -->
 						
 			<!-- Event information display section below -->
-						<div class="back manage_event">
+						<div class="back">
 							<div class="event_tl">
 								<p class="event_name"><?php echo $event_name; ?></p>
 								<p class="event_date">on: <?php echo $event_date; ?></p>

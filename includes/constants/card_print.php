@@ -184,7 +184,7 @@ function print_event_card ($r) {
 	}
 
 ?>
-	<div class ="card flipper">
+	<div class ="card flipper event_card">
 		<div class="back">
 			<input type="hidden" class='event_id' rel="<?php echo $event_id; ?>" name ='event_id'></input>
 			<input type="hidden" class="zipcode" rel="<?php echo $zipcode; ?>"  name="zipcode"></input>
@@ -210,9 +210,9 @@ function print_event_card ($r) {
 				<p class="image_holder"><img class="event_image" src="<?php echo $media_loc;?>" /></p>
 				<br>
 				<input type="checkbox"  class="attending_radio" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $attending_radio;?>" name="attending" value="attending" ><label id="attending_label">I am attending!</label></input>
-				<button class = "save_event" rel="<?php echo $event_id; ?>" id= "<?php echo $save_event;?>" type="submit" name="save_event">Save</button>
+				<button class="save_event" rel="<?php echo $event_id; ?>" id="<?php echo $save_event;?>" type="button" name="save_event">Save</button>
 			</div>
-			<button class="flip" style="position:absolute;bottom:1%;right:1%;">Flip Card</button>
+			<button type="button" class="flip" style="position:absolute;bottom:1%;right:1%;">Flip Card</button>
 			
 			
 		</div>
@@ -256,7 +256,7 @@ function print_event_card ($r) {
 			</div> -->
 			<div class="map_canvas" style="background:lightgrey; position:absolute; top:7em; left:50%; right:1em; padding:.5em; margin:.25em;">Placeholder for Google Map</div>
 			
-			<button class="flip" style="position:absolute;bottom:0;right:0;">Flip Card</button>
+			<button class="flip" type="button" style="position:absolute;bottom:0;right:0;">Flip Card</button>
 		</div>
 	</div>
 	<?php
