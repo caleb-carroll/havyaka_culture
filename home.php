@@ -13,6 +13,21 @@
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
 </head>
+<?php
+	require_once 'includes/constants/sql_constants.php';
+	require_once 'includes/constants/card_print.php';
+	secure_page();  
+
+	if (isset($_SESSION['homepage']))
+		$_SESSION['homepage']++;
+	else
+		$_SESSION['homepage'] = 1;
+
+	$user_id =  $_SESSION['user_id'];
+	$hash_pass= crypt($passsalt,'connectcommunity1');
+?>
+<input style="display:none" type="text" id="user_id" value="<?php echo $user_id ?>">
+
     <script>
         
         $(document).ready(function() {
@@ -49,22 +64,30 @@ function doesCSS(p){
                       height: 500,
                       width: 650
                   });
+		$(".save_chef").click(function() {
+			var chef_id = $(this).attr('rel');
+			var user_id = $('#user_id').val();
+			var datastring = "chef_id=" + chef_id + "&user_id=" + user_id;
+			console.log(datastring);
+			
+			$.ajax({
+				type: "POST",
+				url: "<?php echo BASE; ?>/chef_interactions.php?cmd=save_chef", 
+				data: datastring,
+				success: function(response) {
+					console.log(response);
+					var results = JSON.parse(response);
+					
+					$('.success').fadeIn(2000).show().html('Chef details are saved in your profile!').fadeOut(6000); //Show, then hide success msg
+					$('.error').fadeOut(2000).hide(); //If showing error, fade out
+				}
+			});
+			
+			return false;
+		});
 	});
-    
     </script>
-     <?php
-        require_once 'includes/constants/sql_constants.php';        
-		require_once 'includes/constants/card_print.php';
-        secure_page();  
-        
-        if (isset($_SESSION['homepage']))
-            $_SESSION['homepage']++;
-        else
-           $_SESSION['homepage'] = 1;
-        
-          $user_id =  $_SESSION['user_id'];
-           
-        $hash_pass= crypt($passsalt,'connectcommunity1');
+<?php
         
         //check if the user is logged in for the first time, if so, display the information dialog box
         

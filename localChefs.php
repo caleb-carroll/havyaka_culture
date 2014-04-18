@@ -23,7 +23,7 @@
 	$msg = NULL;
 	$user_id =  $_SESSION['user_id'];
 ?>
-
+<input style="display:none" type="text" id="user_id" value="<?php echo $user_id ?>">
 <script>
 
 function doesCSS(p){
@@ -46,21 +46,23 @@ $(function(){
 
 $(function() {
 	$(".save_chef").click(function() {
-		alert('!');
 		var chef_id = $(this).attr('rel');
-		alert(chef_id);
-		var datastring = "chef_id="+chef_id;
-
+		var user_id = $('#user_id').val();
+		var datastring = "chef_id=" + chef_id + "&user_id=" + user_id;
+		console.log(datastring);
+		
 		$.ajax({
 			type: "POST",
-			url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=save", 
+			url: "<?php echo BASE; ?>/chef_interactions.php?cmd=save_chef", 
 			data: datastring,
-			success: function() {
-			$('.success').fadeIn(2000).show().html('Chef details are saved in your profile!').fadeOut(6000); //Show, then hide success msg
-			$('.error').fadeOut(2000).hide(); //If showing error, fade out
+			success: function(response) {
+				console.log(response);
+				var results = JSON.parse(response);
+				
+				$('.success').fadeIn(2000).show().html('Chef details are saved in your profile!').fadeOut(6000); //Show, then hide success msg
+				$('.error').fadeOut(2000).hide(); //If showing error, fade out
 			}
-		}
-		);
+		});
 		
 		return false;
 	});
@@ -70,36 +72,9 @@ $(function() {
 </head>
 
 <body>
-<?php
-// PHP code to save a chef
-if(isset($_POST) and isset($_GET)) {
-	if (!empty($_GET['cmd'])) {
-		if($_GET['cmd'] == 'save') {
-			$chef_id = $_POST['chef_id'];
-			
-			if($stmt = mysqli_prepare($link, "SELECT * FROM ".USER_SAVED_INFO. " WHERE user_id = ".$_SESSION['user_id']." AND chef_id= " .$chef_id) or die(mysqli_error($link))) {
-				//execute the query
-				mysqli_stmt_execute($stmt);
-				//store the result
-				mysqli_stmt_store_result($stmt);
-
-				if(mysqli_stmt_num_rows($stmt) == 0) {
-					$q = mysqli_query($link, "INSERT INTO ".USER_SAVED_INFO. " (user_id,chef_id) VALUES(" .$_SESSION['user_id']. ",".$chef_id. ")") or die(mysqli_error($link));
-				} 
-				else {
-					$err[] = "You have saved this chef details!";
-				}
-				mysqli_stmt_close($stmt);
-			}
-			
-			exit();
-		}
-	}
-}
-?>
 
 <div id ="header">
-    <img src="pictures/logo_594749_web1.jpg" alt="Community Connect"></img><h1>Community Connect</h1><br><h3>Connect and relish your tradition!</h3></br>
+	<img src="pictures/logo_594749_web1.jpg" alt="Community Connect"></img><h1>Community Connect</h1><br><h3>Connect and relish your tradition!</h3></br>
 	<?php include('includes/navigation.inc.php');
 
 	// $firstname = $_SESSION['firstname'];

@@ -972,19 +972,16 @@ function save_info($info_type, $user_id, $info_id) {
 	case "contact":
 		$q .= "NULL, NULL, '" . $info_id . "')";
 		break;
-	default:
-		echo "Error, please supply valid info type to update";
-		break;
 	}
+	
+	// echo $q;
 	
 	if (mysqli_query($link,$q)){
-		echo $info_type . " added successfully";
+		return true;
 	}
 	else {
-		
-		echo $info_type . " failed to add";
+		return false;
 	}
-	
 	
 }
 

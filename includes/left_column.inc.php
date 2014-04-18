@@ -1,33 +1,29 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-EN">
 <head>
 
-<link rel="stylesheet" type="text/css" href="styles/style.css"/>
-<link rel="stylesheet" type="text/css" href="styles/left_coulmn_style.css"/>
-
-<link rel="stylesheet" type="text/css" href="styles/jquery-ui-1.10.4.custom.css"></link> 
-  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-  <link rel="stylesheet" href="/resources/demos/style.css"></link>
+<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
+<link rel="stylesheet" type="text/css" href="includes/styles/left_coulmn_style.css"/>
+<link rel="stylesheet" type="text/css" href="includes/styles/jquery-ui-1.10.4.custom.css"></link> 
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     
- <script>
-    //function to execute the accordion style
-      $(function() {
-    $( "#accordion1" ).accordion({
-      heightStyle: "content"
-    });
-  });
-  $(function() {
-    $( "#accordion-resizer" ).resizable({
-      minHeight:200,
-      minWidth: 200,
-      resize: function() {
-        $( "#accordion1" ).accordion({collapsible: true});
-      }
-    });
-  });
-    </script>
+<script>
+//function to execute the accordion style
+$(function() {
+	$( "#accordion1" ).accordion({
+	heightStyle: "content"
+	});
+});
+
+$(function() {
+	$( "#accordion-resizer" ).resizable({
+		minHeight:200,
+		minWidth: 200,
+		resize: function() {
+			$( "#accordion1" ).accordion({collapsible: true});
+		}
+	});
+});
+</script>
 </head>
 <?php 
 require_once 'includes/constants/sql_constants.php';
