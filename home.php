@@ -150,59 +150,14 @@ $(function(){
 
 });
 </script>
-<?php
-<<<<<<< HEAD
-        
-        //check if the user is logged in for the first time, if so, display the information dialog box
-        
-          $q = mysqli_query($link,"SELECT num_logins from " .USERS. " WHERE user_id =".$user_id) or die(mysqli_error($link));
-          
-          list($num_login) = mysqli_fetch_row($q);
-          
-         //if the user is logged for first 2 times or he is landing in the home page for the first time, will display the information dialog
-          //($num_login <= 2) && : add this to below if statement in the future.
-          if(($_SESSION['homepage'] == 1))
-          {   
-              ?>
-            <div id ="information_dialog" title = "Welcome to Community Connect!">               
-                <p>
-                    <h3 style="color: darkmagenta;font-style: italic;">Find Local Events, chef OR Add your own event, become a chef. </h3>
-                     All related to your community!
-                </p>
-                <p>
-                    <center>This website is built on card UI interface.</center>
-                    <div class="card flipper" style="width:85%;height: 50%; margin-top: 1em;">
-                        <div class="back">
-                            <h3 style="color: darkmagenta;font-style: italic;">This is the sample card. </h3>
-                        <button class="flip">flip</button><br>
-                        <p>If you click on the "flip" button above the card flips and displays the contents in the back of the card.</p>
-                        </div>
-                        <div class="front">
-                            <h3 style="color: darkmagenta;font-style: italic;">This the back of the card.</h3>
-                            <button class="flip">flip</button><br>
-                        <p>If you click on the "flip" button above the card flips back and displays front of the card.</p>
-                        </div>
-                    </div>
-                </p>
-                Enjoy your stay in <h3>Community Connect!</h3>
-            </div>
-          <?php }
-          
-        return_meta("Home");
-        $msg = NULL;
-      
-  ?>
     <body>      
         
         <?php
           include_once ('includes/header.inc.php');
         include('includes/navigation.inc.php'); ?>
         
-  <div class="content leftmenu">      
-        
-      <div class="colright">
-=======
 
+<?php
 //check if the user is logged in for the first time, if so, display the information dialog box
 
 $q = mysqli_query($link,"SELECT num_logins from " .USERS. " WHERE user_id =".$user_id) or die(mysqli_error($link));
@@ -242,17 +197,10 @@ $msg = NULL;
 
 ?>
 <body>
-	<div id ="header">
-		<img src="pictures/logo_594749_web2.jpg"></img>
-		<h1>Community Connect</h1> 
-	
-	<?php include('includes/navigation.inc.php'); ?>
-</div>
 	
 <div class="content leftmenu">
 
 	<div class="colright">
->>>>>>> 091ddfe029ee30527b502c07c65851e60c1e548d
 		<div class="col1">
 			<!-- Left Column start -->
 			<?php include('includes/left_column.inc.php'); ?>
