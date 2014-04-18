@@ -6,6 +6,8 @@
 	<meta name="home" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href ="includes/styles/style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/chef_style.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
