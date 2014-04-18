@@ -1,6 +1,67 @@
 <?php
 require_once 'includes/constants/sql_constants.php';
+secure_page();
+
 if($_GET){
+	if($_GET['cmd']== 'attending') {
+		$user_id = $_SESSION['user_id'];
+		$event_id = $_POST['event_id'];
+		$attending = $_POST['attending'];
+		
+		//check if the logged in user is already attending the event, if not insert into the table
+		if ($attending == 'true'){
+			if($stmt = mysqli_prepare($link, "SELECT * FROM ".ATTENDANCE. " WHERE user_id = " . $user_id . " AND event_id= " . $event_id) or die(mysqli_error($link))) {
+				//execute the query
+				mysqli_stmt_execute($stmt);
+				//store the result
+				mysqli_stmt_store_result($stmt);
+
+				if(mysqli_stmt_num_rows($stmt) == 0) {
+					$q = mysqli_query($link, "INSERT INTO ". ATTENDANCE . " (event_id,user_id) VALUES(" . $event_id . "," . $user_id . ")") or die(mysqli_error($link));
+					
+					$results = array(
+						"success" => true,
+						"message" => "You are now marked as attending!"
+					);
+				}
+				else {
+					$results = array(
+						"success" => false,
+						"message" => "You are already attending this event."
+					);
+				}
+				
+				$json_response = json_encode($results);
+				
+				echo $json_response;
+				
+				mysqli_stmt_close($stmt);
+				
+			}
+		}
+		else{
+			$q = "DELETE FROM " . ATTENDANCE . " WHERE event_id= " . $event_id . " AND user_id= " . $user_id;
+
+			if(mysqli_query($link,$q)) {
+				$results = array(
+					"success" => true,
+					"message" => "You are no longer marked as attending!"
+				);
+			}
+			else {
+				$results = array(
+					"success" => false,
+					"message" => "You are not attending this event."
+				);
+			}
+			
+			$json_response = json_encode($results);
+				
+			echo $json_response;
+		
+		}
+	}
+
 	if ($_GET['cmd'] == 'update_event'){
 		$event_name = $_POST['event_name'];
 		$event_date = $_POST['event_date'];
@@ -78,6 +139,27 @@ if($_GET){
 		
 		echo $json_response;
 		
+	}
+	
+	if ($_GET['cmd'] == 'save_event'){
+		$event_id = $_POST['event_id'];
+		$user_id = $_POST['user_id'];
+		
+		if(save_info("event", $user_id, $event_id)){
+			$results = array(
+				"success" => true,
+				"message" => "Save was successful"
+			);
+		}
+		else {
+			$results = array(
+				"success" => false,
+				"message" => "Save failed"
+			);
+		}
+		
+		$json_response = json_encode($results);
+		echo $json_response;
 	}
 }
 ?>

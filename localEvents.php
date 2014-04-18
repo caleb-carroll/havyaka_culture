@@ -94,6 +94,45 @@ $(function(){
 		
 		return false;
 	});
+	
+	$(".attending_radio").change(function() {
+			var event_id = $(this).attr('rel');
+		if(this.checked) {
+			var datastring = "attending=true&event_id="+event_id;
+			console.log(datastring);
+				
+			$.ajax({
+				type: "POST",
+				url: "<?php echo BASE; ?>/event_interactions.php?cmd=attending",
+				data: datastring,
+				success: function(response) {
+					console.log(response);
+					$('.success').fadeIn(2000).show().html('Your attendence is counted!').fadeOut(6000); //Show, then hide success msg
+					$('.error').fadeOut(2000).hide(); //If showing error, fade out   
+				}
+			});
+			
+			return false;
+		} 
+		else {
+			//we may want to add another option called 'may be attending' in that case, we need to write the code here
+			var datastring = "attending=false&event_id="+event_id;
+			console.log(datastring);
+				
+			$.ajax({
+				type: "POST",
+				url: "<?php echo BASE; ?>/event_interactions.php?cmd=attending",
+				data: datastring,
+				success: function(response) {
+					console.log(response);
+					$('.success').fadeIn(2000).show().html('Your attendence is counted!').fadeOut(6000); //Show, then hide success msg
+					$('.error').fadeOut(2000).hide(); //If showing error, fade out   
+				}
+			});
+			
+			return false;
+		}
+	});
 });
 
 function initialize() {
@@ -147,33 +186,7 @@ function initialize() {
         {
             if (!empty($_GET['cmd']))
             {
-                    if($_GET['cmd']== 'attending')
-                     {
-                            $event_id = $_POST['event_id'];
-                            //check if the logged in user is already attending the event, if not insert into the table
-                            if($stmt = mysqli_prepare($link, "SELECT * FROM ".ATTENDENCE. " WHERE user_id = ".$_SESSION['user_id']." AND event_id= " .$event_id) or die(mysqli_error($link)))
-                            {
-                                //execute the query
-                                 mysqli_stmt_execute($stmt);
-                                 //store the result
-                                 mysqli_stmt_store_result($stmt);
-
-                                 if(mysqli_stmt_num_rows($stmt) == 0) {
-
-                                        $q = mysqli_query($link, "INSERT INTO ".ATTENDENCE. " (event_id,user_id) VALUES(".$event_id. "," .$_SESSION['user_id']. ")") or die(mysqli_error($link));
-
-                                 } 
-                                 else 
-                                 {
-                                     $err[] = "You are attending!";
-                                     
-                                 }
-
-                                 mysqli_stmt_close($stmt);
-                            }
-                            exit();
-                       }
-                       elseif($_GET['cmd'] == 'save') 
+                       if($_GET['cmd'] == 'save') 
                        {
                             $event_id = $_POST['event_id'];
                            if($stmt = mysqli_prepare($link, "SELECT * FROM ".USER_SAVED_INFO. " WHERE user_id = ".$_SESSION['user_id']." AND event_id= " .$event_id) or die(mysqli_error($link)))
