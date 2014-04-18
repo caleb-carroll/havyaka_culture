@@ -78,6 +78,45 @@ p {
 .navigation li a span {
 	display:block;
 }
+/*subnavigation styles */
+
+#sub_navigation ul {
+	clear:left;
+	float:left;
+	width:95%;
+	font-size: 1.5em;
+	margin:.2em 0 0 10em;
+	padding:0;
+}
+#sub_navigation ul li {
+	float:left;
+	margin:.25em;
+	padding:3px 8px;
+	background:#eee;
+        list-style:none;
+        float:left;
+	text-decoration:none;
+	line-height:1.3em;
+}
+#sub_navigation ul li a {
+	float:left;
+	margin:.25em;
+	padding:3px 8px;
+	background:#eee;
+	text-decoration:none;
+	line-height:1.3em;
+}
+
+#sub_navigation ul li a:hover {
+	background:#369;
+	color: brown;
+}
+
+#sub_navigation .active,
+ #sub_navigation.active:hover {
+	color:#006666;
+	background: black;
+} 
 
 /* End link styling for header */
 

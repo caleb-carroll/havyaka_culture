@@ -309,13 +309,9 @@ $results = get_events($user_id);
 </head>
 
 <body>
-
-<div id="header">
-	<h1>Community Connect</h1>
-	
-	<?php include('includes/navigation.inc.php'); ?>
-	
-</div>
+  <?php
+          include_once ('includes/header.inc.php');
+        include('includes/navigation.inc.php'); ?>
 	
 <div class="content leftmenu">
 	<div class="colright">

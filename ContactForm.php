@@ -66,13 +66,10 @@ $user_id = $_SESSION['user_id'];
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css"/>
 </head>
 <body>
-<div id="header">
-
-        <h1>Community Connect</h1>
-
-        <?php include('includes/navigation.inc.php'); ?>
-</div>
-
+  <?php
+          include_once ('includes/header.inc.php');
+        include('includes/navigation.inc.php'); ?>
+        
 <div class="content leftmenu">
         <div class="colright">
                 <div class="col1">

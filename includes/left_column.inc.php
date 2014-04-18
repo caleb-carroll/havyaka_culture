@@ -71,7 +71,7 @@ if($food_query = mysqli_query($link, $q)) {
                         Here, the each card contains the information about events or chef etc. When you click on the  button, the card flips over to display more information.
                      </p>
                 </div>
-             <h4 class="left_faq_header">How does card your work?</h4>       
+             <h4 class="left_faq_header">How does your card work?</h4>       
             <div>            
               <p class = "para1">
                   You see the information in the front of the card, to view more, click on the relavent button to see more information on the back of the card.      

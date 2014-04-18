@@ -73,16 +73,15 @@ $(function() {
 
 <body>
 
-<div id ="header">
-	<img src="pictures/logo_594749_web1.jpg" alt="Community Connect"></img><h1>Community Connect</h1><br><h3>Connect and relish your tradition!</h3></br>
-	<?php include('includes/navigation.inc.php');
+      <?php
+          include_once ('includes/header.inc.php');
+        include('includes/navigation.inc.php'); 
 
 	// $firstname = $_SESSION['firstname'];
 	// front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
 	$results = get_localchef_details($user_id);
 
 	?>
-</div>
 <div class="content leftmenu">
 	<div class="colright">
 		<div class="col1">

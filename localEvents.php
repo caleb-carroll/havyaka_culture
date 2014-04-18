@@ -214,11 +214,9 @@ function initialize() {
             
         }
     ?>
- <div id ="header">
-	<img src="pictures/logo_594749_web1.jpg" alt="Community Connect"></img><h1>Community Connect</h1><br><h3>Connect and relish your tradition!</h3></br>
-	<?php      include('includes/navigation.inc.php'); 
-	?>
-</div>
+  <?php
+          include_once ('includes/header.inc.php');
+        include('includes/navigation.inc.php'); ?>
   <div class="content leftmenu">      
         
      <div class="colright">

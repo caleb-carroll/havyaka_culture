@@ -78,7 +78,9 @@ else{
 <body>
 
 <div id="header">
-	<?php include('includes/navigation.inc.php'); ?>
+	<?php  
+          include_once ('includes/header.inc.php');
+        include('includes/navigation.inc.php'); ?> 
 </div>
 
 <div class="content leftmenu">

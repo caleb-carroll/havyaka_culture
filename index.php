@@ -144,7 +144,9 @@ return_meta($meta_title);
 <body>
    
 	<div id="header">
-		<h1>Community Connect</h1>
+		  <?php
+          include_once ('includes/header.inc.php');
+       ?>
 		<div class="login_holder">
 			<?php include_once 'login.php'; ?>
 		</div>

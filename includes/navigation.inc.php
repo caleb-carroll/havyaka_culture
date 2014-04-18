@@ -6,17 +6,8 @@
     
 <?php
 
-//if(isset($_SESSION['user_id'])) // if the user is logged in and display related navigation tabs, else display the default tabs.
-//{
-$names = array("Home","LocalEvents","LocalChefs","MyDashboard","Logout");
+$names = array("Home","Local Events","Local Chefs","My Dashboard","Logout");
 $links = array("home.php","localEvents.php","localChefs.php","userProfile.php","logout.php");
-
-//} else 
-//{
-  //$names = array("Register","Login");
-  //$links = array("register.php","login.php");
-  
-//}
 
 ?>
 <div class="navigation">
@@ -34,8 +25,8 @@ $links = array("home.php","localEvents.php","localChefs.php","userProfile.php","
 			?>
 			<li><a href="<?php echo $links[$i];?>" class="<?php echo $class;?>"><?php echo $names[$i];?></a></li>
 			<?php
-		}
-		?>
+		} ?>
+                
 	</ul>
 </div>
 <p id="layoutdims"></p>
