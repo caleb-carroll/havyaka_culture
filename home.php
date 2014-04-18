@@ -147,12 +147,16 @@ function doesCSS(p){
                     // functions below are defined in sql_constants
                     $chefs_list = get_localchef_details($user_id,2);
                   
-                  if(!empty($chef_list)) { ?>
-                        <div id ="chef_holder">				
-				
-				// prints a card for each chef associated with a food type                              
+                  if(!empty($chefs_list)) {
+                      ?>
+                       
+				<!--prints a card for each chef associated with a food type    -->                          
                                    
-                                   echo "<h2>Chefs in your area!</h2>";
+                                <center><h1 style="background:#B8CFE6;">Chefs in your area!</h1></center>
+                                <div class="more_link" style="position:absolute;margin-left:70em;margin-top: -30px;">
+                                        <a href="localChefs.php">More Chefs>></a>
+                                    </div>  
+				 <div class ="chef_holder">			
 				
                                    <?php foreach ($chefs_list as $chef) {
 
@@ -162,12 +166,10 @@ function doesCSS(p){
                                             // uses the chef info array to print cards
                                             print_chef_card($chef_info_array);
                                     } ?>
-                                    <div class="more_link">
-                                            <a href="localChefs.php">More Chefs>></a>
-                                    </div>                            
+                                                          
                              </div>
                         <?php } else {?>
-                        <div id ="chef_holder" style="display:none;">	</div>	
+                        <div class ="chef_holder">	</div>	
                       <?php  } 
 				?>
                         <?php  
@@ -175,13 +177,20 @@ function doesCSS(p){
                         $results = retrieve_future_event($user_id,2);  
                         if(!empty($results))
                          { ?>
-                            <br><div id="event_holder" style="margin-top:0em; margin-left: 15px; position: relative; float: top;">
-                                <h2> Events in your area!</h2>
+                           
+                                     
+                               <div id="event_holder">
+                                   <center><h1 style="background:#B8CFE6; height: 37px; margin-top: 17em; padding-bottom: 3px;">Events in your area!</h1></center>
+                                <div class="more_link" style="position:relative;margin-left:70em;margin-top: -30px;">
+                                         <a href="localEvents.php">More events>></a>
+                                    </div>
+                                    
                                <form class= "event" action="localEvents.php" method="POST" id = "local_events" name="localevents">      
                                 <?php                                         
                                      $i =0;
                                        foreach ($results as $r) 
                                         {
+                                           
                                                print_event_card($r);
                                         }
                                  ?>
@@ -189,10 +198,7 @@ function doesCSS(p){
                              </form>  
                                 <span class="success" style="display:none;"></span>
                                 <span class="error" style="display:none;">Please enter some text</span>
-
-                                <div class="more_link">
-                                    <a href="localEvents.php">More events>></a>
-                                </div>                  
+                
                             </div>                                
                    <?php  } ?>
             </div>                          <!-- Middle Column end -->

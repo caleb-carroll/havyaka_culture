@@ -392,7 +392,7 @@ function get_localchef_details($user_id,$row_limit = NULL) {
         if ($row_limit !=NULL)
         {
             $row_limit_set = $row_limit;
-        } else { $row_limit_set = 50;}
+        } else { $row_limit_set = 10;}
         
 	//get the logged in user's location
 	$e_loc_id= get_loggedin_user_location($user_id);
@@ -418,7 +418,7 @@ function get_localchef_details($user_id,$row_limit = NULL) {
             $results[] = NULL;
         }
 	mysqli_free_result($chef_query);
-
+        
 	return $results;
 }
 

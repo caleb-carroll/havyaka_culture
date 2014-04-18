@@ -142,6 +142,7 @@ return_meta($meta_title);
 </head>
 
 <body>
+   
 	<div id="header">
 		<h1>Community Connect</h1>
 		<div class="login_holder">

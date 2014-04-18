@@ -163,9 +163,9 @@ p {
 #carousal {
 	border: 2px solid black;
 	display:bloack;
-        margin-left: 3em;
+        margin-left: .5em;
 	height: 200px;
-	width: 90%;
+	width: 100%;
 	overflow: hidden;
 	border-radius: 10px;
 }

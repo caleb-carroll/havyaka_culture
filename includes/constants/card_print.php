@@ -184,7 +184,7 @@ function print_event_card ($r) {
 	}
 
 ?>
-	<div class ="card flipper" style="display:none">
+	<div class ="card flipper">
 		<div class="back">
 			<input type="hidden" class='event_id' rel="<?php echo $event_id; ?>" name ='event_id'></input>
 			<input type="hidden" class="zipcode" rel="<?php echo $zipcode; ?>"  name="zipcode"></input>
