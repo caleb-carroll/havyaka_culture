@@ -158,7 +158,7 @@ function print_event_card ($r) {
 	$map_canvas = "map_canvas_".$event_id;
 	$save_event = "saveevent_".$event_id;
 	
-	$q3 = "SELECT image_location FROM event_picture WHERE event_id = ".$event_id. " LIMIT 1";
+	$q3 = "SELECT image_location FROM " . EVENT_PICTURE . " WHERE event_id = ".$event_id. " LIMIT 1";
 	$query = mysqli_query($link,$q3) or (die(mysqli_error($link)));
 	$row_image = mysqli_fetch_row($query);
 	
