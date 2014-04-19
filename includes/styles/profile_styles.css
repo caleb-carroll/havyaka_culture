@@ -22,12 +22,7 @@ table td {
 	vertical-align: text-top;
 }
 
-/* input, textarea {
-	width:99%;
-	height:99%
-} */
-
-.manage_event label {
+label {
 	display: block;
 	font-size: .9em;
 	padding-top: .5em;
@@ -95,7 +90,7 @@ table td {
 	/* background: lightblue; */
 }
 
-.manage_event .event_name{
+.card_name{
 	font-weight:bold;
 	font-size:2.5em;
 	margin-bottom: 0em;
@@ -114,11 +109,11 @@ table td {
 	font-size:1.5em;
 }
 
-.manage_event .image_holder{
+.image_holder{
 	text-align:right;
 }
 
-.manage_event .event_image{
+.card_image{
 	max-width:100%; 
 	max-height:40%; 
 	width:auto; 
@@ -128,4 +123,49 @@ table td {
 .manage_event .event_description{
 	overflow-y: auto;
 	max-height: 34%;
+}
+
+.update_profile_left{
+	position: absolute; 
+	top: 1em; 
+	left: 1em; 
+	right: 40%; 
+	bottom: 25%; 
+	margin-left:.5em;
+	padding:.5em;
+}
+
+.update_profile_right{
+	position: absolute; 
+	top: 1em; 
+	left: 60%; 
+	right: 1em; 
+	padding:.5em;
+	margin:.25em;
+}
+
+.update_chef_top{
+	position: absolute; 
+	top: 1em; 
+	bottom:85%;
+}
+
+.update_chef_bl{
+	position: absolute; 
+	bottom: 1em; 
+	top: 50%;
+	left: 1em; 
+	right: 40%; 
+	margin-left:.5em;
+	padding:.5em;
+}
+
+.update_chef_br{
+	position: absolute; 
+	bottom: 1em; 
+	top: 50%;
+	left: 60%; 
+	right: 1em; 
+	padding:.5em;
+	margin:.25em;
 }

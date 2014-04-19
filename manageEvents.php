@@ -309,9 +309,9 @@ $results = get_events($user_id);
 </head>
 
 <body>
-  <?php
-          include_once ('includes/header.inc.php');
-        include('includes/navigation.inc.php'); ?>
+<?php
+include_once ('includes/header.inc.php');
+include('includes/navigation.inc.php'); ?>
 	
 <div class="content leftmenu">
 	<div class="colright">
@@ -459,7 +459,7 @@ $results = get_events($user_id);
 								<input type="text" name="event_zipcode" class="get_event_zipcode" value="<?php echo $zipcode ?>" >
 							</div>
 							<div class="event_edit_right">
-								<p class="image_holder"><img class="event_image" style="max-height:20%" src="<?php echo $event_image_loc; ?>" /></p>
+								<p class="image_holder"><img class="card_image" style="max-height:20%" src="<?php echo $event_image_loc; ?>" /></p>
 									<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event_picture" method="post" enctype="multipart/form-data">
 										<input style="display:none" type="text" name="event_id" value="<?php echo $event_id ?>">
 										<label for="file">Filename:</label>
@@ -498,7 +498,7 @@ $results = get_events($user_id);
 			<!-- Event information display section below -->
 						<div class="back">
 							<div class="event_tl">
-								<p class="event_name"><?php echo $event_name; ?></p>
+								<p class="card_name"><?php echo $event_name; ?></p>
 								<p class="event_date">on: <?php echo $event_date; ?></p>
 								
 								<p class="venue_location"><?php 
@@ -510,13 +510,13 @@ $results = get_events($user_id);
 								<p class="event_desc"><?php echo $event_desc; ?></p>
 							</div>
 							<div class="event_right">
-								<p class="image_holder"><img class="event_image" src="<?php echo $event_image_loc; ?>" /></p>
+								<p class="image_holder"><img class="card_image" src="<?php echo $event_image_loc; ?>" /></p>
 								<p class="attendance_count">Attendance count:<br> <?php echo $count; ?></p>
 								<p class="event_type">Event Type: <?php echo $event_type; ?></p>
 								<p class="event_scope">Event Scope: <?php echo $event_scope; ?></p>
 							</div>
 							<div class="event_edit_bottom">
-								<button type="button" class="flip">Edit Event</button>
+								<button type="button" class="flip">Edit Event</button>	
 							</div>
 								
 						</div>

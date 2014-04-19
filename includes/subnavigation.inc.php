@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="styles/style.css"/>
+<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
 <?php
 
 if(isset($_SESSION['user_id'])) // if the user is logged in and display related navigation tabs, else display the default tabs.
