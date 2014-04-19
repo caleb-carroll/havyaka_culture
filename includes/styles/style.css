@@ -24,7 +24,7 @@ h1{
     color: brown;
 }
 h2 {
-    color: blueviolet;
+    color:#006666;
 }
 h3 {
     color: darkmagenta;
@@ -114,7 +114,7 @@ p {
 
 #sub_navigation .active,
  #sub_navigation.active:hover {
-	color:#006666;
+	color:white;
 	background: black;
 } 
 

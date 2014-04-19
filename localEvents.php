@@ -218,7 +218,8 @@ function initialize() {
           include_once ('includes/header.inc.php');
         include('includes/navigation.inc.php'); ?>
   <div class="content leftmenu">      
-        
+         <span class="success" style="display:none;"></span>
+         <span class="error" style="display:none;">Please enter some text</span>
      <div class="colright">
          <div class="col1">
                 <!-- Left Column start -->
@@ -250,8 +251,7 @@ function initialize() {
         <?php }  
         $i++;
 ?>
-                     <span class="success" style="display:none;"></span>
-                     <span class="error" style="display:none;">Please enter some text</span>
+                    
                 
         </div>   <!-- end of col2-->                   
     </div>  

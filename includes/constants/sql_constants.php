@@ -1166,13 +1166,14 @@ function get_saved_events($user_id) {
 	global $salt;
 	$results = array();
 	$q = "SELECT t1.event_date, t1.event_desc, t1.event_id, t1.event_name, t5.first_name, AES_DECRYPT(t5.email, '$salt') as email, t5.phone, t5.last_name, t3.venue_address, t3.venue_name, t4.city, t4.zipcode, t4.state
-			FROM " . EVENT . " AS t1
-			right JOIN " . EVENT_TYPE . " AS t2 ON t1.e_type_id = t2.e_type_id
-			right JOIN " . VENUE . " AS t3 ON t1.venue_id = t3.venue_id
-			right JOIN " . LOCATION . " AS t4 ON t3.e_loc_id = t4.e_loc_id
-			right JOIN " . USERS . " AS t5 ON t1.user_id = t5.user_id
-			left JOIN " . USER_SAVED_INFO . " AS t6 on t1.event_id = t6.event_id
-			WHERE t1.event_status = 1 AND t6.user_id = 6;";
+				FROM " . EVENT . " AS t1
+				right JOIN " . EVENT_TYPE . " AS t2 ON t1.e_type_id = t2.e_type_id
+				right JOIN " . VENUE . " AS t3 ON t1.venue_id = t3.venue_id
+				right JOIN " . LOCATION . " AS t4 ON t3.e_loc_id = t4.e_loc_id
+				right JOIN " . USERS . " AS t5 ON t1.user_id = t5.user_id
+				left JOIN " . USER_SAVED_INFO . " AS t6 on t1.event_id = t6.event_id
+				WHERE t1.event_status = 1 AND t6.user_id = " . $user_id . ";";
+
 
 	$q_saved_events = mysqli_query($link,$q) or die(mysqli_error($link));
 	if(mysqli_num_rows($q_saved_events) !=0) {
@@ -1195,8 +1196,8 @@ function get_saved_chef($user_id) {
 		FROM " . CHEF . " AS t1
 		RIGHT JOIN " . USERS . " AS t2 ON t1.user_id = t2.user_id
 		RIGHT JOIN " . LOCATION . " AS t4 ON t2.e_loc_id = t4.e_loc_id
-		LEFT JOIN user_saved_info AS t5 ON t1.chef_id = t5.chef_id
-		WHERE  t5.user_id =6;";
+		LEFT JOIN " . USER_SAVED_INFO . " AS t5 ON t1.chef_id = t5.chef_id
+		WHERE  t5.user_id =" . $user_id . ";";
 
 	$q_saved_chef = mysqli_query($link,$q) or die(mysqli_error($link));
 	if(mysqli_num_rows($q_saved_chef) !=0) {

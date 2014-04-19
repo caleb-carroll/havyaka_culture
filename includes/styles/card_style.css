@@ -75,8 +75,7 @@ http://home.jejaju.com/play/flipCards/simple */
 	-moz-border-radius: 2em;
 	-ms-border-radius: 2em;
 	-o-border-radius: 2em;
-        /* background-image: url('img_css/background1.jpg'); */
-       background-size: 100%;
+	background-size: 100%;
 }
 
 .card .front {

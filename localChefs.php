@@ -59,8 +59,15 @@ $(function() {
 				console.log(response);
 				var results = JSON.parse(response);
 				
-				$('.success').fadeIn(2000).show().html('Chef details are saved in your profile!').fadeOut(6000); //Show, then hide success msg
+                                var status = results['success'];
+                                var message = results['message'];
+                                if(status === 'true') {
+				$('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
 				$('.error').fadeOut(2000).hide(); //If showing error, fade out
+                            } else {
+                                $('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+				$('.success').fadeOut(2000).hide();
+                            }
 			}
 		});
 		
@@ -91,6 +98,8 @@ $(function() {
 		</div>
 		
 		<div class="col2">
+                       <span class="success" style="display:none;"></span>
+                     <span class="error" style="display:none;">Please enter some text</span>
 			<!-- Middle Column start -->
 			<style>img {width: 160px;}</style> 
 			<div id ="chef_holder">
@@ -114,8 +123,7 @@ $(function() {
 			</div>
 		</div>   <!-- end of col2-->
 	</div>
-      <span class="success" style="display:none;"></span>
-                     <span class="error" style="display:none;">Please enter some text</span>
+                  
 </div>
 
 <?php include('includes/footer.inc.php'); ?>
