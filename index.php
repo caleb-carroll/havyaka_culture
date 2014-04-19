@@ -91,6 +91,11 @@ function compIsType(t, s) {
 require_once 'includes/constants/sql_constants.php';
 include_once 'includes/constants/card_print.php';
 
+session_start();
+if($_SESSION){
+	header("Location: " . BASE . "/home.php");
+}
+
 $meta_title = "Get Started";
 
 $firstname = NULL;
