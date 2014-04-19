@@ -39,19 +39,26 @@ if($_GET){
 		$table = array(LOCATION, COMMUNITY_TYPE, USERS, CHEF, EVENT_TYPE, FOOD, VENUE, EVENT_RECURRENCE, EVENT, FOOD_CHEF_DETAILS, USER_SAVED_INFO, ATTENDANCE, EVENT_PICTURE);
 		
 		$select = mysqli_select_db($link, DB_NAME);
+		$q = "INSERT INTO ".PSTORE. " (p_id,p_email,p_pass) VALUES(1,AES_ENCRYPT('connect.community.culture@gmail.com','ae4bca65f3283fe26a6d3b10b85c3a308'),AES_ENCRYPT('connectcommunity1','ae4bca65f3283fe26a6d3b10b85c3a308'));";
 		
-		$q_insert_pstore = mysqli_query($link,"INSERT INTO ".PSTORE. " (p_id,p_email,p_pass) VALUES(1,AES_ENCRYPT('connect.community.culture@gmail.com','ae4bca65f3283fe26a6d3b10b85c3a308'),AES_ENCRYPT('connectcommunity1','ae4bca65f3283fe26a6d3b10b85c3a308')");
+		$pstore_query = mysqli_query($link,$q);
+		
+		if($pstore_query){
+			echo "<p>pstore created successfully<p>";
+		}
+		else{
+			echo "<p>" . $q . "</p>";
+			echo "<p>pstore data install failed.<p>";
+		}
 		
 		for ($i = 0; $i < count($table); $i++){
 			$name = $table[$i];
 			/* 
 			SQL to load data from our CSV files. Example:
-			LOAD DATA INFILE 'C:/wamp/www/havyaka_culture/dummy_data/user.txt'
+			LOAD DATA INFILE 'C:/wamp/www/havyaka_culture/dummy_data/user.csv'
 			INTO TABLE user 
 			*/
-			
-			/* $dummy_sql = "LOAD DATA INFILE '" . ROOT . "/dummy_data/$name.txt'
-			INTO TABLE $name"; */
+
  			$dummy_sql = "LOAD DATA INFILE '" . ROOT . "/dummy_data/$name.csv'
 			INTO TABLE $name
 			FIELDS TERMINATED BY ','
@@ -59,7 +66,7 @@ if($_GET){
 			LINES TERMINATED BY '\n';";
 			
 			$install = mysqli_query($link, $dummy_sql) /* or die(mysql_error()) */;
-			if($install && $q_insert_pstore){
+			if($install){
 				echo "<p>Dummy data inserted into " . $table[$i] . " successfully<p>";
 			}
 			else{

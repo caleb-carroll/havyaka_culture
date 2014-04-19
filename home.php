@@ -150,17 +150,17 @@ $(function(){
 
 });
 </script>
-    <body>      
+<body>      
+	
+<?php
+include_once ('includes/header.inc.php');
+include('includes/navigation.inc.php'); ?>
         
-        <?php
-          include_once ('includes/header.inc.php');
-        include('includes/navigation.inc.php'); ?>
-        
-
 <?php
 //check if the user is logged in for the first time, if so, display the information dialog box
+$query = "SELECT num_logins from " . USERS . " WHERE user_id =" . $user_id;
+$q = mysqli_query($link, $query) or die(mysqli_error($link));
 
-$q = mysqli_query($link,"SELECT num_logins from " .USERS. " WHERE user_id =".$user_id) or die(mysqli_error($link));
 
 list($num_login) = mysqli_fetch_row($q);
 

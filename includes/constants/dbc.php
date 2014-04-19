@@ -18,21 +18,21 @@ define ("BASE", "http://".$_SERVER['HTTP_HOST']."/havyaka_culture");
 //base in operating system
 
 //tables
-define ("PSTORE","pstore");
+define ("PSTORE","community_connect_pstore");
 
-define ("CHEF", "chef");
-define ("COMMUNITY_TYPE", "community");
-define ("EVENT", "event");
-define ("EVENT_PICTURE", "event_picture");
-define ("EVENT_TYPE", "event_type");
-define ("FOOD", "food");
-define ("FOOD_CHEF_DETAILS", "food_chef_details");
-define ("LOCATION", "location");
-define ("USERS", "user");
-define ("USER_SAVED_INFO", "user_saved_info");
-define ("VENUE", "venue");
-define ("ATTENDANCE","event_attendance");
-define ("EVENT_RECURRENCE","event_recurrence");
+define ("CHEF", "community_connect_chef");
+define ("COMMUNITY_TYPE", "community_connect_community");
+define ("EVENT", "community_connect_event");
+define ("EVENT_PICTURE", "community_connect_event_picture");
+define ("EVENT_TYPE", "community_connect_event_type");
+define ("FOOD", "community_connect_food");
+define ("FOOD_CHEF_DETAILS", "community_connect_food_chef_details");
+define ("LOCATION", "community_connect_location");
+define ("USERS", "community_connect_user");
+define ("USER_SAVED_INFO", "community_connect_user_saved_info");
+define ("VENUE", "community_connect_venue");
+define ("ATTENDANCE","community_connect_event_attendance");
+define ("EVENT_RECURRENCE","community_connect_event_recurrence");
 
 define ("GLOBAL_EMAIL", "connect.community.culture@gmail.com");
 define("REQUIRE_ACTIVIATION","0");

@@ -52,13 +52,13 @@ $results = array();
 
 //query the public events and display them randomly in the public_event section at the registration page
 $q = "SELECT t1.event_id, t1.event_date, t1.event_desc, t1.event_id, t1.event_name, t5.first_name, AES_DECRYPT(t5.email, '$salt') as email, t5.phone, t5.last_name, t3.venue_address, t3.venue_name, t4.city, t4.zipcode as zipcode, t4.state
-	FROM event AS t1
+	FROM " . EVENT . " AS t1
 	LEFT JOIN " . EVENT_TYPE . " AS t2 ON t1.e_type_id = t2.e_type_id
 	LEFT JOIN " . VENUE . " AS t3 ON t1.venue_id = t3.venue_id
 	LEFT JOIN " . LOCATION . " AS t4 ON t3.e_loc_id = t4.e_loc_id
 	LEFT JOIN " . USERS . " AS t5 ON t1.user_id = t5.user_id
 	WHERE t1.event_status=1 AND t1.event_scope = 'public' AND t1.event_date > CURDATE() ORDER BY RAND() LIMIT 1;";
-			
+	
 if($event_query = mysqli_query($link,$q)) {
 	$results = mysqli_fetch_assoc($event_query);
 	mysqli_free_result($event_query);
