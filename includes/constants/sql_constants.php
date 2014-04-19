@@ -957,8 +957,7 @@ function get_loggedin_user_location($user_id) {
 
 /* Function to save things to user profiles. Function can specify event, chef, or contact to save */
 function save_info($info_type, $user_id, $info_id) {
-	global $link;
-	
+	global $link;	
 	$q = "INSERT INTO " . USER_SAVED_INFO . " (user_id, event_id, chef_id, contact_id) VALUES ('" . $user_id . "', ";
 	
 	// builds the query based on the info type supplied
@@ -1206,7 +1205,7 @@ function get_saved_events($user_id) {
 			right JOIN user AS t5 ON t1.user_id = t5.user_id
 			left JOIN user_saved_info AS t6 on t1.event_id = t6.event_id
 								WHERE t1.event_status =1
-			AND t6.user_id = 6;";
+			AND t6.user_id =".$user_id.";";
 
 	$q_saved_events = mysqli_query($link,$q) or die(mysqli_error($link));
 	if(mysqli_num_rows($q_saved_events) !=0) {
@@ -1232,7 +1231,7 @@ function get_saved_chef($user_id) {
 			right JOIN location AS t4 ON t2.e_loc_id = t4.e_loc_id
 
 			left JOIN user_saved_info AS t5 on t1.chef_id = t5.chef_id
-		        WHERE  t5.user_id =6;";
+		        WHERE  t5.user_id =".$user_id.";";
 
 	$q_saved_chef = mysqli_query($link,$q) or die(mysqli_error($link));
 	if(mysqli_num_rows($q_saved_chef) !=0) {
