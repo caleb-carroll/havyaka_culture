@@ -262,7 +262,7 @@ $msg = NULL;
 				<div id="event_holder">
 					<center><h1 style="background:#B8CFE6; height: 37px; margin-top: 17em; padding-bottom: 3px;">Events in your area!</h1></center>
 					<div class="more_link" style="position:relative;margin-left:70em;margin-top: -30px;">
-						<a href="localEvents.php">More events>></a>
+						<a href="localEvents.php">More Events>></a>
 					</div>
 					
 					<form class= "event" action="localEvents.php" method="POST" id = "local_events" name="localevents">      

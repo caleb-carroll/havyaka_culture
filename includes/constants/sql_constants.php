@@ -5,7 +5,7 @@ error_reporting(E_ALL | E_STRICT);
 
 include_once 'dbc.php';
 
-$file_location = "../pictures";
+$file_location = BASE."includes/pictures";
 global $file_location;
 $max_file_size = 5000000;
 global $max_file_size;
@@ -51,7 +51,7 @@ function return_meta($title = NULL, $keywords = NULL, $description = NULL) {
 	<meta name="copyright" content="Copyright '.date("Y").' Community Connect. All rights reserved." />
 	<meta name="author" content="Your site name here" />
 	<meta charset="utf-8">
-	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
+	<link rel="shortcut icon" type="image/x-icon" href="pictures/favicon.ico" />
 	';
 
 	echo $meta;

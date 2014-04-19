@@ -104,8 +104,9 @@ if($_POST and $_GET){
 }
 //Get the user saved events and chef
 $saved_events = get_saved_events($user_id);
-
+print_r($saved_events);
 $saved_chef = get_saved_chef($user_id);
+print_r($saved_chef);
 
 ?>
 
@@ -145,7 +146,8 @@ $saved_chef = get_saved_chef($user_id);
                      <span class="error" style="display:none;">Please enter some text</span>
     <?php
                 if(!empty($saved_events))
-                { ?>
+                { echo "saved events";
+                    ?>
                      <div class="card" id='saved_event_div' style="width: 40%; height: 60%; overflow-y: scroll;">
                        
                         <div class="front">
@@ -174,7 +176,7 @@ $saved_chef = get_saved_chef($user_id);
                     </div>
                 <?php }
                  if(!empty($saved_chef))
-                 {
+                 { echo "saved events";
                 ?>
     <div class="card" id='saved_chef_div' style="width: 49%;height: 60%; overflow: scroll;">
        
