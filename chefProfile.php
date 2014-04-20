@@ -28,7 +28,7 @@ function chef_profile_data($user_id) {
 	$user_info = get_user_info($user_id);
 	$profile_pic = $user_info[0]['profile_picture'];
 	$profile_pic_loc = htmlspecialchars($profile_pic);
-	$profile_pic_loc ="/".$profile_pic_loc;
+	$profile_pic_loc =$profile_pic_loc;
 	list($width, $height, $type, $attr)= getimagesize($profile_pic_loc);
 
 	//Get the chef details of the logged in user if exists

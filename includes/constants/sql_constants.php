@@ -5,7 +5,7 @@ error_reporting(E_ALL | E_STRICT);
 
 include_once 'dbc.php';
 
-$file_location = "../pictures";
+$file_location = ROOT."/pictures";
 global $file_location;
 $max_file_size = 5000000;
 global $max_file_size;
@@ -993,13 +993,13 @@ function store_image($file_handler) {
 				$date = new DateTime();
 				$x = $date->getTimestamp();
 				$img_name = $x.$img_name;
-				$new_file_location ="../pictures/" .$img_name;
+				$new_file_location =$file_location."/".$img_name;
                                // $new_file_location = $file_location."/".$img_name;
                                 echo $new_file_location;
 				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
 			}
 			else {
-				$new_file_location = "../pictures/" . $img_name;
+				$new_file_location = $file_location."/".$img_name;
                               //  $new_file_location = $file_location."/".$img_name;
                                 echo $new_file_location;
 				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
