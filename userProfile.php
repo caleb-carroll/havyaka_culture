@@ -13,6 +13,8 @@ secure_page();
 <script>
  
 $(function(){
+    
+     //Ajax request to save the profile information
 	$('#save_profile_button').click(function() {
 		var datastring = $('#update_profile_form').serialize();
 		
@@ -46,6 +48,7 @@ $(function(){
 		});
 	});
 	
+        //To save the chef updates
 	$('#save_chef_updates').click(function(){
 		var datastring = $('#chef_profile_form').serialize();
 		
@@ -94,6 +97,7 @@ $(function(){
 		});
 	});
 	
+        //Ajax request to add a new food as requested by the user
 	$( "#add_new_food_form" ).dialog({
 		autoOpen: false,
 		height: 500,
@@ -120,6 +124,7 @@ $(function(){
 		$("#add_new_food_form").dialog("open");
 	});
 
+        //ajax request to process the selected food by the user
 	$("#add_selected_food").click(function(){
 		var e = document.getElementById("selected_food");
 		var food_id = e.options[e.selectedIndex].value;
@@ -226,7 +231,7 @@ $err=NULL;
 $user_info = get_user_info($user_id);
 $profile_pic = $user_info[0]['profile_picture'];
 $profile_pic_loc = htmlspecialchars($profile_pic);
-//$profile_pic_loc = BASE."/".$profile_pic_loc;
+$profile_pic_loc = "/".$profile_pic_loc;
 echo $profile_pic_loc;
 list($width, $height, $type, $attr) = getimagesize($profile_pic_loc);
 
@@ -286,13 +291,13 @@ include('includes/navigation.inc.php'); ?>
 			</div>
 			
 			<!-- Middle column start -->
-			
+			<span class="success" style="display:none;"></span>
+                       <span class="error" style="display:none;">Please enter some text</span>
 			
 			
 			<!-- USER PROFILE START -->
 			<div class="card flipper" id="user_profile_div">
-				<span class="success" style="display:none;"></span>
-				<span class="error" style="display:none;">Please enter some text</span>
+				
 				<div class="back">
 					<?php
 					/* if($chef_info == NULL) {

@@ -1,5 +1,8 @@
- <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script>
 function doesCSS(p){
 	var s = ( document.body || document.documentElement).style;
@@ -25,7 +28,7 @@ function chef_profile_data($user_id) {
 	$user_info = get_user_info($user_id);
 	$profile_pic = $user_info[0]['profile_picture'];
 	$profile_pic_loc = htmlspecialchars($profile_pic);
-	$profile_pic_loc = BASE.$profile_pic_loc;
+	$profile_pic_loc ="/".$profile_pic_loc;
 	list($width, $height, $type, $attr)= getimagesize($profile_pic_loc);
 
 	//Get the chef details of the logged in user if exists

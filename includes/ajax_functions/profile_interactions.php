@@ -68,7 +68,6 @@ if($_POST and $_GET) {
 	// if the user is adding a picture, add it to the file system and reference in user table
 	if ($_GET['cmd'] == 'add_picture' || $_GET['cmd'] == 'add_event_picture' || $_GET['cmd'] == 'add_food_picture'){
                 $user_id = $user_id = $_SESSION['user_id'];
-
 		if ($_FILES["file"]["error"] > 0) {
 				echo "Error: " . $_FILES["file"]["error"] . "<br>";
 		}
@@ -76,7 +75,8 @@ if($_POST and $_GET) {
 			$file_handler = $_FILES["file"];
 			$picture = store_image($file_handler);
 			//$picture_loc = "/".$picture;
-			
+                        $picture_loc = $picture;
+			echo $picture_loc;
 			if($_GET['cmd'] == 'add_picture') {
 				//call the update_user_info function defined in sql_constants.php
 				update_user_info($user_id, NULL, NULL, NULL, NULL, $picture_loc);

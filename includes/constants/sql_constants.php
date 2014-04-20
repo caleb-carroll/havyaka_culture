@@ -5,11 +5,10 @@ error_reporting(E_ALL | E_STRICT);
 
 include_once 'dbc.php';
 
-$file_location = BASE."/pictures";
+$file_location = "../pictures";
 global $file_location;
 $max_file_size = 5000000;
 global $max_file_size;
-
 
 // connect to the SQL server and select the database - we can now use $link and $db in pages that include this page
 $link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die("Couldn't make connection:" . mysqli_error() );
@@ -103,7 +102,7 @@ function logout($lm = NULL) {
 	}
 }
 
-/* Function to check for errors */
+/* Function to check the registration page input fields errors */
 function error_check($firstname,$username,$password,$confirm_pass,$email,$zipcode) {
 	$error= array();
 	if(empty($firstname)) {
@@ -190,7 +189,7 @@ function  create_update_chef_profile($about_chef,$contact_time_preference,$accep
 	}
 }
 
-//get all the food names
+//get all the food names 
 function get_all_food_names()
 {
 	global $link;
@@ -201,15 +200,13 @@ function get_all_food_names()
 		$results[] = $q_food;
 	}
 
-
-
-
 	mysqli_free_result($q);
 
 	return $results;
 }
-//get the foods that the chef is preparing
 
+
+//get the foods that the chef is preparing
 function get_foods_of_chef($chef_id) {
 	global $link;
 
@@ -236,6 +233,7 @@ function get_foods_of_chef($chef_id) {
 	return $results;
 }
 
+// Update the food table when the chef updates in his profile
 function update_foods_of_chef($chef_id=NULL,$food_id,$food_description=NULL,$food_price=NULL,$food_picture=NULL) {
 	global $link;
 
@@ -282,8 +280,7 @@ function update_foods_of_chef($chef_id=NULL,$food_id,$food_description=NULL,$foo
 
 }
 
-// add a new food to food table
-
+// add a new food to food table requested by the chef from his dashboard
 function add_new_food($chef_id,$food_name,$food_description,$picture_loc) {
 	//check if the requested new food exists in the database already using string match. if not add one to the db
 	global $link;
@@ -331,6 +328,7 @@ function get_chef_info($chef_id) {
 	return $results;
 }
 
+//function to add the selected food from the dropdown into food_chef_details table.
 function add_selected_food($food_id,$chef_id)
 {
 	global $link;
@@ -775,7 +773,7 @@ function update_event($event_name, $event_date, $event_desc, $event_scope, $e_ty
 	return $results;
 }
 
-
+//function fetch the event types to display it in the user's create or edit event card
 function get_event_types() {
 	global $link;
 	$q_e_type = mysqli_query($link,"SELECT * FROM " .EVENT_TYPE) or die(mysqli_error($link));
@@ -806,6 +804,7 @@ function delete_event($event_id) {
 	}
 }
 
+//function to get the food picture to display it in the home page carousal
 function fetch_food_picture($chef_id = NULL)
 {
     global $link;
@@ -865,8 +864,6 @@ function retrieve_future_event($user_id,$row_limit = NULL) {
 		}
 		else {
 			//if no events found at his exact location, extend the search to different location in his state
-
-
 		}
 	}
 
@@ -918,7 +915,7 @@ function get_events($user_id = NULL, $visibility = NULL) {
 	return $results;
 }
 
-/*  */
+/* function to get the logged in users location, city name and state, is required display all the local events, chef details for the user */
 function get_loggedin_user_location($user_id) {
     global $link;
 	$q1 = "SELECT e_loc_id FROM " . USERS . " WHERE  user_id = ".$user_id;
@@ -991,18 +988,20 @@ function store_image($file_handler) {
 			echo "Size: " . ($file_handler["size"] / 1024) . " kB<br>";
 			echo "Temp file: " . $file_handler["tmp_name"] . "<br>"; */
 			$img_name = str_replace(" ", "", $file_handler["name"]); //remove spaces from the filename
-                        echo $file_location;
+                        
 			if (file_exists($file_location."/".$img_name)) {
 				$date = new DateTime();
 				$x = $date->getTimestamp();
 				$img_name = $x.$img_name;
-				//$new_file_location ="pictures/" .$img_name;
-                                $new_file_location = $file_location."/".$img_name;
+				$new_file_location ="../pictures/" .$img_name;
+                               // $new_file_location = $file_location."/".$img_name;
+                                echo $new_file_location;
 				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
 			}
 			else {
-				//$new_file_location = "pictures/" . $img_name;
-                                $new_file_location = $file_location."/".$img_name;
+				$new_file_location = "../pictures/" . $img_name;
+                              //  $new_file_location = $file_location."/".$img_name;
+                                echo $new_file_location;
 				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
 				 echo "Stored in: " . $new_file_location;
 			}
@@ -1046,6 +1045,7 @@ function get_foods_by_chef($chef_id) {
 
 	return $results;
 }
+
 
 function get_food_info($food_id){
 	global $link;
@@ -1159,7 +1159,7 @@ function get_attendance_count_list($event_id) {
 	}
 }
 
-//functions to get saved chef, contacts, events
+//functions to get the saved events of the specific user to display it in his dashboard
 function get_saved_events($user_id) {
 	global $link;
 	global $salt;
@@ -1186,7 +1186,7 @@ function get_saved_events($user_id) {
 
 	return $results;
 }
-
+//functions to get the saved chef details of the specific user to display it in his dashboard
 function get_saved_chef($user_id) {
 	global $link;
 	global $salt;
@@ -1210,7 +1210,7 @@ function get_saved_chef($user_id) {
 
 	return $results;
 }
-
+//Function to delete the saved data from the user's dashboard.
 function delete_saved_data($delete_id,$delete_type,$user_id)
 {
     global $link;
