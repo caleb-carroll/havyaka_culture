@@ -7,6 +7,8 @@
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/chef_style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
+        
+	<link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css" media="screen" />
 	<script src="includes/js/jquery-1.10.2.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>

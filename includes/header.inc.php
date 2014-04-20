@@ -2,6 +2,8 @@
 <head>
 <link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css"/>
 
+
+<?php require_once 'includes/constants/sql_constants.php';?>
 </head>
     <body>
         <div id="header">

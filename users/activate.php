@@ -74,19 +74,19 @@ $(document).ready(function(){
 </head>
 
 <head>
-	<title>Login to your account</title>
+	<title>Activate your account</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="robots" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="../includes/styles/profile_styles.css"/>
         <link rel="stylesheet" type="text/css" href="../includes/styles/style.css"/>
 	<link rel="stylesheet" type="text/css" href="../includes/styles/card_style.css"/>
+        
+	<link rel="stylesheet" type="text/css" href="/../includes/styles/footer_header_style.css" media="screen" />
 </head>
 <body>
-
-<div id="header">
-	<h1>Community Connect</h1>	
-	<?php //include('../includes/navigation.inc.php'); ?>	
-</div>
+	
+	  <?php
+          include_once ('/../includes/header.inc.php'); ?>	
 	
 <div class="content leftmenu">
     <div class="colright">

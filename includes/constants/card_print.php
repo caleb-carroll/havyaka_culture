@@ -254,7 +254,10 @@ function print_event_card ($r) {
 			<!-- div that holds the google map for the card -->
 			<!-- <div id="<?php echo $map_canvas;?>" rel="<?php echo $event_id; ?>" class = "map_canvas">
 			</div> -->
-			<div class="map_canvas" style="background:lightgrey; position:absolute; top:7em; left:50%; right:1em; padding:.5em; margin:.25em;">Placeholder for Google Map</div>
+			<div class="map_canvas"  style="background:lightgrey; position:absolute; top:7em; left:50%; right:1em; padding:.5em; margin:.25em;">
+                            Placeholder for Google Map
+                        
+                        </div>
 			
 			<button class="flip" type="button" style="position:absolute;bottom:0;right:0;">Flip Card</button>
 		</div>

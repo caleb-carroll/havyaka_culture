@@ -3,16 +3,24 @@
 <head>
 	<script src="includes/js/jquery-1.10.2.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
-	<script type=text/javascript src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>        
+        
+        <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxfFRgFYNDht5u00x-8YzIRyHBU36QS-M&sensor=false">
+    </script>
+        
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />        
+	<link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css" media="screen" />
+        
+</head>
+    <body>
 
 <?php
 	require_once 'includes/constants/sql_constants.php';
 	require_once 'includes/constants/card_print.php';
-	include 'google_map_api.php';
+	//include 'google_map_api.php';
 	secure_page();
 	return_meta("Local Events!");
 	$msg = NULL;
@@ -49,34 +57,8 @@ $(function(){
 		
 $(function(){
 	$('.card').show('slide', {direction: "up"}, 700);
-	//$(".show_more").click =setTimeout('initialize()');
 
-	// $(".front").hide();
-	$(".attending_radio").change(function() {
-		
-		if(this.checked) {
-			var event_id = $(this).attr('rel');
-			// alert(event_id);
-			var datastring = "attending=yes&event_id="+event_id;
-				
-			$.ajax({
-				type: "POST",
-				url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=attending", 
-				data: datastring,
-				success: function() {
-					$('.success').fadeIn(2000).show().html('Your attendence is counted!').fadeOut(6000); //Show, then hide success msg
-					$('.error').fadeOut(2000).hide(); //If showing error, fade out   
-				}
-			});
-			
-			return false;
-		} 
-		else {
-			//we may want to add another option called 'may be attending' in that case, we need to write the code here
-			// alert('do nothing');
-		}
-	});
-	 
+        // If the user clicks on the save button in the local events page, get the event id, userid and store the details into the table and display the details into the dashboard
 	$(".save_event").click(function() {
 		var event_id = $(this).attr('rel');
 		// alert(event_id);
@@ -84,57 +66,64 @@ $(function(){
 		
 		$.ajax({
 			type: "POST",
-			url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=save", 
+			url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=save_event", 
 			data: datastring,
-			success: function(){
-				$('.success').fadeIn(2000).show().html('Event details are saved in your profile!').fadeOut(6000); //Show, then hide success msg
-				$('.error').fadeOut(2000).hide(); //If showing error, fade out
+			success: function(response){
+                            
+                                 var results = JSON.parse(response);
+				console.log(results);
+                                var status = results['success'];
+                                var message = results['message'];
+                                
+                               if(status === 'true') {
+                                   $('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+                                   $('.error').fadeOut(2000).hide(); //If showing error, fade out
+                               } else {
+                                   $('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+                                   $('.success').fadeOut(2000).hide();
+                           }
 			}
 		});
 		
 		return false;
 	});
-	
+        
+	  //Capture the attendance and update the table : this ajax request will send the data to event_interactions.php
 	$(".attending_radio").change(function() {
-			var event_id = $(this).attr('rel');
+                var event_id = $(this).attr('rel');
 		if(this.checked) {
 			var datastring = "attending=true&event_id="+event_id;
+                    } else {
+                        var datastring = "attending=false&event_id="+event_id;
+                    }
 			console.log(datastring);
 				
 			$.ajax({
 				type: "POST",
-				url: "<?php echo BASE; ?>/event_interactions.php?cmd=attending",
+				url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=attending",
 				data: datastring,
 				success: function(response) {
-					console.log(response);
-					$('.success').fadeIn(2000).show().html('Your attendence is counted!').fadeOut(6000); //Show, then hide success msg
-					$('.error').fadeOut(2000).hide(); //If showing error, fade out   
+                                    
+                                    var results = JSON.parse(response);
+                                    
+					console.log(results);
+					 var status = results['success'];
+                                        var message = results['message'];
+                                        if(status === 'true') {
+                                            $('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+                                            $('.error').fadeOut(2000).hide(); //If showing error, fade out
+                                        } else {
+                                            $('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+                                            $('.success').fadeOut(2000).hide();
+                                    }
 				}
 			});
 			
 			return false;
-		} 
-		else {
-			//we may want to add another option called 'may be attending' in that case, we need to write the code here
-			var datastring = "attending=false&event_id="+event_id;
-			console.log(datastring);
-				
-			$.ajax({
-				type: "POST",
-				url: "<?php echo BASE; ?>/event_interactions.php?cmd=attending",
-				data: datastring,
-				success: function(response) {
-					console.log(response);
-					$('.success').fadeIn(2000).show().html('Your attendence is counted!').fadeOut(6000); //Show, then hide success msg
-					$('.error').fadeOut(2000).hide(); //If showing error, fade out   
-				}
-			});
-			
-			return false;
-		}
 	});
 });
 
+//Function to display the google map based on the event location. This function makes use of google's geocode api.
 function initialize() {
 	var lat = '';
 	var lng = '';
@@ -177,49 +166,13 @@ function initialize() {
 	});
 }
 </script>
-
-</head>
-    <body>
-    <?php  
-    
-        if(isset($_POST) and isset($_GET))
-        {
-            if (!empty($_GET['cmd']))
-            {
-                       if($_GET['cmd'] == 'save') 
-                       {
-                            $event_id = $_POST['event_id'];
-                           if($stmt = mysqli_prepare($link, "SELECT * FROM ".USER_SAVED_INFO. " WHERE user_id = ".$_SESSION['user_id']." AND event_id= " .$event_id) or die(mysqli_error($link)))
-                           {
-                                //execute the query
-                                 mysqli_stmt_execute($stmt);
-                                 //store the result
-                                 mysqli_stmt_store_result($stmt);
-
-                                 if(mysqli_stmt_num_rows($stmt) == 0) {
-                                      $q = mysqli_query($link, "INSERT INTO ".USER_SAVED_INFO. " (user_id,event_id) VALUES(" .$_SESSION['user_id']. ",".$event_id. ")") or die(mysqli_error($link));
-                                 } 
-                                 else 
-                                 {
-                                     $err[] = "You have saved this event!";
-
-                                  }
-
-                                     mysqli_stmt_close($stmt);
-
-                            } 
-                                 exit();  
-                      }
-            }
-            
-        }
-    ?>
-  <?php
-          include_once ('includes/header.inc.php');
-        include('includes/navigation.inc.php'); ?>
+    <?php      
+      
+    include_once ('includes/header.inc.php');
+    include('includes/navigation.inc.php'); ?>
+        
   <div class="content leftmenu">      
-         <span class="success" style="display:none;"></span>
-         <span class="error" style="display:none;">Please enter some text</span>
+        
      <div class="colright">
          <div class="col1">
                 <!-- Left Column start -->
@@ -230,7 +183,10 @@ function initialize() {
         <div class="col2">
             <!-- Middle Column start -->
             <style>img {width: 160px;}</style> 
-
+            
+             <span class="success" style="display:none;"></span>
+            <span class="error" style="display:none;">Please enter some text</span>
+         
             <h2>Upcoming events in your area!</h2>
           <?php  
           // front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
@@ -240,6 +196,7 @@ function initialize() {
                    $i =0;
                      foreach ($results as $r) 
                       {
+                          //defined in includes/constants/card_print.php
                              print_event_card($r);
                       }
                 } else

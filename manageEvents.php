@@ -178,7 +178,7 @@ $(function(){
 		// this call inserts the updated values in the DB
 		$.ajax({
 			type: "POST",
-			url: "<?php echo BASE; ?>/event_interactions.php?cmd=update_event", 
+			url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=update_event", 
 			data: datastring,
 			success: function(response){
 				
@@ -280,18 +280,6 @@ $profile_pic = $user_info[0]['profile_picture'];
 $profile_pic_loc = htmlspecialchars($profile_pic);
 $profile_pic_loc = BASE.$profile_pic_loc;
 list($width, $height, $type, $attr)= getimagesize($profile_pic_loc);
-
-//Get the chef details of the logged in user if exists
-$chef_info = get_chef_details_logged_in_user($user_id);
-
-$chef_id =$chef_info[0]['chef_id'];
-$about_chef = $chef_info[0]['about_chef'];
-$contact_time_preference = $chef_info[0]['contact_time_preference'];
-$pickup_available = $chef_info[0]['pickup_available'];
-echo $about_chef."<br>".$contact_time_preference."<br>".$pickup_available;
-
-//Get the foods that the chef is preparing.
-$food_chef = get_foods_of_chef($chef_id);
 
 //get the event types
 $event_types = get_event_types();

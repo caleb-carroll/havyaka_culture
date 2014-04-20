@@ -1,20 +1,25 @@
+/* Header and footer styles */
 #footer ul {
 	clear:left;
 	float:left;
 	width:95%;
-	font-size: 2em;
-	margin:2em 0 0 20em;
-	padding:0;
+	
+        list-style: none;
+        margin-left: 40em;
+        font-size: 100%;
+        font-weight: bold;
+        color: brown;
 }
 #footer ul li {
-	float:left;
-	margin:.25em;
-	padding:3px 8px;
+     display: block;
+     float:left;
+     padding: 2px;
+     margin-left: 3em;
 	background:#eee;
         list-style:none;
         float:left;
 	text-decoration:none;
-	line-height:1.3em;
+	line-height:.3em;
 }
 #footer ul li a {
 	float:left;
@@ -22,18 +27,17 @@
 	padding:3px 8px;
 	background:#eee;
 	text-decoration:none;
-	line-height:1.3em;
+	line-height:.3em;
 }
 
 #footer ul li a:hover {
 	background:#369;
-	color:#fff;
+	color: black;
 }
 
-.active,
-.active:hover {
-	color:#fff;
-	background:#000;
+#footer .active,
+#footer .active:hover {
+	color: #241414;
 } 
 
 /* Header styles */

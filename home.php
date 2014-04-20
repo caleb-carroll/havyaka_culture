@@ -236,7 +236,7 @@ $msg = NULL;
 				?>
 				<!--prints a card for each chef associated with a food type    -->
 				<center><h1 style="background:#B8CFE6;">Chefs in your area!</h1></center>
-				<div class="more_link" style="position:absolute;margin-left:70em;margin-top: -30px;">
+				<div class="more_link" style="position:relative;margin-left:70em;margin-top: -30px;">
 					<a href="localChefs.php">More Chefs>></a>
 				</div>  
 				
@@ -253,13 +253,12 @@ $msg = NULL;
 				</div>
 			<?php } 
 			else {?>
-				<div class ="chef_holder">	</div>	
-			<?php } ?>
-			<?php  
+                                <div class ="chef_holder" style="display:none;">	</div>	
+			<?php } 
 			// front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
 			$results = retrieve_future_event($user_id,2);  
 			if(!empty($results)) { ?>
-				<div id="event_holder">
+                                <div id="event_holder" style="float:left;">
 					<center><h1 style="background:#B8CFE6; height: 37px; margin-top: 17em; padding-bottom: 3px;">Events in your area!</h1></center>
 					<div class="more_link" style="position:relative;margin-left:70em;margin-top: -30px;">
 						<a href="localEvents.php">More Events>></a>
@@ -276,7 +275,13 @@ $msg = NULL;
 					<span class="success" style="display:none;"></span>
 					<span class="error" style="display:none;">Please enter some text</span>
 				</div>
-		<?php  } ?>
+		<?php  }
+                
+                 if(empty($results) && empty($chefs_list)) 
+                 {?>
+                                <h2>No Local events or Chef found!. You can create in your Dashboard!. </h2>
+               <?php  }
+                ?>
 		</div>
 		<!-- Middle Column end -->
 	</div>

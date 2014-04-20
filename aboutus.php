@@ -1,22 +1,47 @@
 <!DOCTYPE html>
- <!-- this is the freequently asked questions page. Here, I have tried to use Accordion jquery function to fold and unfold the sections -->
+ <!--About us page to explain about the developer and website -->
 <html>
 
 <head>
+ 
 <meta charset="utf-8">
-  <title>Faq's</title>
-   <script src="<?php echo BASE; ?> /includes/js/jquery-1.10.2.js"></script>
-    <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+  <title>about us</title>
+   <script src="includes/js/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-  <link rel="stylesheet" href="includes/styles/faq_style.css"/>
+  <link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
+<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css"/>
+<link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css"/>
+<script>
 
+function doesCSS(p){
+	var s = ( document.body || document.documentElement).style;
+	return !!$.grep(['','-moz-', '-webkit-'],function(v){
+		return  typeof s[v+p] === 'string';
+	}).length;
+}
+
+$('html')
+	.toggleClass('transform',doesCSS('transform'))
+	.toggleClass('no-transform',!doesCSS('transform'));
+
+$(function(){
+	$('.flip').click(function(){
+		$(this).parent().closest('.flipper').toggleClass('flipped');
+	});
+    });
+	
+
+</script>
 </head>
 
 <body>
 
-  <?php
-          include_once ('includes/header.inc.php');
-        include('includes/navigation.inc.php'); ?>
+  <?php include_once ('includes/header.inc.php'); 
+   session_start();
+        if($_SESSION){
+             include('includes/navigation.inc.php');
+        }
+   ?>
 
 <div class="content leftmenu">
         <div class="colright">
@@ -35,42 +60,47 @@
                 echo '<div class="error">'.$err.'</div>';
             }
 ?>
-<h2>All questions about this website</h2>
 
-                 <div id = "accordion">
-                        <h3>What is Community Connect?</h3>
-                        <div class = "acc">
-                         <p class = "para">
-                             Connect back to your own community, culture religion people<br>and cherish your tradition.
-                         </p>
-                        </div>
-                        <h3>How can I benifit from this website</h3>
-                        <div>
-                          <p class = "para">
-                              You can benifit in atleast 4 ways:<br>
-                              &nbsp;1.&nbsp;You can connect back to your local community people and events.<br>
-                              &nbsp;2.&nbsp;You can create your own public or private events.<br>
-                              &nbsp;3.&nbsp;You can find the local chef who prepares your own authentic foods.<br>
-                              &nbsp;1.&nbsp;You can become a chef and market yourself.<br>                               
-                         </p>
-                        </div>
-                           <h3>Do you have more questions?:</h3>
-                        <div>
-                          <p class = "para">
-                              <a href="ContactForm.php">Contact us</a> and let us know your comments and questions. <br>
-                              We will be in touch with you.
-                         </p>
-                        </div>
-                           <h3>Do you have issues using this website?:</h3>
-                        <div>
-                             <p class = "para">
-                              <a href="ContactForm.php">Contact us</a> and let us know your comments and questions. <br>
-                              We will be in touch with you.
-                         </p>
-                  </div>
-             </div>
-        </div>
-    </div>
+    <div class="card flipper" style="margin-left:20em; width: 40em;height: 45em;">
+                <div class="back">                
+                        <h2>What is Community Connect?</h2>
+                        <p>
+                            Community Connect is website to bring the similar community, culture or religion people together. <br>
+                            As, everything is getting modernized these days, it is essential to understand their own tradition and cherish their own culture.<br>
+                            This makes local community strong and healthy.                    
+                        </p>
+                        <h2>What are the community type supported now?</h2>
+                        <p>
+                            As we begin with this website, we started working on Havyaka Culture. Our intention is to add as many culture/religion as possible.<br>
+                             We will give an option to add their culture if not found already in the website to accommodate all the culture.
+                        </p>
+                        <h2>What is Havyaka Culture?</h2>
+                        <p>
+                            Havyakan's are a Hindu brahmin subsect, primarily from Indian states Karnataka, Keral and Kashmir.<br>
+                            These days, they are spread all over the world. It is hard to find the events or authentic foods that only few people can prepare. <br>
+                            So, this website is an effort to make easy for them to relish and cherish their tradition. More information on Havyaka is <a href="http://www.havyak.com/" target="_blank">here</a><br>                    
+                        </p>
+                         <h2>Thank you</h2>
+                        <p>
+                            Thank you visiting <b>Community Connect.</b> We hope you enjoy your tradition!.
+                        </p>
+                        <button class="flip">Who are we?</button><br>
+                </div>
+                <div class="front">
+                    <h2>Who are we?</h2>
+                    <p>
+                        We are,<br> <b><i>Caleb Carol</i></b> &nbsp;&nbsp;<img src="pictures/calebc_profile.jpg" style="width: 200px;height: 150px;"/> </p>
+                    <p>
+                        <b><i>Nivedita Bhat</i></b>&nbsp;&nbsp;<img src="pictures/nivi_profile.jpg" style="width: 200px;height: 150px;"/> <br><br>
+                        
+                        We are HCI 573 students developed this  website 'Community Connect' as a final project.<br>
+                        We have mainly used php, mysql, javascript to build this website. <br>. Thank you for visiting. Have fun!.                  
+                    </p>
+                    <button class="flip">Back</button><br>
+               </div>
+         </div>
+      </div>
+   </div>
 </div>
 <?php include('includes/footer.inc.php'); ?>
 </body>

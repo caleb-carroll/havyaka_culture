@@ -26,13 +26,21 @@ $(function(){
 		
 		$.ajax({
 			type: "POST",
-			url: "<?php echo BASE; ?>/profile_interactions.php?cmd=update_user",
+			url: "<?php echo BASE; ?>/includes/ajax_functions/profile_interactions.php?cmd=update_user",
 			data: datastring,
 			success: function(response) {
-				console.log(response);
-				updated_profile = JSON.parse(response);
-				
-				// TODO stuff to indicate the fields have been saved if it comes back successful?
+				 var results = JSON.parse(response);
+				console.log(results);
+                                var status = results['success'];
+                                var message = results['message'];
+                                
+                               if(status === 'true') {
+                                   $('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+                                   $('.error').fadeOut(2000).hide(); //If showing error, fade out
+                               } else {
+                                   $('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+                                   $('.success').fadeOut(2000).hide();
+                           }
 				
 			}
 		});
@@ -67,14 +75,21 @@ $(function(){
 
 		$.ajax({
 			type: "POST",
-			url: "<?php echo BASE; ?>/profile_interactions.php?cmd=update_chef",
+			url: "<?php echo BASE; ?>/includes/ajax_functions/profile_interactions.php?cmd=update_chef",
 			data: datastring,
 			success: function(response) {
-				console.log(response);
-				updated_profile = JSON.parse(response);
-				
-				// TODO stuff to indicate the fields have been saved if it comes back successful?
-				
+				 var results = JSON.parse(response);
+				console.log(results);
+                                var status = results['success'];
+                                var message = results['message'];
+                                
+                               if(status === 'true') {
+                                   $('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+                                   $('.error').fadeOut(2000).hide(); //If showing error, fade out
+                               } else {
+                                   $('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+                                   $('.success').fadeOut(2000).hide();
+                           }
 			}
 		});
 	});
@@ -211,7 +226,8 @@ $err=NULL;
 $user_info = get_user_info($user_id);
 $profile_pic = $user_info[0]['profile_picture'];
 $profile_pic_loc = htmlspecialchars($profile_pic);
-$profile_pic_loc = BASE . $profile_pic_loc;
+//$profile_pic_loc = BASE."/".$profile_pic_loc;
+echo $profile_pic_loc;
 list($width, $height, $type, $attr) = getimagesize($profile_pic_loc);
 
 //Get the chef details of the logged in user if exists
@@ -315,7 +331,7 @@ include('includes/navigation.inc.php'); ?>
 					<div class="update_profile_right">
 						<p class="image_holder"><img class="card_image" src="<?php echo $profile_pic_loc;?>" /></p>
 						<p>Upload a Picture</p>
-						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_picture" method="post" enctype="multipart/form-data">
+						<form action="<?php echo BASE;?>/includes/ajax_functions/profile_interactions.php?cmd=add_picture" method="post" enctype="multipart/form-data">
 							<input type="file" name="file" id="file">
 							<input type="submit" name="submit" value="Submit">
 						</form>

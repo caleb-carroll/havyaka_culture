@@ -1,10 +1,10 @@
 <?php
-require_once 'includes/constants/sql_constants.php';
+require_once '../constants/sql_constants.php';
 secure_page();
 
 if($_GET){
-	if($_GET['cmd']== 'attending') {
-		$user_id = $_SESSION['user_id'];
+	if($_GET['cmd']== 'attending') {	
+            $user_id = $_SESSION['user_id'];
 		$event_id = $_POST['event_id'];
 		$attending = $_POST['attending'];
 		
@@ -87,6 +87,7 @@ if($_GET){
 	
 	if ($_GET['cmd'] == 'delete_event'){
 		$event_id = $_POST['event_id'];
+                $user_id = $_SESSION['user_id'];
 		if(delete_event($event_id)){
 			$results = array(
 				"success" => true,
@@ -143,18 +144,28 @@ if($_GET){
 	
 	if ($_GET['cmd'] == 'save_event'){
 		$event_id = $_POST['event_id'];
-		$user_id = $_POST['user_id'];
-		
-		if(save_info("event", $user_id, $event_id)){
-			$results = array(
-				"success" => true,
-				"message" => "Save was successful"
-			);
-		}
+                $user_id = $_SESSION['user_id'];
+                
+                if($stmt = mysqli_prepare($link, "SELECT * FROM ".USER_SAVED_INFO. " WHERE user_id = ".$_SESSION['user_id']." AND event_id= " .$event_id) or die(mysqli_error($link)))
+                {
+                    //execute the query
+                     mysqli_stmt_execute($stmt);
+                     //store the result
+                     mysqli_stmt_store_result($stmt);
+                }
+                     if(mysqli_stmt_num_rows($stmt) == 0) {
+                           
+                        if(save_info("event", $user_id, $event_id)){
+                            $results = array(
+                                    "success" => true,
+                                    "message" => "Save was successful"
+                            );
+                        }
+                     }
 		else {
 			$results = array(
 				"success" => false,
-				"message" => "Save failed"
+				"message" => "You have already saved this event."
 			);
 		}
 		

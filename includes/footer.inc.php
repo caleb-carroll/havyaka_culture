@@ -1,6 +1,8 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+    
+    <!-- This is a footer page, shows about us, faq and contact us -->
 <head>
-<link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css"/>
 </head>
     <body>
         <div id="footer">
@@ -10,7 +12,7 @@
                 $links = array("aboutus.php","FAQ.php","contactform.php");
                 ?>
             
-            <center><ul style="list-style: none;margin-left: 40em;font-size: 100%;font-weight: bold; color: brown;">
+            <center><ul>
                 <?php
                 for ($i = 0; $i < count($names); $i++) {
                     //here, we check if the page on which the user is at is the same as the page in $links[$i]
@@ -21,11 +23,13 @@
                             $class = "";
                     }
                     ?>
-                    <li style="display: block;float:left; padding: 2px;margin-left: 3em;"><a href="<?php echo $links[$i];?>" class="<?php echo $class;?>"><?php echo $names[$i];?></a></li>
+                    <li ><a href="<?php echo $links[$i];?>" class="<?php echo $class;?>"> <?php echo $names[$i];?></a></li>
                     <?php
                 }
                 ?>
-                </ul></center>
+                </ul>
+            </center>
+            
                 <br><center><h4>(c) 2014 Community Connect</h4></center>
         </div>
     </body>

@@ -1,5 +1,6 @@
 <?php
-require_once 'includes/constants/sql_constants.php';
+require_once '../constants/sql_constants.php';
+secure_page();
 
 if($_POST and $_GET) {
 	if ($_GET['cmd'] == 'update_user'){
@@ -66,6 +67,7 @@ if($_POST and $_GET) {
 	
 	// if the user is adding a picture, add it to the file system and reference in user table
 	if ($_GET['cmd'] == 'add_picture' || $_GET['cmd'] == 'add_event_picture' || $_GET['cmd'] == 'add_food_picture'){
+                $user_id = $user_id = $_SESSION['user_id'];
 
 		if ($_FILES["file"]["error"] > 0) {
 				echo "Error: " . $_FILES["file"]["error"] . "<br>";
@@ -73,14 +75,15 @@ if($_POST and $_GET) {
 		else {
 			$file_handler = $_FILES["file"];
 			$picture = store_image($file_handler);
-			$picture_loc = "/".$picture;
+			//$picture_loc = "/".$picture;
 			
 			if($_GET['cmd'] == 'add_picture') {
-				// $user_info[0]['profile_picture'] = $profile_picture;
+				//call the update_user_info function defined in sql_constants.php
 				update_user_info($user_id, NULL, NULL, NULL, NULL, $picture_loc);
 			}
 			elseif ($_GET['cmd'] == 'add_event_picture') {
 				$event_id = $_POST['event_id'];
+                                //defined in sql_constants.php
 				update_event_picture($picture_loc,$event_id);
 			}
 			elseif ($_GET['cmd'] == 'add_food_picture') {

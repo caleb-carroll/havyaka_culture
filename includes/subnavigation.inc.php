@@ -1,3 +1,4 @@
+<!-- This is the sub navigation menu's for Dashboard only. User specific, profile page, saved information and manage events is displayed-->
 <link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
 <?php
 

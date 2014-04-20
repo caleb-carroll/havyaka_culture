@@ -5,7 +5,7 @@ error_reporting(E_ALL | E_STRICT);
 
 include_once 'dbc.php';
 
-$file_location = BASE."includes/pictures";
+$file_location = BASE."/pictures";
 global $file_location;
 $max_file_size = 5000000;
 global $max_file_size;
@@ -492,7 +492,6 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 
 					User ID: ".$username."<br />
 					Email: ".$email."<br />
-					Password: ".$password."<br>
                                         Activation code: ".$activation_code."</p>
 
 					<p>You must activate your account before you can actually do anything. <br>You can do that by clicking on the below link or entering the activation code in the website:<br />
@@ -786,7 +785,6 @@ function get_event_types() {
 		$row[]=$q_event;
 	}
 
-
 	return $row;
 }
 
@@ -881,7 +879,6 @@ function retrieve_future_event($user_id,$row_limit = NULL) {
 function get_events($user_id = NULL, $visibility = NULL) {
 	global $link;
 	$results = array();
-
 	// to do: return picture
 	// to do: return if the event is editable by the current user
 	// set up query with all of the tables tied together
@@ -914,7 +911,7 @@ function get_events($user_id = NULL, $visibility = NULL) {
 		while ($row = mysqli_fetch_assoc($event_query)) {
 			$results[] =$row;
 		}
-	}
+        } else { $results =NULL; }
 
 	mysqli_free_result($event_query);
 
@@ -961,13 +958,13 @@ function save_info($info_type, $user_id, $info_id) {
 	else {
 		return false;
 	}
-
 }
 
 /* Function to store images in the database */
 function store_image($file_handler) {
 	global $link;
 	global $max_file_size;
+        global $file_location;
 
 	$allowedExts = array("gif", "jpeg", "jpg", "png","JPEG","JPG","PNG","GIF");
 
@@ -994,18 +991,20 @@ function store_image($file_handler) {
 			echo "Size: " . ($file_handler["size"] / 1024) . " kB<br>";
 			echo "Temp file: " . $file_handler["tmp_name"] . "<br>"; */
 			$img_name = str_replace(" ", "", $file_handler["name"]); //remove spaces from the filename
-
-			if (file_exists("pictures/" . $img_name)) {
+                        echo $file_location;
+			if (file_exists($file_location."/".$img_name)) {
 				$date = new DateTime();
 				$x = $date->getTimestamp();
 				$img_name = $x.$img_name;
-				$new_file_location ="pictures/" .$img_name;
+				//$new_file_location ="pictures/" .$img_name;
+                                $new_file_location = $file_location."/".$img_name;
 				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
 			}
 			else {
-				$new_file_location = "pictures/" . $img_name;
+				//$new_file_location = "pictures/" . $img_name;
+                                $new_file_location = $file_location."/".$img_name;
 				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
-				// echo "Stored in: " . $new_file_location;
+				 echo "Stored in: " . $new_file_location;
 			}
 
 

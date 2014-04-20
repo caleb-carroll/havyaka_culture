@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
 
 <head>
 <meta charset="utf-8">
   <title>Faq's</title>
 
 <link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
+<link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css"/>
 <link rel="stylesheet" type="text/css" href="includes/styles/jquery-ui-1.10.4.custom.css"></link> 
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -27,13 +27,14 @@
 </head>
 
 <body>
-
-  <div id="header">
-
-        <h1>Community Connect</h1>
-
-        <?php include('includes/navigation.inc.php'); ?>
-</div>
+   <?php
+   //if the session is not started then display only header and not the navigation which should be available only for the logged in users
+   include_once ('includes/header.inc.php'); 
+   session_start();
+        if($_SESSION){
+             include('includes/navigation.inc.php');
+        }
+   ?>
 
 <div class="content leftmenu">
         <div class="colright">
@@ -53,7 +54,7 @@
             }
 ?>
    
-        <h2>Get to know this Website</h2>
+    <h2>Get to know <i>Community Connect!</i></h2>
 
                  <div id = "accordion">
                         <h3>What is Community Connect?</h3>

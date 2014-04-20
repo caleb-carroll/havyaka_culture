@@ -271,18 +271,6 @@ p {
     background-image:  linear-gradient;
 }
 
-/* Footer styles */
-#footer {
-	clear:both;
-	float:left;
-	width:100%;
-	border-top:1px solid #000;
-	bottom:0px;
-}
-#footer p {
-	padding:10px;
-	margin-bottom: 0px;
-}
 
 /* register section css */
 
