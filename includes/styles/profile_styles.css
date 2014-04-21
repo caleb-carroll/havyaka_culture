@@ -161,20 +161,21 @@ label {
 	margin:.25em;
 }
 
-/* #foods_table table {
+#foods_table table {
 	display: block;
 	width: 100%;
 	border-collapse: collapse;
 	border: solid 1px #D4D4D3;
 	max-height: 20em;
-} */
+}
 
-.foods_table tr {
+tr {
 	border: solid 1px #D4D4D3;
 }
 
 .foods_table td {
-	width:100%;
+	/* width:100%; */
+	vertical-align:top;
 }
 
 #request_new_food_link {
@@ -188,6 +189,8 @@ label {
 }
 
 .gridimg2 {
-	width:8em;
-	float:right;
+	max-width:10em;
+	max-height:7em; 
+	width:auto; 
+	height:auto;
 }

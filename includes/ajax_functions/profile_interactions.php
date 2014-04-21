@@ -128,16 +128,18 @@ if($_POST and $_GET) {
 		
 		$add_selected_food = add_selected_food($food_id,$chef_id);
 		
-		if($add_selected_food) {
+		if($add_selected_food == false) {
+			print_r($add_selected_food);
 			$results = array(
-				"success" => true,
-				"message" => "Food has been added"
+				"success" => false,
+				"message" => "Adding food failed"
 			);
 		}
 		else {
 			$results = array(
-				"success" => false,
-				"message" => "Adding food failed"
+				"success" => true,
+				"message" => "Food has been added",
+				"added_food" => $add_selected_food
 			);
 		}
 		
@@ -146,18 +148,27 @@ if($_POST and $_GET) {
 	}
 
 	if($_GET['cmd'] == 'update_food') {
-		$chef_id=$_POST['chef_id'];
-		$food_description=filter($_POST['food_description']);
+		$chef_id = $_POST['chef_id'];
+		$food_description = filter($_POST['food_description']);
 
-		$food_id=$_POST['food_id'];
+		$food_id = $_POST['food_id'];
 
 		$food_update = update_foods_of_chef($chef_id,$food_id,$food_description,NULL);
 		if($food_update) {
-			$msg="Food details updated successfully";
+			$results = array(
+				"success" => true,
+				"message" => "Food updated",
+			);
 		}
 		else {
-			$err="Could not update this time, Please try again";
+			$results = array(
+				"success" => false,
+				"message" => "Food update failed"
+			);
 		}
+		
+		$json_response = json_encode($results);
+		echo $json_response;
 	}
 	
 	if($_GET['cmd'] == 'add_new_food') {
@@ -167,9 +178,26 @@ if($_POST and $_GET) {
 		$file_handler = $_FILES["file"];
 		
 		$picture = store_image($file_handler);
-		$picture_loc = "/".$picture;
 		
-		$new_food_id = add_new_food($chef_id,$food_name,$food_description,$picture_loc);
+		$new_food = add_new_food($chef_id,$food_name,$food_description,$picture);
+		
+		if(!$new_food) {
+			$results = array(
+				"success" => false,
+				"message" => "Food addition failed"
+			);
+		}
+		else {
+			$results = array(
+				"success" => true,
+				"message" => "Food added to list",
+				"new_food" => $new_food
+			);
+		}
+		
+		$json_response = json_encode($results);
+		echo $json_response;
+		
 	}
 }
 ?>

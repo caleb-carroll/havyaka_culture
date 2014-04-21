@@ -286,28 +286,25 @@ function update_foods_of_chef($chef_id=NULL,$food_id,$food_description=NULL,$foo
 function add_new_food($chef_id,$food_name,$food_description,$picture_loc) {
 	//check if the requested new food exists in the database already using string match. if not add one to the db
 	global $link;
-	$q_new_food = mysqli_query($link, "SELECT * FROM " . FOOD . " WHERE food_name ='" .$food_name. "';") or(die(mysqli_error($link)));
+	$q_new_food = mysqli_query($link, "SELECT food_id, food_name, food_description FROM " . FOOD . " WHERE food_name ='" .$food_name. "';") or(die(mysqli_error($link)));
 
 	if(mysqli_num_rows($q_new_food) == 0) {
 		$q_food_insert = mysqli_query($link,"INSERT INTO " . FOOD . " (food_name, food_description,food_picture,community_id) VALUES ('".$food_name. "','" .$food_description. "','".$picture_loc. "',1)") or die(mysqli_error($link));
-			$food_id = mysqli_insert_id($link);
-
+		$food_id = mysqli_insert_id($link);
+		$add_selected_food = add_selected_food($food_id,$chef_id);
+		
+		$new_food = array(
+			"food_id" => $food_id,
+			"food_name" => $food_name,
+			"food_description" => $food_description,
+			"picture_location" => $picture_loc
+		);
+		
+		return $new_food;
 	}
 	else {
-		$food_id = mysqli_fetch_row($q_new_food);
+		return false;
 	}
-
-
-	$add_selected_food = add_selected_food($food_id,$chef_id);
-	if($add_selected_food) {
-		//return true;
-	}
-	else {
-		// return false;
-	}
-
-
-	return $food_id;
 }
 
 /* Function to retrieve info for a specific chef */
@@ -333,14 +330,21 @@ function get_chef_info($chef_id) {
 //function to add the selected food from the dropdown into food_chef_details table.
 function add_selected_food($food_id,$chef_id) {
 	global $link;
-	$q_food = "SELECT * FROM " . FOOD_CHEF_DETAILS . " WHERE food_id= " . $food_id . " AND chef_id = ".$chef_id;
+	$q_food = "SELECT t1.food_id, t1.chef_id, t2.food_name, t2.food_description, t2.food_picture FROM " . FOOD_CHEF_DETAILS . " AS t1 
+	LEFT JOIN " . FOOD . " AS t2 ON t1.food_id = t2.food_id 
+	WHERE t1.food_id= " . $food_id . " AND t1.chef_id = ".$chef_id;
 	
 	$food_query = mysqli_query($link,$q_food) or die(mysqli_error($link));
 	
+	// check if the food is already associated with the chef
 	if(mysqli_num_rows($food_query) == 0) {
-		
 		$q_food_insert = mysqli_query($link,"INSERT INTO " . FOOD_CHEF_DETAILS . " (food_id, chef_id) VALUES ($food_id, $chef_id);");
-		return true;
+		
+		// get the details of the newly added food
+		$newly_added_association_query = mysqli_query($link,$q_food);
+		$results = mysqli_fetch_assoc($newly_added_association_query);
+		
+		return $results;
 	}
 	else {
 		return false;
@@ -993,23 +997,18 @@ function store_image($file_handler) {
 				$x = $date->getTimestamp();
 				$img_name = $x.$img_name;
 				$new_file_location =$file_location."/".$img_name;
-				// $new_file_location = $file_location."/".$img_name;
-				echo $new_file_location;
 				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
 			}
 			else {
 				$new_file_location = $file_location."/".$img_name;
 				//  $new_file_location = $file_location."/".$img_name;
-				echo $new_file_location;
 				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
-				echo "Stored in: " . $new_file_location;
 			}
 			return $img_name;
 		}
 	}
 	else {
-		echo "Invalid file";
-		// return false;
+		return false;
 	}
 
 
