@@ -1,9 +1,13 @@
-<script src="includes/js/jquery-1.10.2.js"></script>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-<link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+    <head>
+        <script src="includes/js/jquery-1.10.2.js"></script>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+        <link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="includes/styles/index_style.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css" media="screen" />
 <script>
 $(document).ready(function(){
 	$('#login_name').focus();
@@ -86,64 +90,64 @@ function compIsType(t, s) {
    return false;
 } 
 </script>
+  
+    <?php
+    require_once 'includes/constants/sql_constants.php';
+    include_once 'includes/constants/card_print.php';
 
-<?php
-require_once 'includes/constants/sql_constants.php';
-include_once 'includes/constants/card_print.php';
+    session_start();
+    if($_SESSION){
+            header("Location: " . BASE . "/home.php");
+    }
 
-session_start();
-if($_SESSION){
-	header("Location: " . BASE . "/home.php");
-}
+    $meta_title = "Get Started";
 
-$meta_title = "Get Started";
+    $firstname = NULL;
+    $username = NULL;
+    $password = NULL;
+    $city= NULL;
+    $zipcode = NULL;
+    $email = NULL;
+    $pass2 = NULL;
+    $msg = NULL;
+    $err = array();
+    $e_loc_id = NULL;
 
-$firstname = NULL;
-$username = NULL;
-$password = NULL;
-$city= NULL;
-$zipcode = NULL;
-$email = NULL;
-$pass2 = NULL;
-$msg = NULL;
-$err = array();
-$e_loc_id = NULL;
+        //Check if the user signed up, add user to the user table.
+        if(isset($_POST['register'])) {
+                $firstname = filter($_POST['firstname']);
+                $username = filter($_POST['username']);
+                $password = filter($_POST['pass1']);
+                $confirm_pass = filter($_POST['pass2']);
+                $email = filter($_POST['email']);
+                $zipcode = intval(filter($_POST['zipcode']));
+                $date = date('Y-m-d');
+                $user_ip = $_SERVER['REMOTE_ADDR'];
+                $activation_code = rand(1000,9999);
+                $community_type = 'havyaka'; //$_POST['community_type'];
 
-//Check if the user signed up, add user to the user table.
-if(isset($_POST['register'])) {
-	$firstname = filter($_POST['firstname']);
-	$username = filter($_POST['username']);
-	$password = filter($_POST['pass1']);
-	$confirm_pass = filter($_POST['pass2']);
-	$email = filter($_POST['email']);
-	$zipcode = intval(filter($_POST['zipcode']));
-	$date = date('Y-m-d');
-	$user_ip = $_SERVER['REMOTE_ADDR'];
-	$activation_code = rand(1000,9999);
-	$community_type = 'havyaka'; //$_POST['community_type'];
-	
-	$err = array();
-	//defined in config.inc.php
-	$err = add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type );
-	
-	if ( count($err) == 0) {
-		$msg = "Registration successful!";
-		
-		$meta_title = "Registration successful!";
-		//if the registration is successful then get the city and state name using zipcode and update the table
-		
-		?>
-		<script>
-			get_city_state('<?php echo $zipcode;?>');
-		</script>
-		<?php
-	}
+                $err = array();
+                //defined in config.inc.php
+                $err = add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type );
 
-}
+                if ( count($err) == 0) {
+                        $msg = "Registration successful!";
 
-return_meta($meta_title);
-?>
-<link rel="stylesheet" type="text/css" href="includes/styles/index_style.css" media="screen" />
+                        $meta_title = "Registration successful!";
+                        //if the registration is successful then get the city and state name using zipcode and update the table
+
+                        ?>
+                        <script>
+                                get_city_state('<?php echo $zipcode;?>');
+                        </script>
+                        <?php
+                }
+
+        }
+
+        return_meta($meta_title);
+        ?>
+
 </head>
 
 <body>
@@ -181,7 +185,7 @@ return_meta($meta_title);
 	
 	<div class="page_content_holder">
 		<!--- Begining of registration section -->
-		<div class="registration_section" style="border:solid;">
+		<div class="registration_section" style="border:solid; margin-top:5em;margin-right: 6em;">
 			<h1>Register Now!</h1>
 			
 			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="register_form">
@@ -213,10 +217,11 @@ return_meta($meta_title);
 		<!--- End of registration section -->
 		
 		<!-- Beginning of information section -->
-		<div class="information_section" >
-			<h1>Welcome!</h1>
+                <div class="information_section" style="display:block;width:35em;height: 10em;background: white" >
+                    <center><h1>Welcome!</h1>
 			<!-- Need to select a picture to display on this section. Use class "event_image" -->
-			<p>Welcome to the Community Connect site! Sign up to buy and sell traditional Havyaka foods, or to create and participate in Havyaka community events.
+                        <p>Welcome to the Community Connect site! Sign up to find/become a chef who prepares traditional Havyaka foods
+                            <br>OR<br> to create and participate in Havyaka community events.</p></center>
 		</div>
 		<!-- End of information section -->
 	
@@ -229,9 +234,10 @@ return_meta($meta_title);
 		</div> 
 		<!-- End of public event display section -->
 		
-		
-		
-		
 	</div>
-</body>
+        <div>
 	<?php include('includes/footer.inc.php'); ?>
+        </div>
+
+</body>
+</html>

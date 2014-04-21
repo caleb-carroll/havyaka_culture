@@ -257,7 +257,6 @@ $user_info = get_user_info($user_id);
 $profile_pic = PICTURE_LOCATION . $user_info[0]['profile_picture'];
 $profile_pic_loc = htmlspecialchars($profile_pic);
 
-
 //Get the chef details of the logged in user if exists
 $chef_info_ret = get_chef_details_logged_in_user($user_id);
 $chef_info = array_filter($chef_info_ret);

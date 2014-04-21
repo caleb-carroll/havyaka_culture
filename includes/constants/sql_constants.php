@@ -5,6 +5,7 @@ error_reporting(E_ALL | E_STRICT);
 
 include_once 'dbc.php';
 
+
 $file_location = ROOT."/pictures";
 
 global $file_location;
