@@ -15,7 +15,9 @@ define ("ROOT", $_SERVER['DOCUMENT_ROOT'] . "/havyaka_culture");
 
 //base URL of site
 define ("BASE", "http://".$_SERVER['HTTP_HOST']."/havyaka_culture");
-//base in operating system
+
+//picture storage location
+define ("PICTURE_LOCATION", BASE . "/pictures/");
 
 //tables
 define ("PSTORE","community_connect_pstore");
