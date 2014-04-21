@@ -1,11 +1,5 @@
 /* Header and footer styles */
 
-#footer {
-    position: absolute;
-    margin-bottom: 1em;
-    text-align: center;
-    
-}
 #footer ul {
 	clear:left;
 	float:left;
