@@ -5,7 +5,9 @@ error_reporting(E_ALL | E_STRICT);
 
 include_once 'dbc.php';
 
-$file_location = BASE."/pictures";
+
+$file_location = ROOT."/pictures";
+
 global $file_location;
 $max_file_size = 5000000;
 global $max_file_size;
@@ -329,21 +331,18 @@ function get_chef_info($chef_id) {
 }
 
 //function to add the selected food from the dropdown into food_chef_details table.
-function add_selected_food($food_id,$chef_id)
-{
+function add_selected_food($food_id,$chef_id) {
 	global $link;
-	$q_food = "SELECT * FROM " . FOOD_CHEF_DETAILS . " WHERE food_id= ".$food_id. " AND chef_id = ".$chef_id;
-
+	$q_food = "SELECT * FROM " . FOOD_CHEF_DETAILS . " WHERE food_id= " . $food_id . " AND chef_id = ".$chef_id;
+	
 	$food_query = mysqli_query($link,$q_food) or die(mysqli_error($link));
-
+	
 	if(mysqli_num_rows($food_query) == 0) {
-		$q_food_insert = mysqli_query($link,"INSERT INTO " . FOOD_CHEF_DETAILS . " (food_id,chef_id) VALUES (".$food_id. "," .$chef_id. ");") or die(mysqli_query($link));
-
-
+		
+		$q_food_insert = mysqli_query($link,"INSERT INTO " . FOOD_CHEF_DETAILS . " (food_id, chef_id) VALUES ($food_id, $chef_id);");
 		return true;
 	}
 	else {
-
 		return false;
 	}
 }
@@ -961,7 +960,7 @@ function save_info($info_type, $user_id, $info_id) {
 function store_image($file_handler) {
 	global $link;
 	global $max_file_size;
-        global $file_location;
+	global $file_location;
 
 	$allowedExts = array("gif", "jpeg", "jpg", "png","JPEG","JPG","PNG","GIF");
 
@@ -988,26 +987,24 @@ function store_image($file_handler) {
 			echo "Size: " . ($file_handler["size"] / 1024) . " kB<br>";
 			echo "Temp file: " . $file_handler["tmp_name"] . "<br>"; */
 			$img_name = str_replace(" ", "", $file_handler["name"]); //remove spaces from the filename
-                        
+			
 			if (file_exists($file_location."/".$img_name)) {
 				$date = new DateTime();
 				$x = $date->getTimestamp();
 				$img_name = $x.$img_name;
 				$new_file_location =$file_location."/".$img_name;
-                               // $new_file_location = $file_location."/".$img_name;
-                                echo $new_file_location;
+				// $new_file_location = $file_location."/".$img_name;
+				echo $new_file_location;
 				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
 			}
 			else {
 				$new_file_location = $file_location."/".$img_name;
-                              //  $new_file_location = $file_location."/".$img_name;
-                                echo $new_file_location;
+				//  $new_file_location = $file_location."/".$img_name;
+				echo $new_file_location;
 				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
-				 echo "Stored in: " . $new_file_location;
+				echo "Stored in: " . $new_file_location;
 			}
-
-
-			return $new_file_location;
+			return $img_name;
 		}
 	}
 	else {
