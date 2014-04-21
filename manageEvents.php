@@ -269,7 +269,6 @@ if($_POST and $_GET){
 		else {
 			$file_handler = $_FILES["file"];
 			$picture = store_image($file_handler);
-			$picture_loc = "/".$picture;
 			if($_GET['cmd'] == 'add_picture') {
 				// $user_info[0]['profile_picture'] = $profile_picture;
 				update_user_info($user_id, NULL, NULL, NULL, NULL, $profile_picture_loc);
@@ -279,7 +278,7 @@ if($_POST and $_GET){
 			{
 				echo "coming inside add_event-picture";
 				$event_id = $_POST['event_id'];
-				if(update_event_picture($picture_loc,$event_id))
+				if(update_event_picture($picture,$event_id))
                                 {
                                     $msg="Event picture added";
                                 } else
@@ -294,9 +293,6 @@ if($_POST and $_GET){
 
 $user_info = get_user_info($user_id);
 $profile_pic = $user_info[0]['profile_picture'];
-$profile_pic_loc = htmlspecialchars($profile_pic);
-$profile_pic_loc =$profile_pic_loc;
-list($width, $height, $type, $attr)= getimagesize($profile_pic_loc);
 
 //get the event types
 $event_types = get_event_types();

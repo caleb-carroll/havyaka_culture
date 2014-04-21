@@ -216,8 +216,7 @@ $msg = NULL;
 				{
 					$food_image = $r['food_picture']; 
 					$food_image_loc = htmlspecialchars($food_image);
-					$food_image_loc = BASE.$food_image_loc;
-				   list($width, $height, $type, $attr)= getimagesize($food_image_loc);
+					$food_image_loc = PICTURE_LOCATION . $food_image_loc;
 				?>
 				 <li> <img src="<?php echo $food_image_loc?>"></img></li>
 				 

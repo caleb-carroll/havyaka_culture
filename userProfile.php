@@ -6,15 +6,30 @@
 
 <?php
 require_once 'includes/constants/sql_constants.php';
-require_once 'chefProfile.php';
 secure_page();
 ?>
 
 <script>
- 
+function doesCSS(p){
+	var s = ( document.body || document.documentElement).style;
+	return !!$.grep(['','-moz-', '-webkit-'],function(v){
+		return typeof s[v+p] === 'string'
+	}).length
+}
+
+$('html')
+	.toggleClass('transform',doesCSS('transform'))
+	.toggleClass('no-transform',!doesCSS('transform'))
+
 $(function(){
-    
-     //Ajax request to save the profile information
+	$('.flip').click(function(){
+		// console.log("clicked");
+		$(this).parent().closest('.flipper').toggleClass('flipped');
+	});
+});
+
+$(function(){
+	//Ajax request to save the profile information
 	$('#save_profile_button').click(function() {
 		var datastring = $('#update_profile_form').serialize();
 		
@@ -31,24 +46,24 @@ $(function(){
 			url: "<?php echo BASE; ?>/includes/ajax_functions/profile_interactions.php?cmd=update_user",
 			data: datastring,
 			success: function(response) {
-				 var results = JSON.parse(response);
+				var results = JSON.parse(response);
 				console.log(results);
-                                var status = results['success'];
-                                var message = results['message'];
-                                
-                               if(status === 'true') {
-                                   $('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
-                                   $('.error').fadeOut(2000).hide(); //If showing error, fade out
-                               } else {
-                                   $('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
-                                   $('.success').fadeOut(2000).hide();
-                           }
+				var status = results['success'];
+				var message = results['message'];
 				
+				if(status === 'true') {
+					$('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+					$('.error').fadeOut(2000).hide(); //If showing error, fade out
+				}
+				else {
+					$('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+					$('.success').fadeOut(2000).hide();
+				}
 			}
 		});
 	});
 	
-        //To save the chef updates
+	//To save the chef updates
 	$('#save_chef_updates').click(function(){
 		var datastring = $('#chef_profile_form').serialize();
 		
@@ -81,23 +96,24 @@ $(function(){
 			url: "<?php echo BASE; ?>/includes/ajax_functions/profile_interactions.php?cmd=update_chef",
 			data: datastring,
 			success: function(response) {
-				 var results = JSON.parse(response);
+				var results = JSON.parse(response);
 				console.log(results);
-                                var status = results['success'];
-                                var message = results['message'];
-                                
-                               if(status === 'true') {
-                                   $('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
-                                   $('.error').fadeOut(2000).hide(); //If showing error, fade out
-                               } else {
-                                   $('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
-                                   $('.success').fadeOut(2000).hide();
-                           }
+				var status = results['success'];
+				var message = results['message'];
+
+				if(status === 'true') {
+					$('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+					$('.error').fadeOut(2000).hide(); //If showing error, fade out
+				}
+				else {
+					$('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+					$('.success').fadeOut(2000).hide();
+				}
 			}
 		});
 	});
 	
-        //Ajax request to add a new food as requested by the user
+	//Ajax request to add a new food as requested by the user
 	$( "#add_new_food_form" ).dialog({
 		autoOpen: false,
 		height: 500,
@@ -124,24 +140,34 @@ $(function(){
 		$("#add_new_food_form").dialog("open");
 	});
 
-        //ajax request to process the selected food by the user
+	//ajax request to process the selected food by the user
 	$("#add_selected_food").click(function(){
 		var e = document.getElementById("selected_food");
 		var food_id = e.options[e.selectedIndex].value;
 		var chef_id = $(this).attr('rel1');
 		var datastring = "food_id=" +food_id+ "&chef_id="+chef_id;
+		
+		if (food_id == "default"){
+			// show error
+			console.log("food was left at default");
+			return false;
+		}
+		
 		console.log(datastring);
-		 $.ajax({
-				type: "POST",
-				url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=add_selected_food",
-				data: datastring,
-				success:function () {
-					$('.success').fadeIn(2000).show().html('Added Successfully!').fadeOut(6000); //Show, then hide success msg
-					$('.error').fadeOut(2000).hide();
-					// $("#chef_profile").load('chef_profile.php');
-					refresh_content();
-				}
-			});
+		$.ajax({
+			type: "POST",
+			url: "<?php echo BASE; ?>/includes/ajax_functions/profile_interactions.php?cmd=add_selected_food",
+			data: datastring,
+			success:function (response) {
+				console.log(response);
+				/* var results = JSON.parse(response);
+				console.log(results); */
+				
+				$('.success').fadeIn(2000).show().html('Added Successfully!').fadeOut(6000); //Show, then hide success msg
+				$('.error').fadeOut(2000).hide();
+				// $("#chef_profile").load('chef_profile.php');
+			}
+		});
 		return false;
 	});
 
@@ -197,29 +223,28 @@ $(function(){
 	});
 	
 	$(".delete_food").click(function() {
+		var self = this;
 		var food_id = $(this).attr('rel');
 		var chef_id = $(this).attr('rel1');
 		var datastring = "food_id=" +food_id+ "&chef_id=" +chef_id;
 		
-		console.log("in delete food button, datastring is " + datastring);
-		
 		$.ajax({
 			type: "POST",
-			url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=Delete_food",
+			url: "<?php echo BASE; ?>/includes/ajax_functions/profile_interactions.php?cmd=delete_food",
 			data: datastring,
-			success:function() {
+			success:function(response) {
+				var results = JSON.parse(response);
+				console.log(results);
+				
+				$(self).closest('tr').hide('slow');
 				$('.success').fadeIn(2000).show().html('deleted Successfully!').fadeOut(6000); //Show, then hide success msg
 				$('.error').fadeOut(2000).hide();
 				// $("#chef_profile").load('chef_profile.php');
-				refresh_content();
 			}
 		});
 		return false;
 	});
 });
-function refresh_content() {
-	$("#chef_profile").load('get_chef_load.php');
-}
 
 </script>
 
@@ -229,9 +254,9 @@ $msg = NULL;
 $err=NULL;
 
 $user_info = get_user_info($user_id);
-$profile_pic = $user_info[0]['profile_picture'];
+$profile_pic = PICTURE_LOCATION . $user_info[0]['profile_picture'];
 $profile_pic_loc = htmlspecialchars($profile_pic);
-list($width, $height, $type, $attr) = getimagesize($profile_pic_loc);
+
 
 //Get the chef details of the logged in user if exists
 $chef_info_ret = get_chef_details_logged_in_user($user_id);
@@ -247,11 +272,6 @@ if(!empty($chef_info)) {
 		$food_chef = get_foods_of_chef($chef_id);
 	}
 }
-//Get the foods that the chef is preparing.
-
-//get the event types
-$event_types = get_event_types();
-$results = get_events($user_id);
 ?>
 
 <head>
@@ -262,6 +282,7 @@ $results = get_events($user_id);
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css"/>
 </head>
+
 <body>
 <?php
 include('includes/header.inc.php');
@@ -345,7 +366,7 @@ include('includes/navigation.inc.php'); ?>
 			<!-- USER PROFILE END -->
 			
 			<!-- CHEF PROFILE START -->
-			<div class="card flipper" id="chef_profile" style="overflow-y: scroll;">
+			<div class="card flipper" id="chef_profile">
 				<div class="back">
 					<div class="update_chef_top">
 						<p class="card_name">Chef Profile</p>
@@ -389,12 +410,108 @@ include('includes/navigation.inc.php'); ?>
 						<button type="button" class="flip" style="position:absolute;bottom:1em;right:1em;">Food bucket</button>
 					</form>
 				</div>
-				<!-- TO DO - Move food bucket stuff into this file. Nothing gained by having it external since it is only called once. Style similar to other cards -->
+				
 				<?php
-					chef_profile_data($user_id);
+				// TO DO - update this to ONLY get foods for the current chef
+				//Get the chef details of the logged in user if exists
+				$chef_info = get_chef_details_logged_in_user($user_id);
+				$chef_info_filter = array_filter($chef_info);
+				if(!empty($chef_info_filter)) {
+					$chef_id =$chef_info[0]['chef_id'];
+
+					//Get the foods that the chef is preparing.
+					if($chef_id !=NULL){
+						$food_chef = get_foods_of_chef($chef_id);
+					}
+				}
+
+				$food_names = get_all_food_names();
 				?>
+				
+				<div class="front">
+					<div id="request_new_food_div" style="display:none;">
+						<h3>Add a food to your profile. (This should be one, you started taking orders!)</h3>
+						<form action="userProfile.php" id ="add_new_food_form" method="post" enctype="multipart/form-data">
+							<fieldset>
+								<input type="hidden" id="chef_id" name ="chef_id" value="<?php echo $chef_id;?>">
+									Food Name: <input class="input_box" name="food_name" id="new_food_name" placeholder="Enter the food Name">
+									Food description:<textarea name="food_description" id="new_food_description"></textarea>
+
+									<h3> Add a colorful picture to your food!</h3>
+									<input type="file" name="file" id="food_pic"><br>
+							</fieldset>
+						 </form>
+					</div>
+					<p>Food Bucket</p>
+					<!-- TODO: Remove this form name so that AJAX can do it? -->
+						<form action="userProfile.php" method="post">
+							<div id="food_from_db">
+								<select id ="selected_food" class="dropdown">
+									<option selected value="default">Please select a food type</option>
+									<?php
+									foreach ($food_names as $current_food)
+									{
+									?>
+										<option value="<?php echo $current_food['food_id'];?>" ><?php echo $current_food['food_name'];?></option>
+
+									<?php } ?>
+								</select>
+								<input type="button" name="add_selected_food" rel="<?php echo $current_food['food_id'];?>" rel1="<?php echo $chef_info[0]['chef_id'];?>" id="add_selected_food" value="Add this food to your bucket">
+								<p id="request_new_food_link">Request a new food</p>
+							</div>
+						</form>
+						<?php 
+						if(isset($food_chef)) { ?>
+							<table id="foods_table" style="display: block;   width: 100%;   border-collapse: collapse;   border: solid 1px #D4D4D3;   max-height: 16em; overflow-y:auto;">
+							<tbody>
+								<?php 
+								// print foods for the selected chef
+								$foods_array = get_foods_by_chef($chef_id);
+								
+								if ($foods_array){
+									foreach ($foods_array as $row_food) {
+										
+										$food_id = $row_food['food_id'];
+										
+										$food_picture = $row_food['food_picture'];
+										$media_loc = htmlspecialchars($food_picture);
+										$media_loc = PICTURE_LOCATION . $media_loc;
+										?>
+										
+										<tr class="foods_table">
+											<td class="foods_table">
+												<p class="food_name"><?php echo $row_food['food_name']; ?></p>
+												<p class="food_description"><?php echo $row_food['food_description']; ?></p>
+												<button class="update_food" rel="<?php echo $row_food['food_id'];?>" rel1=<?php echo $chef_info[0]['chef_id'];?> id="update_food_"<?php echo $row_food['food_id'];?> >Update</button>
+												<button type="button" name="delete_food" class ="delete_food" rel="<?php echo $row_food['food_id'];?>" rel1="<?php echo $chef_info[0]['chef_id'];?>">Delete</button>
+											</td>
+											
+											<td>
+												<img class="gridimg2" src="<?php echo $media_loc;?>" style="height:8em; float:right;" />
+											</td>
+											
+										</tr>
+
+								<?php
+									}
+								}
+								else{ 
+								?>
+									<tr class="foods_table">
+										<td class="foods_table">You have not specified any foods.</td>
+									</tr>
+								<?php 
+								}
+								?>
+						</tbody>
+						</table>
+
+						<?php
+						} ?>
+					<button class="flip" style="position:absolute;bottom:1em;right:1em;">Back to Chef Profile</button>
+				</div>
 			</div>
-			<!-- CHEF PROFILE END -->
+	<!-- CHEF PROFILE END -->
 		</div>
 	<!-- Center column end -->
 	</div>

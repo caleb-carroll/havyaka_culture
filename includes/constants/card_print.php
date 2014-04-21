@@ -19,8 +19,7 @@ function print_chef_card($chef_info_array) {
 	//get the chef's profile picture
 	$profile_picture = $chef_info_array['profile_picture']; 
 	$media_loc_profile = htmlspecialchars($profile_picture);
-	$media_loc_profile = BASE.$media_loc_profile;
-	list($width, $height, $type, $attr)= getimagesize($media_loc_profile);
+	$media_loc_profile = PICTURE_LOCATION . $media_loc_profile;
 
 ?>
 <div class ="card flipper">
@@ -50,8 +49,7 @@ function print_chef_card($chef_info_array) {
 						
 						$food_picture = $row_food['food_picture'];
 						$media_loc = htmlspecialchars($food_picture);
-						$media_loc = BASE.$media_loc;
-						list($width, $height, $type, $attr)= getimagesize($media_loc);  
+						$media_loc = PICTURE_LOCATION . $media_loc;
 						?>
 						
 						<tr class="foods_table">
@@ -165,14 +163,12 @@ function print_event_card ($r) {
 	// get image for event, if event image isn't specified, use a default image
 	$image = $row_image[0];
 	if (empty($image)){
-		$media_loc = "/pictures/default_event.jpg";
+		$media_loc = PICTURE_LOCATION . "default_event.jpg";
 	}
 	else {
 		$media_loc = htmlspecialchars($image);
 	}
-	$media_loc = BASE.$media_loc;
-	
-	list($width, $height, $type, $attr)= getimagesize($media_loc);
+	$media_loc = PICTURE_LOCATION . $media_loc;
 
 	//back of the card: I am attending option, list users attending add to calender, google map
 	$q = "SELECT u.username, u.first_name, u.last_name FROM " . USERS . " AS u INNER JOIN " . ATTENDANCE . " AS et ON u.user_id = et.user_id AND et.event_id = ".$event_id;
@@ -289,8 +285,7 @@ function print_user_manage_events_card($user_id)
 
                     $event_image = get_event_picture($event_id);
                     $event_image_loc = htmlspecialchars($event_image);
-                    $event_image_loc = BASE.$event_image_loc;
-                    list($width, $height, $type, $attr)= getimagesize($event_image_loc);
+                    $event_image_loc = PICTURE_LOCATION . $event_image_loc;
 
                     // foreach of the event, get the number of attendance
 

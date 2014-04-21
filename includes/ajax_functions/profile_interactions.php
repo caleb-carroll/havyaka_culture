@@ -99,34 +99,50 @@ if($_POST and $_GET) {
 		}
 	}
 
-	if($_GET['cmd'] == 'Delete_food') {
+	if($_GET['cmd'] == 'delete_food') {
 		$food_id = $_POST['food_id'];
 		$chef_id = $_POST['chef_id'];
 				
 		$q= "DELETE FROM " . FOOD_CHEF_DETAILS . " WHERE food_id =" . $food_id . " AND chef_id =" . $chef_id . ";";
 
 		if($food_q = mysqli_query($link,$q)) {
-			$msg="Deleted successfully!";
+			$results = array(
+				"success" => true,
+				"message" => "Food has been removed from food bucket"
+			);
 		}
 		else {
-			$err="Could not delete, please try again";
+			$results = array(
+				"success" => false,
+				"message" => "Food bucket update failed"
+			);
 		}
-
-		exit();
+		
+		$json_response = json_encode($results);
+		echo $json_response;
 	}
 
 	if($_GET['cmd'] == 'add_selected_food') {
 		$chef_id = $_POST['chef_id'];
 		$food_id = $_POST['food_id'];
-		echo $chef_id.$food_id;
+		
 		$add_selected_food = add_selected_food($food_id,$chef_id);
 		
 		if($add_selected_food) {
-			$msg="Food details added successfully to your bucket";
+			$results = array(
+				"success" => true,
+				"message" => "Food has been added"
+			);
 		}
 		else {
-			$err = "You have already added this food!";
+			$results = array(
+				"success" => false,
+				"message" => "Adding food failed"
+			);
 		}
+		
+		$json_response = json_encode($results);
+		echo $json_response;
 	}
 
 	if($_GET['cmd'] == 'update_food') {

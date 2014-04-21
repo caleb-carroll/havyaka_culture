@@ -13,15 +13,6 @@
 	border-top: solid;
 }
 
-table {
-	width: 50%;
-	line-height: 2em;
-}
-
-table td {
-	vertical-align: text-top;
-}
-
 label {
 	display: block;
 	font-size: .9em;
@@ -168,4 +159,35 @@ label {
 	right: 1em; 
 	padding:.5em;
 	margin:.25em;
+}
+
+/* #foods_table table {
+	display: block;
+	width: 100%;
+	border-collapse: collapse;
+	border: solid 1px #D4D4D3;
+	max-height: 20em;
+} */
+
+.foods_table tr {
+	border: solid 1px #D4D4D3;
+}
+
+.foods_table td {
+	width:100%;
+}
+
+#request_new_food_link {
+	color: blue;
+	cursor: pointer;
+	font-size: .9em;
+}
+#request_new_food_link:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.gridimg2 {
+	width:8em;
+	float:right;
 }
