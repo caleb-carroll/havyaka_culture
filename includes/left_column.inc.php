@@ -61,7 +61,7 @@ if($food_query = mysqli_query($link, $q)) {
                 </p>
         </div>
     </div>
-	
+	<!--
         <center><h3>Quick Faq's</h3></center>
         <div id="accordion-resizer" class="ui-widget-content">
                <div id ="accordion1">                            
@@ -102,7 +102,7 @@ if($food_query = mysqli_query($link, $q)) {
                  </p>
            </div>
          </div>
-     </div>
+     </div> -->
     </div>
     </body>
 </html>

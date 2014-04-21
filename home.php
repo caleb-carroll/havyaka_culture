@@ -179,12 +179,12 @@ if(($_SESSION['homepage'] == 1)) {
 			<div class="back">
 				<h3 style="color: darkmagenta;font-style: italic;">This is the sample card. </h3>
 				<button class="flip">flip</button><br>
-				<p>If you click on the "flip" button above the card flips and displays the contents in the back of the card.</p>
+				<p>If you click on the "flip" button above, the card flips and displays the contents in the back of the card.</p>
 			</div>
 			<div class="front">
 				<h3 style="color: darkmagenta;font-style: italic;">This the back of the card.</h3>
 				<button class="flip">flip</button><br>
-				<p>If you click on the "flip" button above the card flips back and displays front of the card.</p>
+				<p>If you click on the "flip" button above, the card flips back and displays front of the card.</p>
 			</div>
 		</div>
 	</p>
@@ -278,7 +278,7 @@ $msg = NULL;
                 
                  if(empty($results) && empty($chefs_list)) 
                  {?>
-                                <h2>No Local events or Chef found!. You can create in your Dashboard!. </h2>
+                                <h2>No Local events or Chef found!. add one <a href="userProfile.php">here</a>.</h2>
                <?php  }
                 ?>
 		</div>

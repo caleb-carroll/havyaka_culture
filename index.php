@@ -76,7 +76,7 @@ function getCityState(results,zipcode) {
 	
 	$.ajax({
 		type: "POST",
-		url: "updateaddress.php?cmd=updatecitystate", 
+		url: "<?php echo BASE; ?>/includes/ajax_functions/updateaddress.php?cmd=updatecitystate", 
 		data: datastring,
 		
 	});

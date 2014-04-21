@@ -435,7 +435,7 @@ function get_user_info($user_id) {
 }
 
 /* Function to add new users to the database */
-function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type) {
+function add_user($firstname,$lastname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type) {
 
 	$msg = NULL;
 	$err = array();
@@ -470,7 +470,7 @@ function add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$
 
 		$password = hash_pass($password);
 
-		$query = "INSERT INTO " . USERS . " (first_name, username, e_loc_id, user_password, email, registration_date, user_ip, activation_code,community_id) VALUES ('$firstname', '$username', '$e_loc_id', '$password', AES_ENCRYPT('$email', '$salt'), '$date', '$user_ip', '$activation_code',$community_id)";
+		$query = "INSERT INTO " . USERS . " (first_name, last_name,username, e_loc_id, user_password, email, registration_date, user_ip, activation_code,community_id) VALUES ('$firstname','$lastname', '$username', '$e_loc_id', '$password', AES_ENCRYPT('$email', '$salt'), '$date', '$user_ip', '$activation_code',$community_id)";
 
 		if ($q1 = mysqli_query($link,$query)) {
 			//Generate rough hash based on user id from above insertion statement

@@ -66,10 +66,7 @@ if (isset($_POST['activate']))
         }
 }
 ?>
-<script>
-$(document).ready(function(){
-	$("#activ_form").validate();
-});
+
 </script>
 </head>
 
