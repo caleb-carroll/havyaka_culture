@@ -1,4 +1,11 @@
 /* Header and footer styles */
+
+#footer {
+    position: absolute;
+    margin-bottom: 1em;
+    text-align: center;
+    
+}
 #footer ul {
 	clear:left;
 	float:left;
@@ -40,15 +47,16 @@
 	color: #241414;
 } 
 
+
 /* Header styles */
 #header {
 	clear:both;
 	float:center;
 	width:100%;
 	margin-bottom: 2px;
+        min-height: 15em;
 	margin-top: 0;
         display:block;
-        float:left;
 }
 
 #header h1 {

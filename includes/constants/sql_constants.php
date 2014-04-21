@@ -5,7 +5,7 @@ error_reporting(E_ALL | E_STRICT);
 
 include_once 'dbc.php';
 
-$file_location = ROOT."/pictures";
+$file_location = BASE."/pictures";
 global $file_location;
 $max_file_size = 5000000;
 global $max_file_size;
