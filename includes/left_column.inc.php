@@ -31,8 +31,11 @@ $(function() {
 require_once 'includes/constants/sql_constants.php';
 
 // select food_name from " . FOOD . " LIMIT 6
-$q = "SELECT food_id, food_name FROM " . FOOD . " LIMIT 8";
+//$q = "SELECT food_id, food_name FROM " . FOOD . " LIMIT 8";
 
+//return all the food names for chef_id is associated with that to display in the left column 
+$q = "SELECT distinct t1.food_name,t1.food_id FROM `community_connect_food` t1 inner join `community_connect_food_chef_details` t2 on 
+    t1.food_id=t2.food_id where t2.chef_id is not null;";
 
 if($food_query = mysqli_query($link, $q)) {
 	while($row = mysqli_fetch_assoc($food_query)) {

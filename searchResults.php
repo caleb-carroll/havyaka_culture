@@ -1,4 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -59,9 +61,8 @@ $(function() {
 	
 </script>
 
-<head>
 <title>Search Results</title>
-	
+
 <?php
 	
 if (isset($_GET['food_id'])){
@@ -115,3 +116,8 @@ else{
 		</div>
 	</div>
 </div>
+ <div>
+	<?php include('includes/footer.inc.php'); ?>
+ </div>
+</body>
+</html>

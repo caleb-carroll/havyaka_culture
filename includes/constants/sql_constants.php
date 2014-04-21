@@ -439,7 +439,7 @@ function get_user_info($user_id) {
 }
 
 /* Function to add new users to the database */
-function add_user($firstname,$lastname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type) {
+function add_user($firstname,$lastname=NULL,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type) {
 
 	$msg = NULL;
 	$err = array();

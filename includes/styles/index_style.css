@@ -20,8 +20,8 @@ label {
 }
  .registration_section{
 	position: absolute; 
-	top: 1em; 
-	right: 1em; 
+	top: -9em; 
+	right: 6em; 
 	min-width: 4em;
 	max-height:30em;
 	padding:.5em;
@@ -30,9 +30,10 @@ label {
 }
 
 .public_event_section{
-	min-height:34em;
 	padding:.5em;
-	max-width: 60em;
+        margin-top:-14em;
+	max-width: 40em;
+        margin-left:2em;
         min-width:30em;
         min-height: 38em;
 	margin-bottom: 1em;
@@ -42,8 +43,9 @@ label {
 
  .information_section{
 	padding:.5em;
-	margin-right: 20em;
-        margin-top: 5em;
+	margin-right: 10em;
+        margin-top: 2em;
+        margin-left:42em;
         display:block;
          width: 10em;
         height: 5em;

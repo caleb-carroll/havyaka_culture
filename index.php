@@ -36,6 +36,8 @@ $(function(){
 		// console.log("clicked");
 		$(this).parent().closest('.flipper').toggleClass('flipped');
 	});
+        
+         var tooltips = $( "[title]" ).tooltip();
 });
 
 setInterval(refresh_content, 7000 );
@@ -185,18 +187,18 @@ function compIsType(t, s) {
 	
 	<div class="page_content_holder">
 		<!--- Begining of registration section -->
-		<div class="registration_section" style="border:solid; margin-top:5em;margin-right: 6em;">
-			<h1>Register Now!</h1>
+		<div class="registration_section" style="border:solid; margin-top:1em;margin-right: 6em;">
+			<h1>Get Started Now!</h1>
 			
 			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="register_form">
 				<label for="firstname">First</label>
-				<input class="account" type="text" name="firstname" required="required">
+				<input class="account" type="text" name="firstname" title="Please input your first name" required="required">
 				
 				<label for="lastname">Last</label>
-				<input class="account" type="text" name="lastname" required="required">
+				<input class="account" type="text" name="lastname">
 
 				<label> Zip Code:</label> 
-				<input class="account" id ="zipcode" type="number" name="zipcode">
+                                <input class="account" id ="zipcode" title="Your zipcode is used to pull the right events and chef details for you." type="number" name="zipcode">
 
 				<label> Email: </label>
 				<input class="account" type="email" name="email" required="required">
@@ -211,7 +213,7 @@ function compIsType(t, s) {
 				<input class="account" type="password" name="pass2" required="required">
 				
 				<br>
-				<button type="submit" name="register">Register</button>
+				<button type="submit" name="register">Create My Account</button>
 			</form>
 		</div> 
 		<!--- End of registration section -->
@@ -227,7 +229,7 @@ function compIsType(t, s) {
 	
 		<!-- Beginning of public event display section -->
 		<div class="public_event_section">
-			<h1>Public Events!</h1>
+			<h1 style="margin-left:7em;">Public Events!</h1>
 			<div class="public_event_refresh">
 				<?php include 'public_event.php';?>
 			</div> 
