@@ -291,7 +291,7 @@ function add_new_food($chef_id,$food_name,$food_description,$picture_loc) {
 	if(mysqli_num_rows($q_new_food) == 0) {
 		$q_food_insert = mysqli_query($link,"INSERT INTO " . FOOD . " (food_name, food_description,food_picture,community_id) VALUES ('".$food_name. "','" .$food_description. "','".$picture_loc. "',1)") or die(mysqli_error($link));
 		$food_id = mysqli_insert_id($link);
-		$add_selected_food = add_selected_food($food_id,$chef_id);
+		// $add_selected_food = add_selected_food($food_id,$chef_id);
 		
 		$new_food = array(
 			"food_id" => $food_id,
@@ -599,8 +599,8 @@ function update_user_info($user_id, $first_name, $last_name, $email, $phone, $pr
 /* Function to send an email message to a user */
 function send_message($email_to,$msg_subject, $message) {
 	global $passsalt;
-        global $salt;
-        global $link;
+	global $salt;
+	global $link;
 
 	//$result = mysqli_query($link,"SELECT AES_DECRYPT(p_pass,'$salt') AS password FROM ".PSTORE. " WHERE p_email=AES_ENCRYPT('".GLOBAL_EMAIL."','$salt')") or die(mysqli_error($link));
 	//$row = mysqli_fetch_assoc($result);
@@ -1182,6 +1182,7 @@ function get_saved_events($user_id) {
 
 	return $results;
 }
+
 //functions to get the saved chef details of the specific user to display it in his dashboard
 function get_saved_chef($user_id) {
 	global $link;
@@ -1206,26 +1207,26 @@ function get_saved_chef($user_id) {
 
 	return $results;
 }
+
 //Function to delete the saved data from the user's dashboard.
-function delete_saved_data($delete_id,$delete_type,$user_id)
-{
-    global $link;
-    $q_delete = "DELETE FROM " . USER_SAVED_INFO . " WHERE ";
+function delete_saved_data($delete_id,$delete_type,$user_id) {
+	global $link;
+	$q_delete = "DELETE FROM " . USER_SAVED_INFO . " WHERE ";
 
-    if($delete_type == "event") {
-        $q_delete .= "event_id=".$delete_id;
-    }
+	if($delete_type == "event") {
+		$q_delete .= "event_id=".$delete_id;
+	}
 	else {
-        $q_delete .="chef_id=".$delete_id;
-    }
-    $q_delete .=" AND user_id =" .$user_id;
+		$q_delete .="chef_id=".$delete_id;
+	}
+	$q_delete .=" AND user_id =" .$user_id;
 
 
-    if(mysqli_query($link,$q_delete)) {
-        return true;
-    }
+	if(mysqli_query($link,$q_delete)) {
+		return true;
+	}
 	else {
-        return false;
-    }
+		return false;
+	}
 }
 ?>

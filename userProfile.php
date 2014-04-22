@@ -28,6 +28,7 @@ $(function(){
 	});
 });
 
+// function to delete a food from the food bucket
 function delete_food(handler){
 	console.log(handler);
 	var food_id = $(handler).attr('rel');
@@ -43,9 +44,8 @@ function delete_food(handler){
 			console.log(results);
 			
 			$(handler).closest('tr').hide('slow');
-			$('.success').fadeIn(2000).show().html('deleted Successfully!').fadeOut(6000); //Show, then hide success msg
+			$('.success').fadeIn(2000).show().html('deleted Successfully!').fadeOut(6000);
 			$('.error').fadeOut(2000).hide();
-			// $("#chef_profile").load('chef_profile.php');
 		}
 	});
 	return false;
@@ -53,17 +53,18 @@ function delete_food(handler){
 
 // this function is called from the update food button that is on each row of foods
 function update_food(handler) {
-	var food_id = $(handler).closest('td').attr('id');
-	var food_to_update = $('#' + food_id);
-	
 	var food_id = $(handler).attr('rel');
 	var chef_id = $(handler).attr('rel1');
+	var food_to_update = $('#' + food_id);
 	
-	var food_description = food_to_update.find("input[type=text], textarea").val();
+	// gets the description of the food by finding the parent table cell for the button clicked, then finding the textarea within the parent that contains the description
+	var food_description = $(handler).parent('td').find('textarea').val();
 	
+	// if the food description is null, an error displays
 	if(food_description == '') {
 		$('.error').fadeIn(400).show().html('Please enter the food description.');
 	}
+	// else calls AJAX function to update the food in the database
 	else {
 		var datastring = "food_description=" +food_description+ "&food_id=" +food_id+ "&chef_id="+chef_id;
 		console.log("in update food button, datastring is " + datastring);
@@ -92,7 +93,7 @@ $(document).on('click', '.delete_food', function() {delete_food(this)});
 $(document).on('click', '.update_food', function() {update_food(this)});
 
 $(function(){	
-	//Ajax request to save the profile information
+	// button that calls an Ajax request to save the profile information
 	$('#save_profile_button').click(function() {
 		var datastring = $('#update_profile_form').serialize();
 		
@@ -111,12 +112,13 @@ $(function(){
 			success: function(response) {
 				var results = JSON.parse(response);
 				console.log(results);
-				var status = results['success'];
-				var message = results['message'];
+				var status = results.success;
+				var message = results.message;
 				
-				if(status === 'true') {
+				if(status === true) {
 					$('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
 					$('.error').fadeOut(2000).hide(); //If showing error, fade out
+					$('#user_profile_div').effect('shake', { direction: "down", distance: "4", times: "2"})
 				}
 				else {
 					$('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
@@ -164,9 +166,10 @@ $(function(){
 				var status = results['success'];
 				var message = results['message'];
 
-				if(status === 'true') {
+				if(status === true) {
 					$('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
 					$('.error').fadeOut(2000).hide(); //If showing error, fade out
+					$('#chef_profile').effect('shake', { direction: "down", distance: "4", times: "2"})
 				}
 				else {
 					$('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
@@ -176,7 +179,7 @@ $(function(){
 		});
 	});
 	
-	//Ajax request to add a new food as requested by the user
+	// button to open the new food dialog form
 	$( "#add_new_food_form" ).dialog({
 		autoOpen: false,
 		height: 500,
@@ -196,12 +199,13 @@ $(function(){
 			$(this).dialog("close");
 		}
 	});
-
+	
+	// opens the add new food dialog when the new food link is clicked
 	$("#request_new_food_link").click(function() {
 		$("#add_new_food_form").dialog("open");
 	});
 	
-	//ajax request to process the selected food by the user
+	// on the new food dialog, clicking to add the food calls an ajax request to add the selected food to the table
 	$("#add_selected_food").click(function(){
 		var e = document.getElementById("selected_food");
 		var self = $(this);
@@ -224,6 +228,7 @@ $(function(){
 				var results = JSON.parse(response);
 				console.log(results);
 				
+				// on success, add the new food row to the table
 				$('#no_foods_message').hide();
 				if (results.success){
 					var new_html =	"<tr class='foods_table'>";
@@ -235,11 +240,12 @@ $(function(){
 					new_html += "<label for='food_description'>Food Description</label>";
 					new_html += "<textarea style='width:20em; height: 5em;'  name='food_description'>" + results.added_food.food_description + "</textarea>";
 					new_html += "<br>";
-					new_html += "<button class='update_food' rel='" + results.added_food.food_id + "' rel1=" + results.added_food.chef_id + " id='update_food_'" + results.added_food.food_id + " >Update</button>"
+					new_html += "<button class='update_food' rel='" + results.added_food.food_id + "' rel1=" + results.added_food.chef_id + " id='update_food_" + results.added_food.food_id + "' >Update</button>"
 					new_html += "<button type='button' name='delete_food' class ='delete_food' rel='" + results.added_food.food_id + "' rel1='" + results.added_food.chef_id + "'>Delete</button>"
 					new_html += "</td>"
 					new_html +=	"</tr>"
 					
+					// adds the new food at the top of the table
 					$(new_html).hide().prependTo('#foods_table').fadeIn('slow');
 					
 					$('.success').fadeIn(2000).show().html('Added Successfully').fadeOut(6000); //Show, then hide success msg
@@ -249,17 +255,18 @@ $(function(){
 					$('.error').fadeIn(2000).show().html('Failed to add food').fadeOut(6000); //Show, then hide success msg
 					$('.success').fadeOut(2000).hide();
 				}
-				// $("#chef_profile").load('chef_profile.php');
 			}
 		});
 		return false;
 	});
 
+	// function called by the add food dialog to insert the values into the database
 	function add_new_food(formData) {
 		$.ajax({
 			url: "<?php echo BASE; ?>/includes/ajax_functions/profile_interactions.php?cmd=add_new_food",
 			type: 'POST',
 			data: formData,
+			// do we need async?
 			async: false,
 			success: function (response) {
 				console.log(response);
@@ -268,7 +275,12 @@ $(function(){
 				
 				$('.success').fadeIn(2000).show().html('Added Successfully!').fadeOut(6000); //Show, then hide success msg
 				$('.error').fadeOut(2000).hide();
+				
+				// adds the new food to the dropdown selection
 				$('#selected_food').append('<option value="' + results.new_food.food_id + '">' + results.new_food.food_name + '</option>');
+				
+				// selects the newly added food in the dropdown
+				$('#selected_food').val(results.new_food.food_id);
 			},
 			cache: false,
 			contentType: false,
@@ -388,7 +400,7 @@ include('includes/navigation.inc.php'); ?>
 						<p class="image_holder"><img class="card_image" src="<?php echo $profile_pic_loc;?>" /></p>
 						<p>Upload a Picture</p>
 						<form action="<?php echo BASE;?>/includes/ajax_functions/profile_interactions.php?cmd=add_picture" method="post" enctype="multipart/form-data">
-							<input type="file" name="file" id="file">
+							<input type="file" name="file" id="file" style="width: 13em;">
 							<input type="submit" name="submit" value="Submit">
 						</form>
 						<button type="button" id="save_profile_button">Save Changes</button>
@@ -520,7 +532,7 @@ include('includes/navigation.inc.php'); ?>
 												<textarea style="width:20em; height: 5em;"  name="food_description"><?php echo $row_food['food_description']; ?></textarea>
 												
 												<br>
-												<button class="update_food" rel="<?php echo $row_food['food_id'];?>" rel1=<?php echo $chef_info[0]['chef_id'];?> id="update_food_"<?php echo $row_food['food_id'];?> >Update</button>
+												<button class="update_food" rel="<?php echo $row_food['food_id'];?>" rel1=<?php echo $chef_info[0]['chef_id'];?> id="update_food_<?php echo $row_food['food_id'];?>" >Update</button>
 												<button type="button" name="delete_food" class ="delete_food" rel="<?php echo $row_food['food_id'];?>" rel1="<?php echo $chef_info[0]['chef_id'];?>">Delete</button>
 											</td>
 											
