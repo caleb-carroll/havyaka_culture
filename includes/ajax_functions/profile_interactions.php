@@ -74,17 +74,29 @@ if($_POST and $_GET) {
 		else {
 			$file_handler = $_FILES["file"];
 			$picture = store_image($file_handler);
-			//$picture_loc = "/".$picture;
-			$picture_loc = $picture;
+			$picture_loc = PICTURE_LOCATION .$picture;
 			echo $picture_loc;
 			if($_GET['cmd'] == 'add_picture') {
 				//call the update_user_info function defined in sql_constants.php
-				update_user_info($user_id, NULL, NULL, NULL, NULL, $picture_loc);
+				$profile_update = update_user_info($user_id, NULL, NULL, NULL, NULL, $picture_loc);
+                                if($profile_update) {
+					$msg="Picture updated successfully";
+				} 
+				else {
+					$msg="Could not update this time, Please try again";
+				}                                
+
 			}
 			elseif ($_GET['cmd'] == 'add_event_picture') {
 				$event_id = $_POST['event_id'];
 				//defined in sql_constants.php
-				update_event_picture($picture_loc,$event_id);
+				$event_update = update_event_picture($picture_loc,$event_id);
+                                if($event_update) {
+					$msg="Food details updated successfully";
+				} 
+				else {
+					$msg="Could not update this time, Please try again";
+				}
 			}
 			elseif ($_GET['cmd'] == 'add_food_picture') {
 				$food_id=$_POST['food_id'];
@@ -93,7 +105,7 @@ if($_POST and $_GET) {
 					$msg="Food details updated successfully";
 				} 
 				else {
-					$err="Could not update this time, Please try again";
+					$msg="Could not update this time, Please try again";
 				}
 			}
 		}

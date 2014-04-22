@@ -445,7 +445,6 @@ function add_user($firstname,$lastname=NULL,$username,$password,$confirm_pass,$e
 	$err = array();
 	global $salt;
 	global $link;
-
 	$err =error_check($firstname,$username,$password,$confirm_pass,$email,$zipcode);
 
 	if($stmt = mysqli_prepare($link, "SELECT username, email FROM " . USERS . " WHERE username = '$username' OR email = AES_ENCRYPT('$email', '$salt')") or die(mysqli_error($link))) {
@@ -510,11 +509,9 @@ function add_user($firstname,$lastname=NULL,$username,$password,$confirm_pass,$e
 				md5_id='". $md5_id. "' AND activation_code = '" . $activation_code ."' ") or die(mysql_error());
 
 				$result = send_message($email,$msg,$message);
-				if($result) {
-					echo "<h3>Registration is successfull!. You may now <a href=\"".BASE."/users/activate.php\">Activate </a> your account.</h3>";
-				}
-				else {
-					echo "message is not sent";
+				if(!$result) 
+                                {
+					$err[]= "message is not sent";
 				}
 			}
 			else {
@@ -530,11 +527,6 @@ function add_user($firstname,$lastname=NULL,$username,$password,$confirm_pass,$e
 			$err[] ="Something happened!, please try again!";
 		}
 	}
-
-
-
-
-
 	return $err;
 }
 
@@ -808,12 +800,13 @@ function delete_event($event_id) {
 }
 
 //function to get the food picture to display it in the home page carousal
-function fetch_food_picture($chef_id = NULL)
+function fetch_food_event_picture($chef_id = NULL)
 {
     global $link;
     $results = array();
 
-    $q_picture = "SELECT food_picture FROM " . FOOD . " WHERE food_picture IS NOT NULL ORDER BY RAND() LIMIT 5";
+    $q_picture = "(SELECT food_picture from community_connect_food WHERE food_picture IS NOT NULL)
+                    UNION (SELECT image_location FROM community_connect_event_picture WHERE image_location is not null) ORDER BY RAND() LIMIT 7;";
    if($picture_query = mysqli_query($link,$q_picture)) {
 	while ($row = mysqli_fetch_assoc($picture_query)) {
 		$results[] =$row;

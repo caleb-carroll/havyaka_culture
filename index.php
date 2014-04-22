@@ -8,11 +8,41 @@
 <link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="includes/styles/index_style.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css" media="screen" />
+<?php 
+require_once 'includes/constants/sql_constants.php';
+include_once 'includes/constants/card_print.php';
+
+session_start();
+?>
+
 <script>
+              
+        //function to get the city name, state based on the submitted zipcode. This utilizes the google geocoding.
+function get_city_state(zipcode) {
+	var zip = zipcode;
+	var country = 'United States';
+	var lat;
+	var lng;
+	var geocoder = new google.maps.Geocoder();
+	alert(zip);
+	geocoder.geocode({ 'address': zipcode + ',' + country }, function (results, status) {
+		if (status === google.maps.GeocoderStatus.OK) {
+			geocoder.geocode({'latLng': results[0].geometry.location}, function(results, status) {
+				if (status === google.maps.GeocoderStatus.OK) {
+					if (results[1]) {
+						var loc = getCityState(results,zipcode);
+					}
+				}
+			});
+		}
+	}); 
+    }
+    
 $(document).ready(function(){
 	$('#login_name').focus();
-});
-
+        
+ 
+}); 
 function refresh_content() {
 	$('.card').fadeOut(700, function(){
 		$(".public_event_refresh").load('public_event.php');
@@ -42,25 +72,7 @@ $(function(){
 
 setInterval(refresh_content, 7000 );
 
-function get_city_state(zipcode) {
-	var zip = zipcode;
-	var country = 'United States';
-	var lat;
-	var lng;
-	var geocoder = new google.maps.Geocoder();
-	
-	geocoder.geocode({ 'address': zipcode + ',' + country }, function (results, status) {
-		if (status === google.maps.GeocoderStatus.OK) {
-			geocoder.geocode({'latLng': results[0].geometry.location}, function(results, status) {
-				if (status === google.maps.GeocoderStatus.OK) {
-					if (results[1]) {
-						var loc = getCityState(results,zipcode);
-					}
-				}
-			});
-		}
-	}); 
-}
+
 
 function getCityState(results,zipcode) {
 	var a = results[0].address_components;
@@ -78,8 +90,8 @@ function getCityState(results,zipcode) {
 	
 	$.ajax({
 		type: "POST",
-		url: "<?php echo BASE; ?>/includes/ajax_functions/updateaddress.php?cmd=updatecitystate", 
-		data: datastring,
+                url:"<?php echo BASE; ?>/includes/ajax_functions/updateaddress.php?cmd=updatecitystate",
+		data: datastring
 		
 	});
 	return false;
@@ -94,10 +106,7 @@ function compIsType(t, s) {
 </script>
   
 <?php
-require_once 'includes/constants/sql_constants.php';
-include_once 'includes/constants/card_print.php';
 
-session_start();
 if($_SESSION){
 	header("Location: " . BASE . "/home.php");
 }
@@ -105,6 +114,7 @@ if($_SESSION){
 $meta_title = "Get Started";
 
 $firstname = NULL;
+$lastname = NULL;
 $username = NULL;
 $password = NULL;
 $city= NULL;
@@ -118,6 +128,7 @@ $e_loc_id = NULL;
 //Check if the user signed up, add user to the user table.
 if(isset($_POST['register'])) {
 	$firstname = filter($_POST['firstname']);
+        $lastname = filter($_POST['lastname']);
 	$username = filter($_POST['username']);
 	$password = filter($_POST['pass1']);
 	$confirm_pass = filter($_POST['pass2']);
@@ -126,22 +137,25 @@ if(isset($_POST['register'])) {
 	$date = date('Y-m-d');
 	$user_ip = $_SERVER['REMOTE_ADDR'];
 	$activation_code = rand(1000,9999);
-	$community_type = 'havyaka'; //$_POST['community_type'];
+	$community_type = 'Havyaka'; //$_POST['community_type'];
 
 	$err = array();
 	//defined in config.inc.php
-	$err = add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type );
+	$err = add_user($firstname,$lastname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type );
 
-	if ( count($err) == 0) {
-		$msg = "Registration successful!";
+	if (empty($err)) {
+		//if the registration is successful then get the city and state name using zipcode and update the table
+               
+               echo "<h3>Registration is successfull!. You may now <a href=\"".BASE."/users/activate.php\">Activate </a> your account.</h3>";
 
 		$meta_title = "Registration successful!";
-		//if the registration is successful then get the city and state name using zipcode and update the table
+                
+                echo "<script>
+                        get_city_state('{$zipcode}');
+		</script>";
 
 		?>
-		<script>
-			get_city_state('<?php echo $zipcode;?>');
-		</script>
+		
 		<?php
 	}
 }
@@ -162,29 +176,30 @@ return_meta($meta_title);
 	
 	<!-- Beginning of error display section -->
 	<div class="login_event_section">
-		<?php
-		//Show message if isset
-		if(isset($msg)) {
-			echo '<div class="success">'.$msg.'</div>';
-		}
-		//Show error message if isset
 		
-		if(!empty($err)) {
-			echo '<div class="err">';
-			
-			foreach($err as $e) {
-				echo $e.'<br />';
-			}
-			
-			echo '</div>';
-		}
-		?>
 	</div>
 	<!-- End of error display section -->
 	
 	<div class="page_content_holder">
 		<!--- Begining of registration section -->
 		<div class="registration_section" style="border:solid; margin-top:1em;margin-right: 6em;">
+                            <?php
+                        //Show message if isset
+                        if(isset($msg)) {
+                                echo '<div class="success">'.$msg.'</div>';
+                        }
+                        //Show error message if isset
+
+                        if(!empty($err)) {
+                                echo '<div class="err">';
+
+                                foreach($err as $e) {
+                                        echo $e.'<br />';
+                                }
+
+                                echo '</div>';
+                        }
+                        ?>
 			<h1>Register</h1>
 			
 			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="register_form">
@@ -198,7 +213,7 @@ return_meta($meta_title);
 				<input class="account" id ="zipcode" title="Your zipcode is used to pull the right events and chef details for you." type="number" name="zipcode">
 
 				<label> Email: </label>
-				<input class="account" type="email" name="email" required="required">
+				<input class="account" type="email" name="email" title="Email is required to verify your account" required="required">
 
 				<label> Username: </label> 
 				<input class="account" id="username" type="text" name="username" required="required">

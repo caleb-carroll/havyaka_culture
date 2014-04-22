@@ -211,7 +211,9 @@ $msg = NULL;
 			<div id="carousal">
 				<ul>
 				<?php
-				$results = fetch_food_picture();
+                                //Display the pictures in the carousal in the home page. 
+                                //defined in sql_constants.php ; fetches randomly 8 images.
+				$results = fetch_food_event_picture();
 				foreach ($results as $r)
 				{
 					$food_image = $r['food_picture']; 
