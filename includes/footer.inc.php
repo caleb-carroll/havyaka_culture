@@ -1,36 +1,26 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
-    
-    <!-- This is a footer page, shows about us, faq and contact us -->
-<head>
-</head>
-    <body>
-        <div id="footer">
-            
-                <?php
-                $names = array("About Us","Faqs","Contact Us");
-                $links = array("aboutus.php","FAQ.php","contactform.php");
-                ?>
-            
-            <center><ul>
-                <?php
-                for ($i = 0; $i < count($names); $i++) {
-                    //here, we check if the page on which the user is at is the same as the page in $links[$i]
-                    if( basename($_SERVER['SCRIPT_NAME']) ==  $links[$i]) { 
-                            $class = "active"; 
-                    }
-                    else {
-                            $class = "";
-                    }
-                    ?>
-                    <li ><a href="<?php echo $links[$i];?>" class="<?php echo $class;?>"> <?php echo $names[$i];?></a></li>
-                    <?php
-                }
-                ?>
-                </ul>
-            </center>
-            
-                <br><center><h4>(c) 2014 Community Connect</h4></center>
-        </div>
-    </body>
-</html>
+<!-- This is a footer page, shows about us, faq and contact us -->
+<div id="footer">
+	<?php
+	$names = array("About Us","FAQs","Contact Us");
+	$links = array("aboutus.php","FAQ.php","contactform.php");
+	?>
+	<ul>
+		<?php
+		// puts a link for each footer item on the page
+		for ($i = 0; $i < count($names); $i++) {
+			//here, we check if the page on which the user is at is the same as the page in $links[$i]
+			if( basename($_SERVER['SCRIPT_NAME']) ==  $links[$i]) { 
+				$class = "active"; 
+			}
+			else {
+				$class = "";
+			}
+			?>
+			<li><a href="<?php echo $links[$i];?>" class="<?php echo $class;?>"> <?php echo $names[$i];?></a></li>
+			<?php
+		}
+		?>
+	</ul>
+	
+	<br><center><h4>(c) 2014 Community Connect</h4></center>
+</div>

@@ -1,13 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
-    <head>
-        <script src="includes/js/jquery-1.10.2.js"></script>
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-        <link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
-        <link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
-        <link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
-        <link rel="stylesheet" type="text/css" href="includes/styles/index_style.css" media="screen" />
-        <link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css" media="screen" />
+<head>
+<script src="includes/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="includes/styles/index_style.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css" media="screen" />
 <script>
 $(document).ready(function(){
 	$('#login_name').focus();
@@ -36,8 +36,8 @@ $(function(){
 		// console.log("clicked");
 		$(this).parent().closest('.flipper').toggleClass('flipped');
 	});
-        
-         var tooltips = $( "[title]" ).tooltip();
+	
+	var tooltips = $( "[title]" ).tooltip();
 });
 
 setInterval(refresh_content, 7000 );
@@ -89,75 +89,72 @@ function compIsType(t, s) {
 	for(z = 0; z < t.length; ++z) 
 		if(t[z] == s)
 			return true;
-   return false;
+	return false;
 } 
 </script>
   
-    <?php
-    require_once 'includes/constants/sql_constants.php';
-    include_once 'includes/constants/card_print.php';
+<?php
+require_once 'includes/constants/sql_constants.php';
+include_once 'includes/constants/card_print.php';
 
-    session_start();
-    if($_SESSION){
-            header("Location: " . BASE . "/home.php");
-    }
+session_start();
+if($_SESSION){
+	header("Location: " . BASE . "/home.php");
+}
 
-    $meta_title = "Get Started";
+$meta_title = "Get Started";
 
-    $firstname = NULL;
-    $username = NULL;
-    $password = NULL;
-    $city= NULL;
-    $zipcode = NULL;
-    $email = NULL;
-    $pass2 = NULL;
-    $msg = NULL;
-    $err = array();
-    $e_loc_id = NULL;
+$firstname = NULL;
+$username = NULL;
+$password = NULL;
+$city= NULL;
+$zipcode = NULL;
+$email = NULL;
+$pass2 = NULL;
+$msg = NULL;
+$err = array();
+$e_loc_id = NULL;
 
-        //Check if the user signed up, add user to the user table.
-        if(isset($_POST['register'])) {
-                $firstname = filter($_POST['firstname']);
-                $username = filter($_POST['username']);
-                $password = filter($_POST['pass1']);
-                $confirm_pass = filter($_POST['pass2']);
-                $email = filter($_POST['email']);
-                $zipcode = intval(filter($_POST['zipcode']));
-                $date = date('Y-m-d');
-                $user_ip = $_SERVER['REMOTE_ADDR'];
-                $activation_code = rand(1000,9999);
-                $community_type = 'havyaka'; //$_POST['community_type'];
+//Check if the user signed up, add user to the user table.
+if(isset($_POST['register'])) {
+	$firstname = filter($_POST['firstname']);
+	$username = filter($_POST['username']);
+	$password = filter($_POST['pass1']);
+	$confirm_pass = filter($_POST['pass2']);
+	$email = filter($_POST['email']);
+	$zipcode = intval(filter($_POST['zipcode']));
+	$date = date('Y-m-d');
+	$user_ip = $_SERVER['REMOTE_ADDR'];
+	$activation_code = rand(1000,9999);
+	$community_type = 'havyaka'; //$_POST['community_type'];
 
-                $err = array();
-                //defined in config.inc.php
-                $err = add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type );
+	$err = array();
+	//defined in config.inc.php
+	$err = add_user($firstname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type );
 
-                if ( count($err) == 0) {
-                        $msg = "Registration successful!";
+	if ( count($err) == 0) {
+		$msg = "Registration successful!";
 
-                        $meta_title = "Registration successful!";
-                        //if the registration is successful then get the city and state name using zipcode and update the table
+		$meta_title = "Registration successful!";
+		//if the registration is successful then get the city and state name using zipcode and update the table
 
-                        ?>
-                        <script>
-                                get_city_state('<?php echo $zipcode;?>');
-                        </script>
-                        <?php
-                }
+		?>
+		<script>
+			get_city_state('<?php echo $zipcode;?>');
+		</script>
+		<?php
+	}
+}
 
-        }
-
-        return_meta($meta_title);
-        ?>
-
+return_meta($meta_title);
+?>
 </head>
 
 <body>
-   
 	<div id="header">
-		  <?php
-          include_once ('includes/header.inc.php');
-       ?>
+	<?php
+	include_once ('includes/header.inc.php');
+	?>
 		<div class="login_holder">
 			<?php include_once 'login.php'; ?>
 		</div>
@@ -188,7 +185,7 @@ function compIsType(t, s) {
 	<div class="page_content_holder">
 		<!--- Begining of registration section -->
 		<div class="registration_section" style="border:solid; margin-top:1em;margin-right: 6em;">
-			<h1>Get Started Now!</h1>
+			<h1>Register</h1>
 			
 			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="register_form">
 				<label for="firstname">First</label>
@@ -198,7 +195,7 @@ function compIsType(t, s) {
 				<input class="account" type="text" name="lastname">
 
 				<label> Zip Code:</label> 
-                                <input class="account" id ="zipcode" title="Your zipcode is used to pull the right events and chef details for you." type="number" name="zipcode">
+				<input class="account" id ="zipcode" title="Your zipcode is used to pull the right events and chef details for you." type="number" name="zipcode">
 
 				<label> Email: </label>
 				<input class="account" type="email" name="email" required="required">
@@ -219,17 +216,16 @@ function compIsType(t, s) {
 		<!--- End of registration section -->
 		
 		<!-- Beginning of information section -->
-                <div class="information_section" style="display:block;width:35em;height: 10em;background: white" >
-                    <center><h1>Welcome!</h1>
+		<div class="information_section" style="display:block;width:35em;height: 10em;background: white" >
+			<h1>Welcome!</h1>
 			<!-- Need to select a picture to display on this section. Use class "event_image" -->
-                        <p>Welcome to the Community Connect site! Sign up to find/become a chef who prepares traditional Havyaka foods
-                            <br>OR<br> to create and participate in Havyaka community events.</p></center>
+			<p>Welcome to the Community Connect site. On this site, you can find a chef who prepares traditional Havyaka foods in your area, participate in Havyaka community events, or sign up to prepare foods or create events.</p>
 		</div>
 		<!-- End of information section -->
 	
 		<!-- Beginning of public event display section -->
 		<div class="public_event_section">
-			<h1 style="margin-left:7em;">Public Events!</h1>
+			<h1 style="margin-left:7em;">Public Events</h1>
 			<div class="public_event_refresh">
 				<?php include 'public_event.php';?>
 			</div> 
@@ -237,9 +233,9 @@ function compIsType(t, s) {
 		<!-- End of public event display section -->
 		
 	</div>
-        <div>
-	<?php include('includes/footer.inc.php'); ?>
-        </div>
+	<div>
+		<?php include('includes/footer.inc.php'); ?>
+	</div>
 
 </body>
 </html>
