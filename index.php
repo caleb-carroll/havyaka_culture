@@ -8,6 +8,7 @@
 <link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="includes/styles/index_style.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css" media="screen" />
+<script src="includes/js/jquery_custom_flip.js"></script>
 <?php 
 require_once 'includes/constants/sql_constants.php';
 include_once 'includes/constants/card_print.php';
@@ -16,8 +17,7 @@ session_start();
 ?>
 
 <script>
-              
-        //function to get the city name, state based on the submitted zipcode. This utilizes the google geocoding.
+//function to get the city name, state based on the submitted zipcode. This utilizes the google geocoding.
 function get_city_state(zipcode) {
 	var zip = zipcode;
 	var country = 'United States';
@@ -36,7 +36,7 @@ function get_city_state(zipcode) {
 			});
 		}
 	}); 
-    }
+}
     
 $(document).ready(function(){
 	$('#login_name').focus();
@@ -50,23 +50,7 @@ function refresh_content() {
 	
 }
 
-function doesCSS(p){
-	var s = ( document.body || document.documentElement).style;
-	return !!$.grep(['','-moz-', '-webkit-'],function(v){
-		return  typeof s[v+p] === 'string';
-	}).length;
-}
-
-$('html')
-	.toggleClass('transform',doesCSS('transform'))
-	.toggleClass('no-transform',!doesCSS('transform'));
-
 $(function(){
-	$('.flip').click(function(){
-		// console.log("clicked");
-		$(this).parent().closest('.flipper').toggleClass('flipped');
-	});
-	
 	var tooltips = $( "[title]" ).tooltip();
 });
 
@@ -128,7 +112,7 @@ $e_loc_id = NULL;
 //Check if the user signed up, add user to the user table.
 if(isset($_POST['register'])) {
 	$firstname = filter($_POST['firstname']);
-        $lastname = filter($_POST['lastname']);
+	$lastname = filter($_POST['lastname']);
 	$username = filter($_POST['username']);
 	$password = filter($_POST['pass1']);
 	$confirm_pass = filter($_POST['pass2']);
@@ -146,12 +130,12 @@ if(isset($_POST['register'])) {
 	if (empty($err)) {
 		//if the registration is successful then get the city and state name using zipcode and update the table
                
-               echo "<h3>Registration is successfull!. You may now <a href=\"".BASE."/users/activate.php\">Activate </a> your account.</h3>";
+	   echo "<h3>Registration is successfull!. You may now <a href=\"".BASE."/users/activate.php\">Activate </a> your account.</h3>";
 
 		$meta_title = "Registration successful!";
                 
-                echo "<script>
-                        get_city_state('{$zipcode}');
+		echo "<script>
+			get_city_state('{$zipcode}');
 		</script>";
 
 		?>
@@ -182,24 +166,24 @@ return_meta($meta_title);
 	
 	<div class="page_content_holder">
 		<!--- Begining of registration section -->
-		<div class="registration_section" style="border:solid; margin-top:1em;margin-right: 6em;">
-                            <?php
-                        //Show message if isset
-                        if(isset($msg)) {
-                                echo '<div class="success">'.$msg.'</div>';
-                        }
-                        //Show error message if isset
+		<div class="registration_section">
+			<?php
+			//Show message if isset
+			if(isset($msg)) {
+					echo '<div class="success">'.$msg.'</div>';
+			}
+			//Show error message if isset
 
-                        if(!empty($err)) {
-                                echo '<div class="err">';
+			if(!empty($err)) {
+					echo '<div class="err">';
 
-                                foreach($err as $e) {
-                                        echo $e.'<br />';
-                                }
+					foreach($err as $e) {
+							echo $e.'<br />';
+					}
 
-                                echo '</div>';
-                        }
-                        ?>
+					echo '</div>';
+			}
+			?>
 			<h1>Register</h1>
 			
 			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="register_form">
@@ -231,7 +215,7 @@ return_meta($meta_title);
 		<!--- End of registration section -->
 		
 		<!-- Beginning of information section -->
-		<div class="information_section" style="display:block;width:35em;height: 10em;background: white" >
+		<div class="information_section">
 			<h1>Welcome!</h1>
 			<!-- Need to select a picture to display on this section. Use class "event_image" -->
 			<p>Welcome to the Community Connect site. On this site, you can find a chef who prepares traditional Havyaka foods in your area, participate in Havyaka community events, or sign up to prepare foods or create events.</p>

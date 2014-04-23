@@ -1,6 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
-<head>
 <?php
 include_once 'includes/constants/sql_constants.php';
 
@@ -90,25 +87,23 @@ if(isset($_POST['login'])) {
 }
 ?>
 
-	<div id="login_form">
-		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="login_form">
-			<ul id="login_list">
-				<li>
-					<label for="user">Username</label>
-					<div>
-						<input id="login_name" type="text" name="user" value="<?php echo stripslashes($username); ?>" class="required" tabindex="1"/>
-					</div>
-				</li>
-				<li>
-					<label for="pass">Password</label>
-					<a href = 'password_reset.php' style='font-size: .9em; margin-left: 5px;'>Forgot password?</a>
-					<div>
-						<input type="password" name="pass" value="<?php echo stripslashes($pass2); ?>" class="required" tabindex="2" />
-					</div>
-				</li>
-				<button id ="login" name="login" type="submit">Login</button> 
-			</ul>
-		</form>
-	</div>
-</body>
-</html>
+<div id="login_form">
+	<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="login_form">
+		<ul id="login_list">
+			<li>
+				<label for="user">Username</label>
+				<div>
+					<input id="login_name" type="text" name="user" value="<?php echo stripslashes($username); ?>" class="required" tabindex="1"/>
+				</div>
+			</li>
+			<li>
+				<label for="pass">Password</label>
+				<a href = 'password_reset.php' style='font-size: .9em; margin-left: 5px;'>Forgot password?</a>
+				<div>
+					<input type="password" name="pass" value="<?php echo stripslashes($pass2); ?>" class="required" tabindex="2" />
+				</div>
+			</li>
+			<button id ="login" name="login" type="submit">Login</button> 
+		</ul>
+	</form>
+</div>

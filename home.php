@@ -13,6 +13,7 @@
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	<script src="includes/js/jquery_custom_flip.js"></script>
 </head>
 <?php
 	require_once 'includes/constants/sql_constants.php';
@@ -39,22 +40,7 @@ $(document).ready(function() {
 	},5000);
 });
 
-function doesCSS(p){
-	var s = ( document.body || document.documentElement).style;
-	return !!$.grep(['','-moz-', '-webkit-'],function(v){
-		return  typeof s[v+p] === 'string';
-	}).length;
-}
-
-$('html')
-	.toggleClass('transform',doesCSS('transform'))
-	.toggleClass('no-transform',!doesCSS('transform'));
-
 $(function(){
-	$('.flip').click(function(){
-		$(this).parent().closest('.flipper').toggleClass('flipped');
-	});
-	
 	$("#information_dialog").dialog({
 		autoOpen: true,
 		height: 500,

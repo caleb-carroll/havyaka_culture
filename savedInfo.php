@@ -1,40 +1,26 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-EN">
-    <head>
-        <script type="text/javascript" src="includes/js/jquery-1.10.2.js"></script>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <!-- to make google map work, http://maps.google.com/maps/api/js?sensor=false should be added -->
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-        <title>Saved Information</title>
-        
+<head>
+	<script type="text/javascript" src="includes/js/jquery-1.10.2.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	<!-- to make google map work, http://maps.google.com/maps/api/js?sensor=false should be added -->
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<title>Saved Information</title>
+	
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="robots" content="index, follow" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/profile_styles.css"/>
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css"/>
-        <link rel="stylesheet" type="text/css" href="includes/styles/saved_info_style.css"/>
-    </head>
+	<link rel="stylesheet" type="text/css" href="includes/styles/saved_info_style.css"/>
+	<script src="includes/js/jquery_custom_flip.js"></script>
+</head>
+
 <script>
-    function doesCSS(p){
-            var s = ( document.body || document.documentElement).style;
-            return !!$.grep(['','-moz-', '-webkit-'],function(v){
-                    return  typeof s[v+p] === 'string'
-            }).length
-    }
-
-    $('html')
-            .toggleClass('transform',doesCSS('transform'))
-            .toggleClass('no-transform',!doesCSS('transform'));
-
+ 
 $(function(){
-             
-    $('.flip').click(function(){
-            console.log("clicked");
-            $(this).parent().closest('.flipper').toggleClass('flipped');
-    });
-
-  // ajax request to delete the saved information from the user profile
+	// ajax request to delete the saved information from the user profile
     $(".delete_saved_data").click( function()
     {
         var delete_id = $(this).attr('rel');
@@ -49,10 +35,10 @@ $(function(){
                  data: datastring,                             
                  success:function () {      
                     // will be dynamically removed from the table
-                     var tr_id = "tr_"+delete_id;                           
-                       $("#"+tr_id+"").remove();
+                    var tr_id = "tr_"+delete_id;                           
+                    $("#"+tr_id+"").remove();
 
-                     $('.success').fadeIn(2000).show().html('deleted Successfully!').fadeOut(6000); //Show, then hide success msg
+                    $('.success').fadeIn(2000).show().html('deleted Successfully!').fadeOut(6000); //Show, then hide success msg
                     $('.error').fadeOut(2000).hide(); 
 
                  }
@@ -70,18 +56,17 @@ require_once 'includes/constants/sql_constants.php';
 secure_page();
 $user_id = $_SESSION['user_id'];
 
-		$msg = NULL;
-                $err=NULL;
+$msg = NULL;
+$err=NULL;
 
 if($_POST and $_GET){	
-        //to delete the saved data
-        if($_GET['cmd'] == 'Delete_saved_data')
-        {
-            $delete_type = $_POST['delete_type'];
-            $delete_id = $_POST['delete_id'];
-            //Call the delete_saved_data function, defined in sql_constants.php
-            $delete_data = delete_saved_data($delete_id,$delete_type,$user_id);            
-        }
+	//to delete the saved data
+	if($_GET['cmd'] == 'Delete_saved_data') {
+		$delete_type = $_POST['delete_type'];
+		$delete_id = $_POST['delete_id'];
+		//Call the delete_saved_data function, defined in sql_constants.php
+		$delete_data = delete_saved_data($delete_id,$delete_type,$user_id);            
+	}
 }
 //Get the user saved events and chef details
 $saved_events = get_saved_events($user_id);
@@ -90,9 +75,9 @@ $saved_chef = get_saved_chef($user_id);
 ?>
 
 <body>
-  <?php
-          include_once ('includes/header.inc.php');
-          include('includes/navigation.inc.php'); ?>
+	<?php
+	include_once ('includes/header.inc.php');
+	include('includes/navigation.inc.php'); ?>
     
 <div class="content leftmenu">
     <div class="colright">

@@ -10,28 +10,8 @@
 <link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
 <link rel="stylesheet" type="text/css" href="includes/styles/card_style.css"/>
 <link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css"/>
+<script src="includes/js/jquery_custom_flip.js"></script>
 
-<script>
-
-function doesCSS(p){
-	var s = ( document.body || document.documentElement).style;
-	return !!$.grep(['','-moz-', '-webkit-'],function(v){
-		return  typeof s[v+p] === 'string';
-	}).length;
-}
-
-$('html')
-	.toggleClass('transform',doesCSS('transform'))
-	.toggleClass('no-transform',!doesCSS('transform'));
-
-$(function(){
-	$('.flip').click(function(){
-		$(this).parent().closest('.flipper').toggleClass('flipped');
-	});
-});
-	
-
-</script>
 </head>
 
 <body>

@@ -7,14 +7,13 @@
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/chef_style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
-        
 	<link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css" media="screen" />
+	
 	<script src="includes/js/jquery-1.10.2.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="includes/js/jquery.flip.min.js"></script>
-	<script type="text/javascript" src="includes/js/scripts.js"></script>
 	<script type=text/javascript src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'></script>
+	<script src="includes/js/jquery_custom_flip.js"></script>
 	<meta charset="utf-8">
 
 <?php
@@ -27,24 +26,6 @@
 ?>
 <input style="display:none" type="text" id="user_id" value="<?php echo $user_id ?>">
 <script>
-
-function doesCSS(p){
-	var s = ( document.body || document.documentElement).style;
-	return !!$.grep(['','-moz-', '-webkit-'],function(v){
-		return typeof s[v+p] === 'string'
-	}).length
-}
-
-$('html')
-	.toggleClass('transform',doesCSS('transform'))
-	.toggleClass('no-transform',!doesCSS('transform'))
-
-$(function(){
-	$('.flip').click(function(){
-		// console.log("clicked");
-		$(this).parent().closest('.flipper').toggleClass('flipped');
-	});
-});
 
 $(function() {
 	$(".save_chef").click(function() {

@@ -3,20 +3,16 @@
 <head>
 	<script src="includes/js/jquery-1.10.2.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>        
-        
-        <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxfFRgFYNDht5u00x-8YzIRyHBU36QS-M&sensor=false">
-    </script>
-        
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxfFRgFYNDht5u00x-8YzIRyHBU36QS-M&sensor=false"></script>
 	<link rel="stylesheet" type="text/css" href="includes/styles/style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/event_style.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />        
+	<link rel="stylesheet" type="text/css" href="includes/styles/card_style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="includes/styles/footer_header_style.css" media="screen" />
-        
+	<script src="includes/js/jquery_custom_flip.js"></script>
 </head>
-    <body>
 
+<body>
 <?php
 	require_once 'includes/constants/sql_constants.php';
 	require_once 'includes/constants/card_print.php';
@@ -29,36 +25,11 @@
 <script>
 
  //setTimeout('initialize()',2000);
-
-function doesCSS(p){
-	var s = ( document.body || document.documentElement).style;
-	return !!$.grep(['','-moz-', '-webkit-'],function(v){
-		return  typeof s[v+p] === 'string';
-	}).length;
-}
-
-$('html')
-	.toggleClass('transform',doesCSS('transform'))
-	.toggleClass('no-transform',!doesCSS('transform'));
-
-	
-$(function(){
-	$('.flip').click(function(){
-		// console.log("clicked");
-		$(this).parent().closest('.flipper').toggleClass('flipped');
-		
-		console.log($(this).parentsUntil('.flipper').find('.map_canvas').css('visibility'));
-/*  		if ($(this).parent().find('.map_canvas').css('visibility') == 'hidden')
-			$(this).parent().find('.map_canvas').css('visibility', 'visible');
-		else
-			$(this).parent().find('.map_canvas').css('visibility', 'hidden'); */
-	});
-});
 		
 $(function(){
 	$('.card').show('slide', {direction: "up"}, 700);
 
-        // If the user clicks on the save button in the local events page, get the event id, userid and store the details into the table and display the details into the dashboard
+	// If the user clicks on the save button in the local events page, get the event id, userid and store the details into the table and display the details into the dashboard
 	$(".save_event").click(function() {
 		var event_id = $(this).attr('rel');
 		// alert(event_id);
@@ -69,19 +40,19 @@ $(function(){
 			url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=save_event", 
 			data: datastring,
 			success: function(response){
-                            
-                                 var results = JSON.parse(response);
+				var results = JSON.parse(response);
 				console.log(results);
-                                var status = results['success'];
-                                var message = results['message'];
-                                
-                               if(status === 'true') {
-                                   $('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
-                                   $('.error').fadeOut(2000).hide(); //If showing error, fade out
-                               } else {
-                                   $('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
-                                   $('.success').fadeOut(2000).hide();
-                           }
+				var status = results['success'];
+				var message = results['message'];
+				
+				if(status === 'true') {
+					$('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+					$('.error').fadeOut(2000).hide(); //If showing error, fade out
+				} 
+				else {
+					$('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+					$('.success').fadeOut(2000).hide();
+				}
 			}
 		});
 		
@@ -90,36 +61,38 @@ $(function(){
         
 	  //Capture the attendance and update the table : this ajax request will send the data to event_interactions.php
 	$(".attending_radio").change(function() {
-                var event_id = $(this).attr('rel');
+		var event_id = $(this).attr('rel');
+		
 		if(this.checked) {
 			var datastring = "attending=true&event_id="+event_id;
-                    } else {
-                        var datastring = "attending=false&event_id="+event_id;
-                    }
-			console.log(datastring);
+		} 
+		else {
+			var datastring = "attending=false&event_id="+event_id;
+		}
+		
+		console.log(datastring);
+		$.ajax({
+			type: "POST",
+			url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=attending",
+			data: datastring,
+			success: function(response) {
+				var results = JSON.parse(response);
+				console.log(results);
+				var status = results['success'];
+				var message = results['message'];
 				
-			$.ajax({
-				type: "POST",
-				url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=attending",
-				data: datastring,
-				success: function(response) {
-                                    
-                                    var results = JSON.parse(response);
-                                    
-					console.log(results);
-					 var status = results['success'];
-                                        var message = results['message'];
-                                        if(status === 'true') {
-                                            $('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
-                                            $('.error').fadeOut(2000).hide(); //If showing error, fade out
-                                        } else {
-                                            $('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
-                                            $('.success').fadeOut(2000).hide();
-                                    }
+				if(status === 'true') {
+					$('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+					$('.error').fadeOut(2000).hide(); //If showing error, fade out
+				} 
+				else {
+					$('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+					$('.success').fadeOut(2000).hide();
 				}
-			});
-			
-			return false;
+			}
+		});
+		
+		return false;
 	});
 });
 

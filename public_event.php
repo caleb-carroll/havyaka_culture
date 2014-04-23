@@ -1,40 +1,17 @@
-
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-<script>
-function doesCSS(p){
-	var s = ( document.body || document.documentElement).style;
-	return !!$.grep(['','-moz-', '-webkit-'],function(v){
-		return  typeof s[v+p] === 'string';
-	}).length;
-}
+<script src="includes/js/jquery_custom_flip.js"></script>
 
-$('html')
-	.toggleClass('transform',doesCSS('transform'))
-	.toggleClass('no-transform',!doesCSS('transform'));
-	
+<script>
+ 
 $(function(){
-	// $('.card').hide('slide', {direction: "right"}, 300);
+	// show the public events card, but hide the elements for logged in users
 	$('.card').show('slide', {direction: "left"}, 400);
 	$('.flip').hide();
 	$('.save_event').hide();
 	$('.attending_radio').hide();
 	$('#attending_label').hide();
-	
-	//$('.attending_radio').$('label').hide();
-	
-	$('.flip').click(function(){
-		// console.log("clicked");
-		$(this).parent().closest('.flipper').toggleClass('flipped');
-		
-		console.log($(this).parentsUntil('.flipper').find('.map_canvas').css('visibility'));
-/*  		if ($(this).parent().find('.map_canvas').css('visibility') == 'hidden')
-			$(this).parent().find('.map_canvas').css('visibility', 'visible');
-		else
-			$(this).parent().find('.map_canvas').css('visibility', 'hidden'); */
-	});
-	
 });
 </script>
 

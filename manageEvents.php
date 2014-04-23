@@ -5,6 +5,7 @@
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script src="includes/js/jquery_custom_flip.js"></script>
 <?php 
 require_once 'includes/constants/sql_constants.php';
 require_once 'includes/constants/card_print.php';
@@ -12,18 +13,6 @@ secure_page();
 $user_id = $_SESSION['user_id'];
 ?>
 <script>
-// this function and the html statements below are used to initialize card flipping functionality
-function doesCSS(p){
-	var s = ( document.body || document.documentElement).style;
-	return !!$.grep(['','-moz-', '-webkit-'],function(v){
-		return typeof s[v+p] === 'string'
-	}).length
-}
-	
-$('html')
-	.toggleClass('transform',doesCSS('transform'))
-	.toggleClass('no-transform',!doesCSS('transform'));
-
 // function to get the city and state from Google, then pass them to getCityState in order to update it in the DB
 function get_city_state(zipcode) {
 	var zip = zipcode;
@@ -71,13 +60,6 @@ function getCityState(results,zipcode) {
 	return false;
 }
 
-function compIsType(t, s) { 
-	for(z = 0; z < t.length; ++z) 
-		if(t[z] === s)
-			return true;
-	return false;
-}
-
 $(function(){
 	$("#create_event_div").hide();
 	$("#saved_event_div").hide();
@@ -87,11 +69,6 @@ $(function(){
 
 	// creates a jquery datepicker on all editable date areas
 	$( '.datepicker').datepicker({dateFormat: "yy-mm-dd" });
-	
-	// flips cards over to edit/cancel editing
-	$('.flip').click(function(){
-		$(this).parent().closest('.flipper').toggleClass('flipped');
-	});
 	
 	$('.manage_event').show('slide', {direction: "left"}, 400);
 	

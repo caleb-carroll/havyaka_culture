@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
 <link rel="stylesheet" type="text/css" href="includes/styles/card_style.css"/>
 <link rel="stylesheet" type="text/css" href="includes/styles/chef_style.css"/>
+<script src="includes/js/jquery_custom_flip.js"></script>
 <?php
 require_once 'includes/constants/sql_constants.php';
 require_once 'includes/constants/card_print.php';
@@ -16,24 +17,10 @@ secure_page();
 $user_id = $_SESSION['user_id'];
 ?>
 <input style="display:none" type="text" id="user_id" value="<?php echo $user_id ?>">
+
+
 <script>
-	function doesCSS(p){
-		var s = ( document.body || document.documentElement).style;
-		return !!$.grep(['','-moz-', '-webkit-'],function(v){
-			return  typeof s[v+p] === 'string';
-		}).length;
-	}
 
-	$('html')
-		.toggleClass('transform',doesCSS('transform'))
-		.toggleClass('no-transform',!doesCSS('transform'));
-
-	$(function(){
-		$('.flip').click(function(){
-			console.log("clicked");
-			$(this).parent().closest('.flipper').toggleClass('flipped');
-		});
-	});
 
 $(function() {
 	$(".save_chef").click(function() {

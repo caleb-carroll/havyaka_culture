@@ -8,52 +8,43 @@ label {
 	width:16em;
 }
 
-.login {
-	/* float:right; */
-}
-
 .page_content_holder{
 	position:relative;
-	/* height:100%;
-	width:100%; */
-	/* background: green; */
+	max-width: 75em;
+	margin-left:auto;
+	margin-right:auto;
 }
  .registration_section{
 	position: absolute; 
-	top: -9em; 
-	right: 6em; 
+	top: 0em; 
+	right: 0em; 
 	min-width: 4em;
 	max-height:30em;
 	padding:.5em;
-	background: #B8CFE6;
+	background: #dee9f3;
+	border:solid; 
+	margin-top:0em;
+	margin-right: 1em;
 	z-index:3;
 }
 
 .public_event_section{
 	padding:.5em;
-        margin-top:-14em;
 	max-width: 40em;
-        margin-left:2em;
-        min-width:30em;
-        min-height: 38em;
+	margin-left:2em;
+	min-width:30em;
+	min-height: 38em;
 	margin-bottom: 1em;
-/* 	background: lightblue; */
-
 }
 
  .information_section{
 	padding:.5em;
-	margin-right: 10em;
-        margin-top: 2em;
-        margin-left:42em;
-        display:block;
-         width: 10em;
-        height: 5em;
-        background:white;
-        border-image:  url('img_style/page_bg.jpg');
-       
-        
-/* 	background: yellow; */
+	margin-left: 5em;
+	display:block;
+	width: 40em;
+	height: 8em;
+	background:white;
+	/* border-image:  url('img_style/page_bg.jpg'); */
 }
 
 #login_form{
@@ -62,13 +53,15 @@ label {
 	border:0em;
 	position: absolute;
 	right: 0em;
-	top: 0em;
-	min-width:33em;
+	top: 2em;
+	min-width:30em;
+	background: #dee9f3;
 }
 
 #login_form ul {
 	list-style-position:outside; 
 	list-style-type: none;
+	padding:0em;
 }
 
 #login_form li {
