@@ -25,7 +25,7 @@
 <script>
 
  //setTimeout('initialize()',2000);
-		
+
 $(function(){
 	$('.card').show('slide', {direction: "up"}, 700);
 
@@ -34,42 +34,42 @@ $(function(){
 		var event_id = $(this).attr('rel');
 		// alert(event_id);
 		var datastring = "event_id="+event_id;
-		
+
 		$.ajax({
 			type: "POST",
-			url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=save_event", 
+			url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=save_event",
 			data: datastring,
 			success: function(response){
 				var results = JSON.parse(response);
 				console.log(results);
 				var status = results['success'];
 				var message = results['message'];
-				
+
 				if(status === 'true') {
 					$('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
 					$('.error').fadeOut(2000).hide(); //If showing error, fade out
-				} 
+				}
 				else {
 					$('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
 					$('.success').fadeOut(2000).hide();
 				}
 			}
 		});
-		
+
 		return false;
 	});
-        
+
 	  //Capture the attendance and update the table : this ajax request will send the data to event_interactions.php
 	$(".attending_radio").change(function() {
 		var event_id = $(this).attr('rel');
-		
+
 		if(this.checked) {
 			var datastring = "attending=true&event_id="+event_id;
-		} 
+		}
 		else {
 			var datastring = "attending=false&event_id="+event_id;
 		}
-		
+
 		console.log(datastring);
 		$.ajax({
 			type: "POST",
@@ -80,18 +80,18 @@ $(function(){
 				console.log(results);
 				var status = results['success'];
 				var message = results['message'];
-				
+
 				if(status === 'true') {
 					$('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
 					$('.error').fadeOut(2000).hide(); //If showing error, fade out
-				} 
+				}
 				else {
 					$('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
 					$('.success').fadeOut(2000).hide();
 				}
 			}
 		});
-		
+
 		return false;
 	});
 });
@@ -103,7 +103,7 @@ function initialize() {
 	var zip = $(".zipcode").attr('rel');
 	var event_id = $(".event_id").attr('rel');
 	var map_canvas = "map_canvas_"+event_id;
-	
+
 	console.log("event_id is " + event_id);
 	console.log("zipcode is " + zip);
 	console.log("map canvas is " + map_canvas);
@@ -120,9 +120,9 @@ function initialize() {
 				zoom: 9,
 				center: new google.maps.LatLng(lat,lng)
 			};
-		
+
 			var map = new google.maps.Map(document.getElementById(map_canvas),mapOptions);
-			
+
 			map.setCenter(results[0].geometry.location);
 			var center = map.getCenter();
 			google.maps.event.trigger(map, 'resize');
@@ -131,68 +131,62 @@ function initialize() {
 				map: map,
 				position: results[0].geometry.location
 			});
-		
-		} 
+
+		}
 		else {
 			// alert("Geocode was not successful for the following reason: " + status);
 		}
 	});
 }
 </script>
-    <?php      
-      
-    include_once ('includes/header.inc.php');
-    include('includes/navigation.inc.php'); ?>
-        
-  <div class="content leftmenu">      
-        
-     <div class="colright">
-         <div class="col1">
-                <!-- Left Column start -->
-                <?php include('includes/left_column.inc.php'); ?>			
+<?php
 
-                <!-- Left Column end -->
-        </div>
-        <div class="col2">
-            <!-- Middle Column start -->
-            <style>img {width: 160px;}</style> 
-            
-             <span class="success" style="display:none;"></span>
-            <span class="error" style="display:none;">Please enter some text</span>
-         
-            <h2>Upcoming events in your area!</h2>
-          <?php  
-          // front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
-             $results = retrieve_future_event($user_id);  
-              if(($results))
-                {
-                   $i =0;
-                     foreach ($results as $r) 
-                      {
-                          //defined in includes/constants/card_print.php
-                             print_event_card($r);
-                      }
-                } else
-              { ?>
-                        <div class="back">
-                            <h2>No upcoming events found! </h2>
-                            Add an event <a href="userProfile.php">here</a>
-                        </div>
-        <?php }  
-        $i++;
-?>
-                    
-                
-        </div>   <!-- end of col2-->                   
-    </div>  
-                              
- </div>
+include_once ('includes/header.inc.php');
+include('includes/navigation.inc.php'); ?>
 
+<div class="content leftmenu">
+	<div class="colright">
+		<div class="col1">
+			<!-- Left Column start -->
+			<?php include('includes/left_column.inc.php'); ?>
+
+			<!-- Left Column end -->
+		</div>
+		
+		<div class="col2">
+			<!-- Middle Column start -->
+			<style>img {width: 160px;}</style>
+			
+			<span class="success" style="display:none;"></span>
+			<span class="error" style="display:none;">Please enter some text</span>
+			
+			<h2>Upcoming events in your area!</h2>
+			<?php
+			// front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
+			$results = retrieve_future_event($user_id);
+			// if future events are found for the user, print an event card for each event found
+			if($results) {
+				foreach ($results as $r) {
+					// defined in includes/constants/card_print.php
+					print_event_card($r);
+				}
+			}
+			else {
+			?>
+				<div class="back">
+					<h2>No upcoming events found! </h2>
+					Add an event <a href="userProfile.php">here</a>
+				</div>
+			<?php 
+			}
+			?>
+		
+		</div>   <!-- end of col2-->
+	</div>
 </div>
 
 	<div id="footer">
-	<?php include('includes/footer.inc.php'); ?>
+		<?php include('includes/footer.inc.php'); ?>
 	</div>
 </body>
 </html>
-    

@@ -17,7 +17,7 @@ function print_chef_card($chef_info_array) {
 	// $zipcode = $chef_info_array['zipcode'];
 
 	//get the chef's profile picture
-	$profile_picture = $chef_info_array['profile_picture']; 
+	$profile_picture = $chef_info_array['profile_picture'];
 	$media_loc_profile = htmlspecialchars($profile_picture);
 	$media_loc_profile = PICTURE_LOCATION . $media_loc_profile;
 
@@ -33,31 +33,31 @@ function print_chef_card($chef_info_array) {
 
 		<table class="foods_table">
 		<tbody class="foods_table">
-				<?php 
+				<?php
 				// print foods for the selected chef
 				$foods_array = get_foods_by_chef($chef_id);
-				 
+
 				// uncomment below to debug
 				/*	echo "<br> get_foods_by_chef array is: <br>";
 				print_r($foods_array);
 				echo "<br>"; */
-				
+
 				if ($foods_array){
 					foreach ($foods_array as $row_food) {
-						
+
 						$food_id = $row_food['food_id'];
-						
+
 						$food_picture = $row_food['food_picture'];
 						$media_loc = htmlspecialchars($food_picture);
 						$media_loc = PICTURE_LOCATION . $media_loc;
 						?>
-						
+
 						<tr class="foods_table">
 							<td class="foods_table">
 							<?php echo $row_food['food_name'] . " - " . $row_food['food_price']; ?><br><br>
 							<?php echo $row_food['food_description']; ?><br><br><br><br>
 							</td>
-							
+
 							<td><img class="gridimg2" src="<?php echo $media_loc;?>" style="height:8em; float:right;" /></td>
 
 						</tr>
@@ -65,17 +65,17 @@ function print_chef_card($chef_info_array) {
 				<?php
 					}
 				}
-				else{ 
+				else{
 				?>
 					<tr class="foods_table">
 						<td class="foods_table">This chef has not specified any foods</td>
 					</tr>
-				<?php 
+				<?php
 				}
 				?>
 		</tbody>
 		</table>
-		
+
 		<button class="flip" style="position:absolute;bottom:0;right:0;">Flip Card</button>
 	</div>
 
@@ -105,26 +105,26 @@ function print_chef_card($chef_info_array) {
 		<div class="br">
 			<button class="save_chef" rel="<?php echo $chef_id; ?>" type="submit">Save Chef</button>
 			<p style="font-weight:bold;">
-			<?php 
+			<?php
 				if ($delivery_available == "yes")
-					echo "Delivery available"; 
+					echo "Delivery available";
 				else echo "Delivery not available";
 				echo "<br><br>";
-				
+
 				if ($pickup_available == "yes")
-					echo "Pickup available"; 
+					echo "Pickup available";
 				else echo "Pickup not available";
 				echo "<br><br>";
-				
+
 				echo "Payments accepted:" . $payments_accepted;
 				echo "<br><br>";
-				
+
 				if ($taking_offline_order == "yes")
-					echo "Offline orders available"; 
+					echo "Offline orders available";
 				else echo "Offline orders not available";
 			?>
 			</p>
-			
+
 		</div>
 	<button class="flip" style="position:absolute;bottom:0;right:0;">Flip Card</button>
 	</div>
@@ -135,7 +135,7 @@ function print_chef_card($chef_info_array) {
 
 /* Function to print event cards - accepts an array of event information */
 function print_event_card ($r) {
-	global  $link;
+	global $link;
 
 	$event_id = $r['event_id'];
 	$zipcode = $r['zipcode'];
@@ -151,15 +151,14 @@ function print_event_card ($r) {
 	$email = $r['email'];
 	$phone = $r['phone'];
 
-   
 	$attending_radio = "attending_radio_".$event_id;
 	$map_canvas = "map_canvas_".$event_id;
 	$save_event = "saveevent_".$event_id;
-	
+
 	$q3 = "SELECT image_location FROM " . EVENT_PICTURE . " WHERE event_id = ".$event_id. " LIMIT 1";
 	$query = mysqli_query($link,$q3) or (die(mysqli_error($link)));
 	$row_image = mysqli_fetch_row($query);
-	
+
 	// get image for event, if event image isn't specified, use a default image
 	$image = $row_image[0];
 	if (empty($image)){
@@ -184,24 +183,24 @@ function print_event_card ($r) {
 		<div class="back">
 			<input type="hidden" class='event_id' rel="<?php echo $event_id; ?>" name ='event_id'></input>
 			<input type="hidden" class="zipcode" rel="<?php echo $zipcode; ?>"  name="zipcode"></input>
-			
+
 			<div class="event_tl">
 				<p class="event_name"><?php echo $event_name; ?></p>
 				<p class="event_date">on: <?php echo $event_date; ?></p>
-				
-				<p class="venue_location"><?php 
+
+				<p class="venue_location"><?php
 				echo $venue_name . "<br>";
 				echo $venue_address . "<br>";
 				echo $city . ", " . $state . " " . $zipcode; ?>
 				</p>
 				<p class="event_description"><?php echo $event_desc; ?></p>
-				
+
 			</div>
 			<div class="event_bl">
 				<p class="contact_info">For more information, contact:<br>
 				<?php echo $first_name . " " . $last_name . "<br>" . $email . "<br>" . $phone; ?></p>
 			</div>
-			
+
 			<div class="event_right">
 				<p class="image_holder"><img class="event_image" src="<?php echo $media_loc;?>" /></p>
 				<br>
@@ -209,16 +208,16 @@ function print_event_card ($r) {
 				<button class="save_event" rel="<?php echo $event_id; ?>" id="<?php echo $save_event;?>" type="button" name="save_event">Save</button>
 			</div>
 			<button type="button" class="flip" style="position:absolute;bottom:1%;right:1%;">Flip Card</button>
-			
-			
+
+
 		</div>
-		
+
 		<div class="front">
 			<p class="event_name"><?php echo $event_name; ?></p>
 			<p class="event_date">on: <?php echo $event_date; ?></p>
-			
-			
-			<p><?php 
+
+
+			<p><?php
 			// adapt text to the number of attendees for the event
 			$number_attendees = count($user_list);
 			echo $number_attendees;
@@ -230,7 +229,7 @@ function print_event_card ($r) {
 				echo " friend attending:";
 				break;
 			default:
-				echo " friends attending:"; 
+				echo " friends attending:";
 				break;
 			}
 			echo "<br>";
@@ -252,19 +251,19 @@ function print_event_card ($r) {
 			</div> -->
 			<div class="map_canvas"  style="background:lightgrey; position:absolute; top:7em; left:50%; right:1em; padding:.5em; margin:.25em;">
                             Placeholder for Google Map
-                        
+
                         </div>
-			
+
 			<button class="flip" type="button" style="position:absolute;bottom:0;right:0;">Flip Card</button>
 		</div>
 	</div>
 	<?php
-		 
+
 } // end of event card function
 
 function print_user_manage_events_card($user_id)
 {
-    
+
     $results = get_events($user_id);
     $event_types = get_event_types();
     if($results) {
@@ -281,7 +280,7 @@ function print_user_manage_events_card($user_id)
                     $state = $r['state'];
                     $zipcode = $r['zipcode'];
                     $event_type = $r['event_type'];
-                    $event_scope = $r['event_scope'];					
+                    $event_scope = $r['event_scope'];
 
                     $event_image = get_event_picture($event_id);
                     $event_image_loc = htmlspecialchars($event_image);
@@ -293,7 +292,7 @@ function print_user_manage_events_card($user_id)
 
                     if($event_attendance !=NULL) {
                             $count=$event_attendance;
-                    } 
+                    }
                     else {
                             $count = "No attandance!";
                     }
@@ -370,7 +369,7 @@ function print_user_manage_events_card($user_id)
                                             <p class="card_name"><?php echo $event_name; ?></p>
                                             <p class="event_date">on: <?php echo $event_date; ?></p>
 
-                                            <p class="venue_location"><?php 
+                                            <p class="venue_location"><?php
                                             echo $venue_name . "<br>";
                                             echo $venue_address . "<br>";
                                             echo $city . ", " . $state . " " . $zipcode; ?>
@@ -385,18 +384,18 @@ function print_user_manage_events_card($user_id)
                                             <p class="event_scope">Event Scope: <?php echo $event_scope; ?></p>
                                     </div>
                                     <div class="event_edit_bottom">
-                                            <button type="button" class="flip">Edit Event</button>	
+                                            <button type="button" class="flip">Edit Event</button>
                                     </div>
 
                             </div>
     <!-- END Event information display section -->
                     </div>
-            <?php 
+            <?php
             }
     }
     else {
             echo "<h2> No events found!. Add one now!</h2>";
     }
-    
+
 }
 ?>

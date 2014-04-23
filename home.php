@@ -96,7 +96,7 @@ $(function(){
 
 	// $(".front").hide();
 	$(".attending_radio").change(function() {
-			var event_id = $(this).attr('rel');
+		var event_id = $(this).attr('rel');
 		if(this.checked) {
 			var datastring = "attending=true&event_id="+event_id;
 			console.log(datastring);
@@ -106,7 +106,6 @@ $(function(){
 				url: "<?php echo BASE; ?>/event_interactions.php?cmd=attending",
 				data: datastring,
 				success: function(response) {
-					console.log(response);
 					$('.success').fadeIn(2000).show().html('Your attendence is counted!').fadeOut(6000); //Show, then hide success msg
 					$('.error').fadeOut(2000).hide(); //If showing error, fade out   
 				}
@@ -117,7 +116,6 @@ $(function(){
 		else {
 			//we may want to add another option called 'may be attending' in that case, we need to write the code here
 			var datastring = "attending=false&event_id="+event_id;
-			console.log(datastring);
 				
 			$.ajax({
 				type: "POST",
@@ -133,7 +131,6 @@ $(function(){
 			return false;
 		}
 	});
-
 });
 </script>
 <body>      

@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Asynchronous Loading</title>
-    <meta name="Google map" content="initial-scale=1.0, user-scalable=no">
-
-    <script type=text/javascript src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'></script>
-    <meta charset="utf-8">
+<script type=text/javascript src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'></script>
     
     <?php
        
@@ -107,11 +100,9 @@ function loadScript() {
 onload = setTimeout('initialize()',2000);
 
     </script>
-  </head>
+	
   <body style="width:100%; height: 100%">
      
       <div id="map-canvas" >
          
       </div>
-  </body>
-</html>

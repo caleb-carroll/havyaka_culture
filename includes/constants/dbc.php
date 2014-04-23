@@ -1,9 +1,8 @@
-
 <?php
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
 
-// information about the SQL database -- make sure the database on your end matches the dataase name, the user and the password
+// information about the SQL database -- make sure the database on your end matches the database name, the user and the password
 define('DB_HOST', "localhost");
 define('DB_USER', "hci573");
 define('DB_PASS', "hci573");
@@ -21,7 +20,6 @@ define ("PICTURE_LOCATION", BASE . "/pictures/");
 
 //tables
 define ("PSTORE","community_connect_pstore");
-
 define ("CHEF", "community_connect_chef");
 define ("COMMUNITY_TYPE", "community_connect_community");
 define ("EVENT", "community_connect_event");
@@ -36,7 +34,10 @@ define ("VENUE", "community_connect_venue");
 define ("ATTENDANCE","community_connect_event_attendance");
 define ("EVENT_RECURRENCE","community_connect_event_recurrence");
 
+// the email address used for sending activation emails
 define ("GLOBAL_EMAIL", "connect.community.culture@gmail.com");
+
+// whether we require users to activate their accounts or not
 define("REQUIRE_ACTIVIATION","0");
 
 //our keys -- ideally, those would be stored on a separate machine or server
