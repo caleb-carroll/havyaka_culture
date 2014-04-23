@@ -58,13 +58,23 @@ if($_GET){
 			LOAD DATA INFILE 'C:/wamp/www/havyaka_culture/dummy_data/user.csv'
 			INTO TABLE user 
 			*/
+                        if($name == 'community_connect_event')
+                        {
+                            $dummy_sql = "LOAD DATA INFILE '" . ROOT . "/dummy_data/$name.csv'
+                            INTO TABLE $name
+                            FIELDS TERMINATED BY ','
+                            OPTIONALLY ENCLOSED BY '\"' 
+                            LINES TERMINATED BY '\\n'
+                            (@event_date)
+                            SET event_date = DATE_FORMAT(STR_TO_DATE(@event_date, '%m/%d/%Y'),'%Y-%m-%d');";  
+                        } else {
 
  			$dummy_sql = "LOAD DATA INFILE '" . ROOT . "/dummy_data/$name.csv'
 			INTO TABLE $name
 			FIELDS TERMINATED BY ','
 			OPTIONALLY ENCLOSED BY '\"' 
 			LINES TERMINATED BY '\\n';";
-                        
+                        }
 			$install = mysqli_query($link, $dummy_sql)  /*or die(mysql_error()) */;
 			if($install){
 				echo "<p>Dummy data inserted into " . $table[$i] . " successfully<p>";

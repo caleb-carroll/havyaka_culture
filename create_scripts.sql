@@ -184,7 +184,7 @@ CREATE INDEX `fk_community_id_idx` ON `hci573`.`community_connect_event` (`commu
 
 CREATE INDEX `fk_event_recurrence_id_idx` ON `hci573`.`community_connect_event` (`e_recurring_id` ASC);
 
-
+Update `community_connect_event` set event_date = DATE_FORMAT(STR_TO_DATE('event_date', '%m/%d/%Y'),'%m-%d-%Y');
 -- -----------------------------------------------------
 -- Table `hci573`.`community_connect_chef`
 -- -----------------------------------------------------
