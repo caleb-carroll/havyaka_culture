@@ -36,7 +36,7 @@ if($_GET){
 	
 	/* Adds dummy data to our database for testing purposes. */
 	if ($_GET['cmd'] == 'dummy_data'){
-		$table = array(LOCATION, COMMUNITY_TYPE, USERS, CHEF, EVENT_TYPE, FOOD, VENUE, EVENT_RECURRENCE, EVENT, FOOD_CHEF_DETAILS, USER_SAVED_INFO, ATTENDANCE, EVENT_PICTURE);
+		$table = array(LOCATION, COMMUNITY_TYPE, USERS, VENUE, EVENT_TYPE, EVENT_RECURRENCE, EVENT, CHEF,  FOOD, FOOD_CHEF_DETAILS, EVENT_PICTURE, USER_SAVED_INFO, ATTENDANCE);
 		
 		$select = mysqli_select_db($link, DB_NAME);
 		$q = "INSERT INTO ".PSTORE. " (p_id,p_email,p_pass) VALUES(1,AES_ENCRYPT('connect.community.culture@gmail.com','ae4bca65f3283fe26a6d3b10b85c3a308'),AES_ENCRYPT('connectcommunity1','ae4bca65f3283fe26a6d3b10b85c3a308'));";
@@ -63,9 +63,9 @@ if($_GET){
 			INTO TABLE $name
 			FIELDS TERMINATED BY ','
 			OPTIONALLY ENCLOSED BY '\"' 
-			LINES TERMINATED BY '\n';";
-			
-			$install = mysqli_query($link, $dummy_sql) /* or die(mysql_error()) */;
+			LINES TERMINATED BY '\\n';";
+                        
+			$install = mysqli_query($link, $dummy_sql)  /*or die(mysql_error()) */;
 			if($install){
 				echo "<p>Dummy data inserted into " . $table[$i] . " successfully<p>";
 			}
