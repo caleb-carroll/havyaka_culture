@@ -328,7 +328,7 @@ if($_POST and $_GET)
 		else {
 			$file_handler = $_FILES["file"];
 			$picture = store_image($file_handler);
-			$picture_loc = PICTURE_LOCATION .$picture;
+			$picture_loc = $picture;
 			if($_GET['cmd'] == 'add_picture') {
 				//call the update_user_info function defined in sql_constants.php
 				$profile_update = update_user_info($user_id, NULL, NULL, NULL, NULL, $picture_loc);
