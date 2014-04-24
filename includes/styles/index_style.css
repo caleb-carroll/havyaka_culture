@@ -11,17 +11,19 @@ label {
 .page_content_holder{
 	position:relative;
 	max-width: 75em;
+	padding-top: 1em;
 	margin-left:auto;
 	margin-right:auto;
+	background: #eee;
 }
  .registration_section{
 	position: absolute; 
-	top: 0em; 
+	top: 1em; 
 	right: 0em; 
 	min-width: 4em;
 	max-height:30em;
 	padding:.5em;
-	background: #dee9f3;
+	background: #eee;
 	border:solid; 
 	margin-top:0em;
 	margin-right: 1em;

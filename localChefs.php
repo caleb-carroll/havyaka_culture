@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
 <head>
 	<title>Community Resource</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
@@ -26,7 +26,7 @@
 ?>
 <input style="display:none" type="text" id="user_id" value="<?php echo $user_id ?>">
 <script>
-
+ 
 $(function() {
 	$(".save_chef").click(function() {
 		var chef_id = $(this).attr('rel');
@@ -42,15 +42,16 @@ $(function() {
 				console.log(response);
 				var results = JSON.parse(response);
 				
-                                var status = results['success'];
-                                var message = results['message'];
-                                if(status === 'true') {
+				var status = results['success'];
+				var message = results['message'];
+				if(status === 'true') {
 				$('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
 				$('.error').fadeOut(2000).hide(); //If showing error, fade out
-                            } else {
-                                $('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
-				$('.success').fadeOut(2000).hide();
-                            }
+				} 
+				else {
+					$('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+					$('.success').fadeOut(2000).hide();
+				}
 			}
 		});
 		
@@ -63,9 +64,9 @@ $(function() {
 
 <body>
 
-      <?php
-          include_once ('includes/header.inc.php');
-        include('includes/navigation.inc.php'); 
+	<?php
+	include_once ('includes/header.inc.php');
+	include('includes/navigation.inc.php'); 
 
 	// $firstname = $_SESSION['firstname'];
 	// front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
@@ -81,12 +82,12 @@ $(function() {
 		</div>
 		
 		<div class="col2">
-                       <span class="success" style="display:none;"></span>
-                     <span class="error" style="display:none;">Please enter some text</span>
+			<span class="success" style="display:none;"></span>
+			<span class="error" style="display:none;">Please enter some text</span>
 			<!-- Middle Column start -->
 			<style>img {width: 160px;}</style> 
 			<div id ="chef_holder">
-				<h2>Local chefs in your area!</h2>
+				<h1>Local chefs in your area</h1>
 				
 				<?php
 				// This section gets all chefs for the appropriate food types, then prints them into a card
@@ -106,7 +107,6 @@ $(function() {
 			</div>
 		</div>   <!-- end of col2-->
 	</div>
-                  
 </div>
 
 <?php include('includes/footer.inc.php'); ?>

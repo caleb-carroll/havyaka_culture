@@ -1,6 +1,6 @@
 .chef_holder {
-	background-color:lightgrey;
-        
+	display:inline-block;
+	width: 100%
 }
 
 table {
@@ -26,7 +26,10 @@ table {
 }
 
 .gridimg2 {
-	width:8em;
+	width:auto;
+	height:auto;
+	max-height: 12em;
+	max-width: 20em;
 	float:right;
 }
 
@@ -42,13 +45,6 @@ table {
 	display:inline-block; 
 	padding-left: 2em;
 	margin-top: 0em;
-}
-
-.card_title {
-	font-weight:bold;
-	font-size:3em;
-	margin-bottom: 0em;
-	margin-top: .5em;
 }
 
 /* 

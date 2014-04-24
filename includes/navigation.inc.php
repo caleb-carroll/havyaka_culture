@@ -1,7 +1,3 @@
-<head>
-	<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
-</head>
-
 <?php
 $names = array("Home","Local Events","Local Chefs","My Dashboard","Logout");
 $links = array("home.php","localEvents.php","localChefs.php","userProfile.php","logout.php");

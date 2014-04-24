@@ -99,7 +99,7 @@ function print_chef_card($chef_info_array) {
 			<h3>About chef:</h3>
 			<p><?php echo $about_chef; ?></p>
 			<h3>Favorite Dish:</h3>
-			<img class="gridimg2" src="http://localhost/havyaka_culture/pictures/3.jpg" style="width:80%" />
+			<img class="gridimg2" src="http://localhost/havyaka_culture/pictures/1.jpg" />
 		</div>
 
 		<div class="br">
@@ -185,7 +185,7 @@ function print_event_card ($r) {
 			<input type="hidden" class="zipcode" rel="<?php echo $zipcode; ?>"  name="zipcode"></input>
 
 			<div class="event_tl">
-				<p class="event_name"><?php echo $event_name; ?></p>
+				<p class="event_name card_title"><?php echo $event_name; ?></p>
 				<p class="event_date">on: <?php echo $event_date; ?></p>
 
 				<p class="venue_location"><?php

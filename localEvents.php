@@ -155,12 +155,11 @@ include('includes/navigation.inc.php'); ?>
 		
 		<div class="col2">
 			<!-- Middle Column start -->
-			<style>img {width: 160px;}</style>
 			
 			<span class="success" style="display:none;"></span>
 			<span class="error" style="display:none;">Please enter some text</span>
 			
-			<h2>Upcoming events in your area!</h2>
+			<h1>Upcoming events in your area</h1>
 			<?php
 			// front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
 			$results = retrieve_future_event($user_id);

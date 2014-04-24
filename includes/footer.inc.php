@@ -20,7 +20,7 @@
 			<?php
 		}
 		?>
+	<br><p style="text-align:center;">(c) 2014 Community Connect</p>
 	</ul>
 	
-	<br><center><h4>(c) 2014 Community Connect</h4></center>
 </div>

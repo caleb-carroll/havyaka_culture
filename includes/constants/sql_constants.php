@@ -126,12 +126,8 @@ function store_image($file_handler) {
 			// return false;
 		}
 		else {
-		/*	Uncomment to debug
-			echo "Upload: " . $file_handler["name"] . "<br>";
-			echo "Type: " . $file_handler["type"] . "<br>";
-			echo "Size: " . ($file_handler["size"] / 1024) . " kB<br>";
-			echo "Temp file: " . $file_handler["tmp_name"] . "<br>"; */
-			$img_name = str_replace(" ", "", $file_handler["name"]); //remove spaces from the filename
+			//remove spaces from the filename
+			$img_name = str_replace(" ", "", $file_handler["name"]); 
 
 			if (file_exists($file_location."/".$img_name)) {
 				$date = new DateTime();
@@ -142,7 +138,6 @@ function store_image($file_handler) {
 			}
 			else {
 				$new_file_location = $file_location."/".$img_name;
-				//  $new_file_location = $file_location."/".$img_name;
 				move_uploaded_file($file_handler["tmp_name"], $new_file_location);
 			}
 			return $img_name;
@@ -166,7 +161,8 @@ function send_message($email_to,$msg_subject, $message) {
 	//$row = mysqli_fetch_assoc($result);
 
 	//$pw = $row['password'];
-        $pw = "connectcommunity1";
+	$pw = "connectcommunity1";
+	
 	//we use swift's email function
 	$email_to = $email_to; $email_from=GLOBAL_EMAIL;$password = $pw; $subj = $msg_subject;
 	$transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, "ssl")
@@ -239,7 +235,7 @@ function generate_key($length = 7) {
 // Function to get the logged in users location, city name and state
 // is required display all the local events, chef details for the user
 function get_loggedin_user_location($user_id) {
-    global $link;
+	global $link;
 	$q1 = "SELECT e_loc_id FROM " . USERS . " WHERE  user_id = ".$user_id;
 	$query = mysqli_query($link,$q1) or (die(mysqli_error($link)));
 
@@ -430,13 +426,16 @@ function update_user_info($user_id, $first_name, $last_name, $email, $phone, $pr
 function insert_zipcode_location ($zipcode) {
 	global $link;
 
+	// query to see if the zipcode exists
 	if($loc_query = mysqli_query($link,"SELECT e_loc_id FROM ".LOCATION. " WHERE zipcode = $zipcode LIMIT 1") or die(mysqli_error($link))) {
+		// if the zipcode does not exist, insert it into the database
 		if(mysqli_num_rows($loc_query) == 0) {
 			$q_loc = mysqli_query($link, "INSERT INTO " . LOCATION . " (zipcode) VALUES ('$zipcode')") or die(mysqli_error($link));
 			//get the last inserted id from the location table
 			$e_loc_id = mysqli_insert_id($link);
 		}
 		else {
+			
 			$row = mysqli_fetch_assoc($loc_query);
 			$e_loc_id = $row['e_loc_id'];
 		}

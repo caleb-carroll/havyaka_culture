@@ -1,4 +1,10 @@
 /* Header and footer styles */
+#footer{
+	position: relative;
+	bottom: 0;
+	height: 0;
+	width: 100%;
+}
 
 #footer ul {
 	clear:left;
@@ -46,7 +52,7 @@
 	float:center;
 	width:100%;
 	margin-bottom: 2px;
-	min-height: 10em;
+	min-height: 8em;
 	margin-top: 0;
 	display:block;
 	max-width: 75em;

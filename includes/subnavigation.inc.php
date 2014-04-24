@@ -1,7 +1,5 @@
 <!-- This is the sub navigation menu's for Dashboard only. User specific, profile page, saved information and manage events is displayed-->
-<link rel="stylesheet" type="text/css" href="includes/styles/style.css"/>
 <?php
-
 // if the user is logged in and display related navigation tabs, else display the default tabs.
 if(isset($_SESSION['user_id'])) {
 	$names = array("My profile","My saved Info","Manage my events");

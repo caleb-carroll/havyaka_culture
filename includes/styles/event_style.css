@@ -30,13 +30,6 @@
 	/* background: lightblue; */
 }
 
-.event_name{
-	font-weight:bold;
-	font-size:2.5em;
-	margin-bottom: 0em;
-	margin-top: .5em;
-}
-
 .event_date{
 	display:inline-block;
 	padding-left: 2em;
