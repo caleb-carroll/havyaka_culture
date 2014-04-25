@@ -198,7 +198,7 @@ $msg = NULL;
 				$results = fetch_food_event_picture();
 				foreach ($results as $r)
 				{
-					$food_image = $r['food_picture']; 
+					$food_image = $r['food_picture'];                                         
 					$food_image_loc = htmlspecialchars($food_image);
 					$food_image_loc = PICTURE_LOCATION . $food_image_loc;
 				?>
