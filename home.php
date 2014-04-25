@@ -43,7 +43,8 @@ $(function(){
 	$("#information_dialog").dialog({
 		autoOpen: true,
 		height: 500,
-		width: 650
+		width: 650,
+		modal: true
 	});
 	
 	$(".save_chef").click(function() {

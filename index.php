@@ -40,9 +40,8 @@ function get_city_state(zipcode) {
     
 $(document).ready(function(){
 	$('#login_name').focus();
-        
- 
 }); 
+
 function refresh_content() {
 	$('.card').fadeOut(700, function(){
 		$(".public_event_refresh").load('public_event.php');

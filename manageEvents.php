@@ -48,17 +48,24 @@ function getCityState(results,zipcode) {
 
 
 	var datastring = "zipcode="+zipcode+ "&city=" +city+"&state="+state;
-	 $.ajax({
+	$.ajax({
 		type: "POST",
 		url: "<?php echo BASE; ?>/includes/ajax_functions/updateaddress.php?cmd=updatecitystate",
 		data: datastring,
 		success: function(response){
-			console.log(response);
+			// console.log(response);
 		}
 	});
 
 	return false;
 }
+
+function compIsType(t, s) { 
+	for(z = 0; z < t.length; ++z) 
+		if(t[z] == s)
+			return true;
+	return false;
+} 
 
 $(function(){
 	$("#create_event_div").hide();
@@ -202,16 +209,17 @@ $(function(){
 
 				var results = JSON.parse(response);
 				console.log(results);
-                                var status = results['success'];
-                                var message = results['message'];
+				var status = results['success'];
+				var message = results['message'];
 
-                               if(status === 'true') {
-                                   $('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
-                                   $('.error').fadeOut(2000).hide(); //If showing error, fade out
-                               } else {
-                                   $('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
-                                   $('.success').fadeOut(2000).hide();
-                              }
+				if(status === 'true') {
+					$('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+					$('.error').fadeOut(2000).hide(); //If showing error, fade out
+				} 
+				else {
+					$('.error').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
+					$('.success').fadeOut(2000).hide();
+				}
 
 				$('#create_event_div').hide('slide', {direction: "up"}, 900);
 				$("#create_event_button").fadeIn(700);
