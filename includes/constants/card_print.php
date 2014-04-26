@@ -328,11 +328,11 @@ function print_user_manage_events_card($user_id)
                                     </div>
                                     <div class="event_edit_right">
                                             <p class="image_holder"><img class="card_image" style="max-height:20%" src="<?php echo $event_image_loc; ?>" /></p>
-                                                    <form action="<?php echo BASE;?>/manageEvents.php?cmd=add_event_picture" method="post" enctype="multipart/form-data">
+                                                    <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event_picture" method="post" enctype="multipart/form-data">
                                                             <input style="display:none" type="text" name="event_id" value="<?php echo $event_id ?>">
                                                             <label for="file">Filename:</label>
                                                             <input type="file" name="file" id="file_event" style="max-width:100%">
-                                                            <input type="submit" name="submit" value="Update Image">
+                                                            <input type="submit" name="submit" value="Update">
                                                     </form>
 
                                             <label for="event_type">Event Type</label>

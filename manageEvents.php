@@ -246,8 +246,7 @@ $err=NULL;
 if($_POST and $_GET){
 	// if the user is adding a picture, add it to the file system and reference in user table
 	if ($_GET['cmd'] == 'add_picture' || $_GET['cmd'] == 'add_event_picture'){
-		
-		print_r($_FILES);
+		echo 'inside manage events';
 		if ($_FILES["file"]["error"] > 0) {
 			echo "Error: " . $_FILES["file"]["error"] . "<br>";
 		}
