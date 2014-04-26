@@ -13,8 +13,7 @@
 <?php
      
 require_once 'includes/constants/sql_constants.php';
-secure_page();
-$user_id = $_SESSION['user_id'];
+
 
 		$msg = NULL;
                 $err=NULL;
@@ -35,7 +34,6 @@ $user_id = $_SESSION['user_id'];
                  $message = " Message from the website contact form: \n
                          \n\n\n
                          Username : .$user_name. \n\n
-                          User id :  .$user_id. \n\n
                           User email : .$email.\n\n
                           user phone: .$user_phone.\n\n
                           Message:  .$message. \n\n                         
@@ -68,13 +66,21 @@ $user_id = $_SESSION['user_id'];
 <body>
   <?php
           include_once ('includes/header.inc.php');
-        include('includes/navigation.inc.php'); ?>
+         session_start();
+          if($_SESSION){
+             include('includes/navigation.inc.php'); 
+          }
+             ?>
         
 <div class="content leftmenu">
         <div class="colright">
                 <div class="col1">
                         <!-- Left Column start -->
-                        <?php include('includes/left_column.inc.php'); ?>
+                     <?php 
+                        if($_SESSION){
+                        include('includes/left_column.inc.php'); 
+                        }
+                        ?>
                         <!-- Left Column end -->
                 </div>
 <div class="col2">

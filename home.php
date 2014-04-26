@@ -149,7 +149,7 @@ list($num_login) = mysqli_fetch_row($q);
 
 //if the user is logged for first 2 times or he is landing in the home page for the first time, will display the information dialog
 //($num_login <= 2) && : add this to below if statement in the future.
-if(($_SESSION['homepage'] == 1)) {
+if(($_SESSION['homepage'] == 1) && ($num_login == 1)) {
 ?>
 <div id ="information_dialog" title = "Welcome to Community Connect!">
 	<p>

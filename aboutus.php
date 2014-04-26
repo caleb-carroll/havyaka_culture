@@ -28,7 +28,12 @@ if($_SESSION){
 	<div class="colright">
 		<div class="col1">
 			<!-- Left Column start -->
-			<?php include('includes/left_column.inc.php'); ?>
+                        
+			<?php 
+                        if($_SESSION){
+                        include('includes/left_column.inc.php'); 
+                        }
+                        ?>
 			<!-- Left Column end -->
 		</div>
 		

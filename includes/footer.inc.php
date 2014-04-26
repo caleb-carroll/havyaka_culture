@@ -1,8 +1,14 @@
 <!-- This is a footer page, shows about us, faq and contact us -->
 <div id="footer">
 	<?php
-	$names = array("About Us","FAQs","Contact Us");
-	$links = array("aboutus.php","FAQ.php","contactform.php");
+        if($_SESSION){
+               
+            $names = array("Home","About Us","FAQs","Contact Us");
+            $links = array("home.php","aboutus.php","FAQ.php","contactform.php");
+        } else {
+            $names = array("Home","About Us","FAQs","Contact Us");
+            $links = array("index.php","aboutus.php","FAQ.php","contactform.php");
+        }
 	?>
 	<ul>
 		<?php
