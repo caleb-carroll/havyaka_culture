@@ -25,14 +25,14 @@ $(function(){
 		var delete_id = $(this).attr('rel');
 		var delete_type = $(this).attr('rel1');
 		var datastring = "delete_id=" +delete_id+ "&delete_type="+delete_type;
-		// alert(datastring);
+		 alert(datastring);
 		$.ajax({
 			type: "POST",
 			url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=Delete_saved_data",
 			data: datastring,
 			success:function () {
 				// will be dynamically removed from the table
-				var tr_id = "tr_"+delete_id;
+				var tr_id = "tr_"+delete_type+"_"+delete_id;
 				$("#"+tr_id+"").remove();
 				
 				$('.success').fadeIn(2000).show().html('deleted Successfully!').fadeOut(6000); //Show, then hide success msg
@@ -115,7 +115,7 @@ $saved_chef = get_saved_chef($user_id);
 						//Display each of the event details in individual card.
 						foreach($saved_events as $r) {
 						?>
-							<tr id="tr_<?php echo $r['event_id']; ?>">
+							<tr id="tr_event_<?php echo $r['event_id']; ?>">
 								<input type="hidden" id="<?php echo $r['event_id']; ?>" value=""></input>
 
 								<td><b> <center clss="chef_event_name"><h2><?php echo $r['event_name']; ?></h2></center></b><center class="desc">"<?php echo $r['event_desc']; ?>"</center>
@@ -153,7 +153,7 @@ $saved_chef = get_saved_chef($user_id);
 						foreach($saved_chef as $r) {
 							$food_det =  get_foods_of_chef($r['chef_id']);
 							?>
-							<tr id="tr_<?php echo $r['chef_id'];?>">
+							<tr id="tr_chef_<?php echo $r['chef_id'];?>">
 
 								<input type="hidden" id="<?php echo $r['chef_id'];?>" value=""></input>
 
