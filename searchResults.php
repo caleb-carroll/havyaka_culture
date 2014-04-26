@@ -67,8 +67,9 @@ else{
 
 <div id="header">
 	<?php  
-          include_once ('includes/header.inc.php');
-        include('includes/navigation.inc.php'); ?> 
+	include_once ('includes/header.inc.php');
+	include('includes/navigation.inc.php'); 
+	?> 
 </div>
 
 <div class="content leftmenu">
@@ -82,7 +83,7 @@ else{
 			<div>
 				<?php $food_info = get_food_info($food_id); ?>
 				<h1>Chefs that serve <?php echo $food_info['food_name']; ?></h1>
-				<img src="<?php echo PICTURE_LOCATION . $food_info['food_picture']; ?>" style="width:30%">
+				<img src="<?php echo PICTURE_LOCATION . $food_info['food_picture']; ?>" style="max-width:15em; max-height: 15em;">
 			</div>
 			
 			<?php
