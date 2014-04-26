@@ -28,7 +28,7 @@ table {
 .gridimg2 {
 	width:auto;
 	height:auto;
-	max-height: 12em;
+	max-height: 11em;
 	max-width: 20em;
 	float:right;
 }
@@ -62,7 +62,7 @@ tl = top left, br = bottom right, etc
 }
 .bl { 
 	position: absolute; 
-	top: 33%; 
+	top: 40%; 
 	left: 1em; 
 	right: 41%; 
 	bottom: 1em; 

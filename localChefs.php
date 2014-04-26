@@ -36,7 +36,7 @@ $(function() {
 		
 		$.ajax({
 			type: "POST",
-			url: "<?php echo BASE; ?>/chef_interactions.php?cmd=save_chef", 
+			url: "<?php echo BASE; ?>/includes/ajax_functions/chef_interactions.php?cmd=save_chef", 
 			data: datastring,
 			success: function(response) {
 				console.log(response);
