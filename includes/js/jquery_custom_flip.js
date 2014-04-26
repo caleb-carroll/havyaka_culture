@@ -18,4 +18,6 @@ $(function(){
 	$('.flip').click(function(){
 		$(this).parent().closest('.flipper').toggleClass('flipped');
 	});
+	
+	$('.card').show('slide', {direction: "up"}, 700);
 });

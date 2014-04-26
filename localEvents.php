@@ -27,8 +27,6 @@
  //setTimeout('initialize()',2000);
 
 $(function(){
-	$('.card').show('slide', {direction: "up"}, 700);
-
 	// If the user clicks on the save button in the local events page, get the event id, userid and store the details into the table and display the details into the dashboard
 	$(".save_event").click(function() {
 		var event_id = $(this).attr('rel');

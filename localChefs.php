@@ -28,6 +28,7 @@
 <script>
  
 $(function() {
+	
 	$(".save_chef").click(function() {
 		var chef_id = $(this).attr('rel');
 		var user_id = $('#user_id').val();

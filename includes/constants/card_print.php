@@ -22,7 +22,7 @@ function print_chef_card($chef_info_array) {
 	$media_loc_profile = PICTURE_LOCATION . $media_loc_profile;
 
 ?>
-<div class ="card flipper">
+<div class ="card flipper chef_card">
 	<div class="front">
 		<input type="hidden" value=<?php echo $chef_id; ?> ></input>
 		<p style="display:block; position:absolute; top: 1em; left: 1em; font-size:1.5em; font-weight:bold">Foods by <?php echo $first_name . " " .  $last_name; ?></p>

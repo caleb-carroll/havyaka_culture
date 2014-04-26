@@ -93,6 +93,10 @@ http://home.jejaju.com/play/flipCards/simple */
 	display:none;
 }
 
+.chef_card{
+	display:none;
+}
+
 .card_title {
 	font-weight:bold;
 	font-size:3em;
