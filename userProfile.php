@@ -303,8 +303,7 @@ if(!empty($chef_info)) {
 if($_POST and $_GET)
 {
     if ($_GET['cmd'] == 'add_picture'|| $_GET['cmd'] == 'add_food_picture'){
-		$user_id = $user_id = $_SESSION['user_id'];
-                print_r($_FILES);
+		$user_id = $user_id = $_SESSION['user_id'];                
 		if ($_FILES["file"]["error"] > 0) {
 				echo "Error: " . $_FILES["file"]["error"] . "<br>";
 		}

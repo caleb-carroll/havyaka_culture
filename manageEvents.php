@@ -246,8 +246,7 @@ $err=NULL;
 if($_POST and $_GET){
 	// if the user is adding a picture, add it to the file system and reference in user table
 	if ($_GET['cmd'] == 'add_picture' || $_GET['cmd'] == 'add_event_picture'){
-		echo "1";
-		print_r($_FILES);
+		echo 'inside manage events';
 		if ($_FILES["file"]["error"] > 0) {
 			echo "Error: " . $_FILES["file"]["error"] . "<br>";
 		}
@@ -261,7 +260,7 @@ if($_POST and $_GET){
 			}
 			elseif ($_GET['cmd'] == 'add_event_picture')
 			{
-				echo "coming inside add_event-picture";
+				
 				$event_id = $_POST['event_id'];
 				if(update_event_picture($picture,$event_id))
                                 {
@@ -387,7 +386,8 @@ include('includes/navigation.inc.php'); ?>
 
 		<!-- begin existing events cards -->
 			<?php
-				print_user_manage_events_card($user_id);
+				//Defined in card_print.php
+                                print_user_manage_events_card($user_id);
 
 			?>
 			</div>
