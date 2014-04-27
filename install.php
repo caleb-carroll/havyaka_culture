@@ -58,28 +58,35 @@ if($_GET){
 			LOAD DATA INFILE 'C:/wamp/www/havyaka_culture/dummy_data/user.csv'
 			INTO TABLE user 
 			*/
-                    /*   if($name == 'community_connect_event')
-                        {
-                            $dummy_sql = "LOAD DATA INFILE '" . ROOT . "/dummy_data/$name.csv'
-                            INTO TABLE $name
-                            FIELDS TERMINATED BY ','
-                            OPTIONALLY ENCLOSED BY '\"' 
-                            LINES TERMINATED BY '\\n'
-                            (event_date,@date_value)
-                            SET event_date = STR_TO_DATE(@date_value, '%d/%m/%Y');";  
-                        } else {*/
-
+                     
  			$dummy_sql = "LOAD DATA INFILE '" . ROOT . "/dummy_data/$name.csv'
 			INTO TABLE $name
 			FIELDS TERMINATED BY ','
 			OPTIONALLY ENCLOSED BY '\"' 
 			LINES TERMINATED BY '\\n';";
-                        //}
 			$install = mysqli_query($link, $dummy_sql)  /*or die(mysql_error()) */;
 			if($install){
 				echo "<p>Dummy data inserted into " . $table[$i] . " successfully<p>";
-			}
-			else{
+                                 if($name == 'community_connect_user')
+                                 {
+                                      $q_update = "update " .USERS. " set email= AES_ENCRYPT('calebc@iastate.edu','ae4bca65f3283fe26a6d3b10b85c3a308') where user_id =1;";
+                                      $update_ex = mysqli_query($link,$q_update) or die(mysqli_error($link));
+                                      $q_update = "update " .USERS. " set email= AES_ENCRYPT('nivi@iastate.edu','ae4bca65f3283fe26a6d3b10b85c3a308') where user_id =2;";
+                                      $update_ex = mysqli_query($link,$q_update) or die(mysqli_error($link));
+                                      $q_update = "update " .USERS. " set email= AES_ENCRYPT('jsinapov@iastate.edu','ae4bca65f3283fe26a6d3b10b85c3a308') where user_id =3;";
+                                      $update_ex = mysqli_query($link,$q_update) or die(mysqli_error($link));
+                                      $q_update = "update " .USERS. " set email= AES_ENCRYPT('arushi.gadde@gmail.com','ae4bca65f3283fe26a6d3b10b85c3a308') where user_id =4;";
+                                      $update_ex = mysqli_query($link,$q_update) or die(mysqli_error($link));
+                                      $q_update = "update " .USERS. " set email= AES_ENCRYPT('vighnesh.gadde@gmail.com','ae4bca65f3283fe26a6d3b10b85c3a308') where user_id =5;";
+                                      $update_ex = mysqli_query($link,$q_update) or die(mysqli_error($link));
+                                      $q_update = "update " .USERS. " set email= AES_ENCRYPT('pushpa.bhat@gmail.com','ae4bca65f3283fe26a6d3b10b85c3a308') where user_id =6;";
+                                      $update_ex = mysqli_query($link,$q_update) or die(mysqli_error($link));
+                                      $q_update = "update " .USERS. " set email= AES_ENCRYPT('savita.joshi@gmail.com','ae4bca65f3283fe26a6d3b10b85c3a308') where user_id =7;";
+                                      $update_ex = mysqli_query($link,$q_update) or die(mysqli_error($link));
+                                      $q_update = "update " .USERS. " set email= AES_ENCRYPT('arjun.gadde@gmail.com','ae4bca65f3283fe26a6d3b10b85c3a308') where user_id =8;";
+                                      $update_ex = mysqli_query($link,$q_update) or die(mysqli_error($link));
+                                 }
+                        } else{
 				echo "<p>" . $dummy_sql . "</p>";
 				echo "<p>Dummy data install failed.<p>";
 			}
