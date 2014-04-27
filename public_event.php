@@ -7,7 +7,6 @@
  
 $(function(){
 	// show the public events card, but hide the elements for logged in users
-	$('.card').show('slide', {direction: "left"}, 400);
 	$('.flip').hide();
 	$('.save_event').hide();
 	$('.attending_radio').hide();
