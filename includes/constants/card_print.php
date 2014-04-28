@@ -76,7 +76,7 @@ function print_chef_card($chef_info_array) {
 		</tbody>
 		</table>
 
-		<button class="flip" style="position:absolute;bottom:0;right:0;">Flip Card</button>
+		<button class="flip" style="position:absolute;bottom:0;right:0;">Chef Info</button>
 	</div>
 
 	<div class="back">
@@ -126,7 +126,7 @@ function print_chef_card($chef_info_array) {
 			</p>
 
 		</div>
-	<button class="flip" style="position:absolute;bottom:0;right:0;">Flip Card</button>
+	<button class="flip" style="position:absolute;bottom:0;right:0;">See Foods</button>
 	</div>
 
 </div>
@@ -207,7 +207,7 @@ function print_event_card ($r) {
 				<input type="checkbox"  class="attending_radio" rel="<?php echo $r['event_id']; ?>" id= "<?php echo $attending_radio;?>" name="attending" value="attending" ><label id="attending_label">I am attending!</label></input>
 				<button class="save_event" rel="<?php echo $event_id; ?>" id="<?php echo $save_event;?>" type="button" name="save_event">Save</button>
 			</div>
-			<button type="button" class="flip" style="position:absolute;bottom:1%;right:1%;">Flip Card</button>
+			<button type="button" class="flip" style="position:absolute;bottom:1%;right:1%;">More Details</button>
 
 
 		</div>
@@ -254,7 +254,7 @@ function print_event_card ($r) {
 
                         </div>
 
-			<button class="flip" type="button" style="position:absolute;bottom:0;right:0;">Flip Card</button>
+			<button class="flip" type="button" style="position:absolute;bottom:0;right:0;">Event Info</button>
 		</div>
 	</div>
 	<?php
