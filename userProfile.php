@@ -431,9 +431,9 @@ include('includes/navigation.inc.php'); ?>
 						<p>Upload a Picture</p>
 						<form action="<?php echo $_SERVER['PHP_SELF']; ?>?cmd=add_picture" method="post" enctype="multipart/form-data">
 							<input type="file" name="file" id="file" style="width: 13em;">
-							<input type="submit" name="submit" value="Submit">
+							<input type="submit" name="submit" value="Update picture">
 						</form>
-						<button type="button" id="save_profile_button">Save Changes</button>
+                                                <br><br></br><button type="button" id="save_profile_button">Save Changes</button>
 					</div>
 				</div>
 			</div>

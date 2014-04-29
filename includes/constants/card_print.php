@@ -326,15 +326,7 @@ function print_user_manage_events_card($user_id)
                                             <label for="event_zipcode">Venue Zipcode</label>
                                             <input type="text" name="event_zipcode" class="get_event_zipcode" value="<?php echo $zipcode ?>" >
                                     </div>
-                                    <div class="event_edit_right">
-                                            <p class="image_holder"><img class="card_image" style="max-height:20%" src="<?php echo $event_image_loc; ?>" /></p>
-                                                    <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event_picture" method="post" enctype="multipart/form-data">
-                                                            <input style="display:none" type="text" name="event_id" value="<?php echo $event_id ?>">
-                                                            <label for="file">Filename:</label>
-                                                            <input type="file" name="file" id="file_event" style="max-width:100%">
-                                                            <input type="submit" name="submit" value="Update">
-                                                    </form>
-
+                                    <div class="event_edit_right">                                            
                                             <label for="event_type">Event Type</label>
                                             <select name="event_type" class="get_event_type">
                                             <?php
@@ -359,6 +351,16 @@ function print_user_manage_events_card($user_id)
                                             <button type="button" class="flip">Cancel</button>
                                     </div>
                                     </form>
+                                <div class="event_edit_right">
+                                    <p class="image_holder"><img class="card_image" style="max-height:20%" src="<?php echo $event_image_loc; ?>" /></p>
+                                                    <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event_picture" method="post" enctype="multipart/form-data">
+                                                            <input style="display:none" type="text" name="event_id" value="<?php echo $event_id ?>">
+                                                            <label for="file">Filename:</label>
+                                                            <input type="file" name="file" id="file_event" style="max-width:100%">
+                                                            <input type="submit" name="submit" value="Update Image">
+                                                    </form>
+
+                                </div>
 
                             </div>
     <!-- END Event editing section -->
