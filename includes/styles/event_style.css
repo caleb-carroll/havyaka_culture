@@ -22,12 +22,14 @@
 
 .event_right { 
 	position: absolute; 
-	top: 1em; 
-	left: 60%; 
+	top: 2em; 
+	left: 45%; 
 	right: 1em; 
 	padding:.5em;
 	margin:.25em;
 	/* background: lightblue; */
+}
+.event_edit_right_picture {
 }
 
 .event_date{
