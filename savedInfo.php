@@ -18,27 +18,26 @@
 </head>
 
 <script>
-
+ 
 $(function(){
 	// ajax request to delete the saved information from the user profile
 	$(".delete_saved_data").click( function() {
 		var delete_id = $(this).attr('rel');
 		var delete_type = $(this).attr('rel1');
 		var datastring = "delete_id=" +delete_id+ "&delete_type="+delete_type;
+		
 		$.ajax({
 			type: "POST",
 			url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=Delete_saved_data",
 			data: datastring,
 			success:function () {
-				// will be dynamically removed from the table
+				// dynamically removes the row from the table
 				var tr_id = "tr_"+delete_type+"_"+delete_id;
 				$("#"+tr_id+"").remove();
 				
 				$('.success').fadeIn(2000).show().html('deleted Successfully!').fadeOut(6000); //Show, then hide success msg
 				$('.error').fadeOut(2000).hide();
-				
 			}
-			
 		});
 		
 		return false;
@@ -60,6 +59,7 @@ if($_POST and $_GET){
 	if($_GET['cmd'] == 'Delete_saved_data') {
 		$delete_type = $_POST['delete_type'];
 		$delete_id = $_POST['delete_id'];
+		
 		//Call the delete_saved_data function, defined in sql_constants.php
 		$delete_data = delete_saved_data($delete_id,$delete_type,$user_id);
 	}

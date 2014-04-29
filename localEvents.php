@@ -23,26 +23,22 @@
 	$user_id = $_SESSION['user_id'];
 ?>
 <script>
-
- //setTimeout('initialize()',2000);
-
+ 
 $(function(){
 	// If the user clicks on the save button in the local events page, get the event id, userid and store the details into the table and display the details into the dashboard
 	$(".save_event").click(function() {
 		var event_id = $(this).attr('rel');
-		// alert(event_id);
 		var datastring = "event_id="+event_id;
-
+		
 		$.ajax({
 			type: "POST",
 			url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=save_event",
 			data: datastring,
 			success: function(response){
 				var results = JSON.parse(response);
-				console.log(results);
 				var status = results['success'];
 				var message = results['message'];
-
+				
 				if(status === 'true') {
 					$('.success').fadeIn(2000).show().html(message).fadeOut(6000); //Show, then hide success msg
 					$('.error').fadeOut(2000).hide(); //If showing error, fade out
@@ -53,29 +49,28 @@ $(function(){
 				}
 			}
 		});
-
+		
 		return false;
 	});
 
-	  //Capture the attendance and update the table : this ajax request will send the data to event_interactions.php
+	//Capture the attendance and update the table : this ajax request will send the data to event_interactions.php
 	$(".attending_radio").change(function() {
 		var event_id = $(this).attr('rel');
-
+		
+		// checks whether the attending checkbox is checked or not
 		if(this.checked) {
 			var datastring = "attending=true&event_id="+event_id;
 		}
 		else {
 			var datastring = "attending=false&event_id="+event_id;
 		}
-
-		console.log(datastring);
+		
 		$.ajax({
 			type: "POST",
 			url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=attending",
 			data: datastring,
 			success: function(response) {
 				var results = JSON.parse(response);
-				console.log(results);
 				var status = results['success'];
 				var message = results['message'];
 
@@ -101,19 +96,14 @@ function initialize() {
 	var zip = $(".zipcode").attr('rel');
 	var event_id = $(".event_id").attr('rel');
 	var map_canvas = "map_canvas_"+event_id;
-
-	console.log("event_id is " + event_id);
-	console.log("zipcode is " + zip);
-	console.log("map canvas is " + map_canvas);
-	console.log("zipcode inside google map" + zip);
+	
 	var country = "USA";
 	var geocoder = new google.maps.Geocoder();
 	geocoder.geocode({ 'address':zip+ ','+country}, function(results, status) {
 		if (status === google.maps.GeocoderStatus.OK) {
 			lat = results[0].geometry.location.lat();
-			// alert (lat);
 			lng = results[0].geometry.location.lng();
-			// alert(lng);
+			
 			var mapOptions = {
 				zoom: 9,
 				center: new google.maps.LatLng(lat,lng)
@@ -138,22 +128,20 @@ function initialize() {
 }
 </script>
 <?php
-
 include_once ('includes/header.inc.php');
-include('includes/navigation.inc.php'); ?>
+include('includes/navigation.inc.php'); 
+?>
 
 <div class="content leftmenu">
 	<div class="colright">
 		<div class="col1">
 			<!-- Left Column start -->
 			<?php include('includes/left_column.inc.php'); ?>
-
 			<!-- Left Column end -->
 		</div>
 		
 		<div class="col2">
 			<!-- Middle Column start -->
-			
 			<span class="success" style="display:none;"></span>
 			<span class="error" style="display:none;">Please enter some text</span>
 			
@@ -182,8 +170,8 @@ include('includes/navigation.inc.php'); ?>
 	</div>
 </div>
 
-	<div id="footer">
-		<?php include('includes/footer.inc.php'); ?>
-	</div>
+<div id="footer">
+	<?php include('includes/footer.inc.php'); ?>
+</div>
 </body>
 </html>

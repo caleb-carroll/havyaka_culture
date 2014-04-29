@@ -29,9 +29,9 @@ $(function() {
 //if the session is not started then display only header and not the navigation which should be available only for the logged in users
 include_once ('includes/header.inc.php'); 
 session_start();
-	if($_SESSION){
-		 include('includes/navigation.inc.php');
-	}
+if($_SESSION){
+	 include('includes/navigation.inc.php');
+}
 ?>
 
 <div class="content leftmenu">
@@ -39,10 +39,10 @@ session_start();
 		<div class="col1">
 			<!-- Left Column start -->
 			<?php 
-                        if($_SESSION){
-                        include('includes/left_column.inc.php'); 
-                        }
-                        ?>
+			if($_SESSION) {
+				include('includes/left_column.inc.php'); 
+			}
+			?>
 			<!-- Left Column end -->
 		</div>
 		

@@ -30,6 +30,7 @@
 <input style="display:none" type="text" id="user_id" value="<?php echo $user_id ?>">
 
 <script>
+ 
 $(document).ready(function() {
 	var t = setInterval(function() {
 		$("#carousal ul").animate({marginLeft:-480},1000,function() {
@@ -46,99 +47,92 @@ $(function(){
 		width: 650,
 		modal: true
 	});
-	
+
 	$(".save_chef").click(function() {
 		var chef_id = $(this).attr('rel');
 		var user_id = $('#user_id').val();
 		var datastring = "chef_id=" + chef_id + "&user_id=" + user_id;
-		console.log(datastring);
-		
+
 		$.ajax({
 			type: "POST",
-			url: "<?php echo BASE; ?>/includes/ajax_functions/chef_interactions.php?cmd=save_chef", 
+			url: "<?php echo BASE; ?>/includes/ajax_functions/chef_interactions.php?cmd=save_chef",
 			data: datastring,
 			success: function(response) {
-				console.log(response);
 				var results = JSON.parse(response);
-				
+
 				$('.success').fadeIn(2000).show().html('Chef details are saved in your profile!').fadeOut(6000); //Show, then hide success msg
 				$('.error').fadeOut(2000).hide(); //If showing error, fade out
 			}
 		});
-		
+
 		return false;
 	});
-	 
+
 	$(".save_event").click(function() {
 		var event_id = $(this).attr('rel');
 		var user_id = $('#user_id').val();
 		// alert(event_id);
 		var datastring = "event_id="+event_id + "&user_id=" + user_id;
-		
+
 		$.ajax({
 			type: "POST",
-			url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=save_event", 
+			url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=save_event",
 			data: datastring,
 			success: function(response) {
 				console.log(response);
 				var results = JSON.parse(response);
-				
+
 				$('.success').fadeIn(2000).show().html('Event details are saved in your profile!').fadeOut(6000); //Show, then hide success msg
 				$('.error').fadeOut(2000).hide(); //If showing error, fade out
 			}
 		});
-		
+
 		return false;
 	});
-	
-	$('.card').show('slide', {direction: "up"}, 700);
-	//$(".show_more").click =setTimeout('initialize()');
 
-	// $(".front").hide();
+	$('.card').show('slide', {direction: "up"}, 700);
+
 	$(".attending_radio").change(function() {
 		var event_id = $(this).attr('rel');
 		if(this.checked) {
 			var datastring = "attending=true&event_id="+event_id;
-			console.log(datastring);
-				
+
 			$.ajax({
 				type: "POST",
 				url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=attending",
 				data: datastring,
 				success: function(response) {
 					$('.success').fadeIn(2000).show().html('Your attendence is counted!').fadeOut(6000); //Show, then hide success msg
-					$('.error').fadeOut(2000).hide(); //If showing error, fade out   
+					$('.error').fadeOut(2000).hide(); //If showing error, fade out
 				}
 			});
-			
+
 			return false;
-		} 
+		}
 		else {
-			//we may want to add another option called 'may be attending' in that case, we need to write the code here
 			var datastring = "attending=false&event_id="+event_id;
-				
+
 			$.ajax({
 				type: "POST",
 				url: "<?php echo BASE; ?>/includes/ajax_functions/event_interactions.php?cmd=attending",
 				data: datastring,
 				success: function(response) {
-					console.log(response);
 					$('.success').fadeIn(2000).show().html('Your attendence is counted!').fadeOut(6000); //Show, then hide success msg
-					$('.error').fadeOut(2000).hide(); //If showing error, fade out   
+					$('.error').fadeOut(2000).hide(); //If showing error, fade out
 				}
 			});
-			
+
 			return false;
 		}
 	});
 });
 </script>
-<body>      
-	
+<body>
+
 <?php
 include_once ('includes/header.inc.php');
 include('includes/navigation.inc.php'); ?>
-        
+
 <?php
 //check if the user is logged in for the first time, if so, display the information dialog box
 $query = "SELECT num_logins from " . USERS . " WHERE user_id =" . $user_id;
@@ -151,6 +145,8 @@ list($num_login) = mysqli_fetch_row($q);
 //($num_login <= 2) && : add this to below if statement in the future.
 if(($_SESSION['homepage'] == 1) && ($num_login == 1)) {
 ?>
+
+<!-- Begin modal welcome message window -->
 <div id ="information_dialog" title = "Welcome to Community Connect!">
 	<p>
 		<h3 style="color: darkmagenta;font-style: italic;">Find Local Events, chef OR Add your own event, become a chef. </h3>
@@ -173,6 +169,8 @@ if(($_SESSION['homepage'] == 1) && ($num_login == 1)) {
 	</p>
 	Enjoy your stay in <h3>Community Connect!</h3>
 </div>
+<!-- End modal welcome message window -->
+
 <?php }
 
 return_meta("Home");
@@ -180,7 +178,7 @@ $msg = NULL;
 
 ?>
 <body>
-	
+
 <div class="content leftmenu">
 	<div class="colright">
 		<div class="col1">
@@ -188,26 +186,26 @@ $msg = NULL;
 			<?php include('includes/left_column.inc.php'); ?>
 			<!-- Left Column end -->
 		</div>
+		
 		<div class="col2">
 		<!-- Middle Column start -->
 			<div id="carousal">
 				<ul>
 				<?php
-				//Display the pictures in the carousal in the home page. 
+				//Display the pictures in the carousal in the home page.
 				//defined in sql_constants.php ; fetches randomly 8 images.
 				$results = fetch_food_event_picture();
-				foreach ($results as $r)
-				{
-					$food_image = $r['food_picture'];                                         
+				foreach ($results as $r) {
+					$food_image = $r['food_picture'];
 					$food_image_loc = htmlspecialchars($food_image);
 					$food_image_loc = PICTURE_LOCATION . $food_image_loc;
 				?>
 				 <li> <img src="<?php echo $food_image_loc?>"></img></li>
-				 
+
 				<?php } ?>
 				</ul>
 			</div>
-			
+
 			<!-- Middle Column start -->
 			<?php
 			// This section gets all chefs for the user's location, then prints them into a card
@@ -217,11 +215,11 @@ $msg = NULL;
 			if(!empty($chefs_list)) {
 				?>
 				<!--prints a card for each chef associated with a food type    -->
-				
+
 				<div class ="chef_holder">
 				<h1 class="home_section_header">Chefs in your area <a class="more_link" href="localChefs.php">More Chefs >></a></h1>
-				
-					<?php 
+
+					<?php
 					foreach ($chefs_list as $chef) {
 						// gets the chef info and loads it into an array
 						$chef_info_array = get_chef_info($chef['chef_id']);
@@ -230,46 +228,46 @@ $msg = NULL;
 						print_chef_card($chef_info_array);
 					} ?>
 				</div>
-			<?php } 
+			<?php }
 			else {?>
-				<div class ="chef_holder" style="display:none;">	</div>	
-			<?php 
-			} 
+				<div class ="chef_holder" style="display:none;">	</div>
+			<?php
+			}
 			?>
-			
+
 			<div id="event_holder">
 				<?php
-				$results = retrieve_future_event($user_id,2);  
+				$results = retrieve_future_event($user_id,2);
 				if(!empty($results)) { ?>
-						<div stlye="position:relative">
-						<h1 class="home_section_header">Events in your area <a style="" class="more_link" href="localEvents.php">More Events >></a></h1>
-							
-						</div>
-						
-						<?php
-							$i =0;
-							foreach ($results as $r) {
-								print_event_card($r);
-							}
-						?>
+					<div stlye="position:relative">
+					<h1 class="home_section_header">Events in your area <a style="" class="more_link" href="localEvents.php">More Events >></a></h1>
 
-						<span class="success" style="display:none;"></span>
-						<span class="error" style="display:none;">Please enter some text</span>
+					</div>
+
+					<?php
+						$i =0;
+						foreach ($results as $r) {
+							print_event_card($r);
+						}
+					?>
+
+					<span class="success" style="display:none;"></span>
+					<span class="error" style="display:none;">Please enter some text</span>
 				<?php
 				}
-				
+
 				if(empty($results) && empty($chefs_list)) {
 				?>
 					<h2>No Local events or Chef found!. add one <a href="userProfile.php">here</a>.</h2>
-				<?php  
+				<?php
 				}
 				?>
 			</div>
 		</div>
 		<!-- Middle Column end -->
 	</div>
-		<!-- for future reference Right column start 
-		<div class="col3"> 
+		<!-- for future reference Right column start
+		<div class="col3">
 
 		</div>
 		-->
@@ -278,4 +276,3 @@ $msg = NULL;
 
 </body>
 </html>
-    

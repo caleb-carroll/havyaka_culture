@@ -6,7 +6,6 @@ $username = NULL;
 $pass2 = NULL;
 $msg = NULL;
 $email = NULL;
-//$err = array();
 
 //See if form was submitted, if so, execute...
 if(isset($_POST['login'])) {
@@ -82,11 +81,12 @@ if(isset($_POST['login'])) {
 		}
 	} 
 	else {
-		//$err[] = "Invalid username. Please check again!";
+		$err[] = "Invalid username. Please check again!";
 	}
 }
 ?>
 
+<!-- BEGIN login form -->
 <div id="login_form">
 	<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" id="login_form">
 		<ul id="login_list">
@@ -107,3 +107,4 @@ if(isset($_POST['login'])) {
 		</ul>
 	</form>
 </div>
+<!-- END login form -->

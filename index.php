@@ -37,25 +37,6 @@ function get_city_state(zipcode) {
 		}
 	}); 
 }
-    
-$(document).ready(function(){
-	$('#login_name').focus();
-}); 
-
-function refresh_content() {
-	$('.card').fadeOut(700, function(){
-		$(".public_event_refresh").load('public_event.php');
-	});
-	
-}
-
-$(function(){
-	var tooltips = $( "[title]" ).tooltip();
-});
-
-setInterval(refresh_content, 7000 );
-
-
 
 function getCityState(results,zipcode) {
 	var a = results[0].address_components;
@@ -73,7 +54,7 @@ function getCityState(results,zipcode) {
 	
 	$.ajax({
 		type: "POST",
-                url:"<?php echo BASE; ?>/includes/ajax_functions/updateaddress.php?cmd=updatecitystate",
+		url:"<?php echo BASE; ?>/includes/ajax_functions/updateaddress.php?cmd=updatecitystate",
 		data: datastring
 		
 	});
@@ -86,6 +67,26 @@ function compIsType(t, s) {
 			return true;
 	return false;
 } 
+    
+// sets the focus on the username field
+$(document).ready(function(){
+	$('#login_name').focus();
+}); 
+
+// function to refresh the public event
+function refresh_content() {
+	$('.card').fadeOut(700, function(){
+		$(".public_event_refresh").load('public_event.php');
+	});
+	
+}
+
+// refreshes the public event periodically
+setInterval(refresh_content, 7000 );
+
+$(function(){
+	var tooltips = $( "[title]" ).tooltip();
+});
 </script>
   
 <?php
@@ -127,19 +128,14 @@ if(isset($_POST['register'])) {
 	$err = add_user($firstname,$lastname,$username,$password,$confirm_pass,$email,$zipcode,$date,$user_ip,$activation_code,$community_type );
 
 	if (empty($err)) {
+		
 		//if the registration is successful then get the city and state name using zipcode and update the table
-               
-	   echo "<h3>Registration is successfull!. You may now <a href=\"".BASE."/users/activate.php\">Activate </a> your account.</h3>";
+		echo "<h3>Registration is successfull!. You may now <a href=\"".BASE."/users/activate.php\">Activate </a> your account.</h3>";
 
 		$meta_title = "Registration successful!";
-                
 		echo "<script>
 			get_city_state('{$zipcode}');
 		</script>";
-
-		?>
-		
-		<?php
 	}
 }
 

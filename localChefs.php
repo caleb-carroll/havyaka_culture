@@ -20,7 +20,7 @@
 	require_once 'includes/constants/sql_constants.php';
 	require_once 'includes/constants/card_print.php';
 	secure_page();  
-	return_meta("Local Chef!");
+	return_meta("Local Chefs!");
 	$msg = NULL;
 	$user_id =  $_SESSION['user_id'];
 ?>
@@ -64,16 +64,12 @@ $(function() {
 </head>
 
 <body>
+<?php
+include_once ('includes/header.inc.php');
+include('includes/navigation.inc.php'); 
 
-	<?php
-	include_once ('includes/header.inc.php');
-	include('includes/navigation.inc.php'); 
+?>
 
-	// $firstname = $_SESSION['firstname'];
-	// front of the card: call the retrieve_event function to retrive all event details based ont he user's location. defined in sql_constants.php
-	$results = get_localchef_details($user_id);
-
-	?>
 <div class="content leftmenu">
 	<div class="colright">
 		<div class="col1">
@@ -91,13 +87,12 @@ $(function() {
 				<h1>Local chefs in your area</h1>
 				
 				<?php
-				// This section gets all chefs for the appropriate food types, then prints them into a card
+				// This section gets all chefs in the user's area, then prints them into a card
 				// functions below are defined in sql_constants
 				$chefs_list = get_localchef_details($user_id);
 				
 				// prints a card for each chef associated with a food type
 				foreach ($chefs_list as $chef) {
-					
 					// gets the chef info and loads it into an array
 					$chef_info_array = get_chef_info($chef['chef_id']);
 					
