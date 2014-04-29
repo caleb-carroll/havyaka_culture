@@ -25,7 +25,6 @@ $(function(){
 		var delete_id = $(this).attr('rel');
 		var delete_type = $(this).attr('rel1');
 		var datastring = "delete_id=" +delete_id+ "&delete_type="+delete_type;
-		 alert(datastring);
 		$.ajax({
 			type: "POST",
 			url: "<?php echo $_SERVER['PHP_SELF']; ?>?cmd=Delete_saved_data",

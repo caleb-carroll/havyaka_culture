@@ -223,10 +223,10 @@ $(function(){
 					new_html += "<label for='food_description'>Food Description</label>";
 					new_html += "<textarea style='width:20em; height: 5em;'  name='food_description'>" + results.added_food.food_description + "</textarea>";
 					new_html += "<br>";
-					new_html += "<button class='update_food' rel='" + results.added_food.food_id + "' rel1=" + results.added_food.chef_id + " id='update_food_" + results.added_food.food_id + "' >Update</button>"
-					new_html += "<button type='button' name='delete_food' class ='delete_food' rel='" + results.added_food.food_id + "' rel1='" + results.added_food.chef_id + "'>Delete</button>"
-					new_html += "</td>"
-					new_html +=	"</tr>"
+					new_html += "<button class='update_food' rel='" + results.added_food.food_id + "' rel1=" + results.added_food.chef_id + " id='update_food_" + results.added_food.food_id + "' >Update</button>";
+					new_html += "<button type='button' name='delete_food' class ='delete_food' rel='" + results.added_food.food_id + "' rel1='" + results.added_food.chef_id + "'>Delete</button>";
+					new_html += "</td>";
+					new_html +=	"</tr>";
 					
 					// adds the new food at the top of the table
 					$(new_html).hide().prependTo('#foods_table').fadeIn('slow');
@@ -300,8 +300,7 @@ if(!empty($chef_info)) {
 	}
 }
 
-if($_POST and $_GET)
-{
+if($_POST and $_GET) {
     if ($_GET['cmd'] == 'add_picture'|| $_GET['cmd'] == 'add_food_picture'){
 		$user_id = $user_id = $_SESSION['user_id'];                
 		if ($_FILES["file"]["error"] > 0) {
@@ -314,7 +313,7 @@ if($_POST and $_GET)
 			if($_GET['cmd'] == 'add_picture') {
 				//call the update_user_info function defined in sql_constants.php
 				$profile_update = update_user_info($user_id, NULL, NULL, NULL, NULL, $picture_loc);
-                                if($profile_update) {
+				if($profile_update) {
 					$msg="Picture updated successfully";
 				} 
 				else {
@@ -326,7 +325,7 @@ if($_POST and $_GET)
 				$event_id = $_POST['event_id'];
 				//defined in sql_constants.php
 				$event_update = update_event_picture($picture_loc,$event_id);
-                                if($event_update) {
+				if($event_update) {
 					$msg="Food details updated successfully";
 				} 
 				else {
@@ -385,7 +384,7 @@ include('includes/navigation.inc.php'); ?>
 			
 			<!-- Middle column start -->
 			<span class="success" style="display:none;"></span>
-                       <span class="error" style="display:none;">Please enter some text</span>
+			<span class="error" style="display:none;">Please enter some text</span>
 			
 			
 			<!-- USER PROFILE START -->
@@ -441,32 +440,32 @@ include('includes/navigation.inc.php'); ?>
 			
 			<!-- CHEF PROFILE START -->
                       
-                        <div class="card flipper" id="chef_profile">
+			<div class="card flipper" id="chef_profile">
 				<div class="back">
 					<div class="update_chef_top">
 						<p class="card_name">Chef Profile</p>
 						
 						<form id="chef_profile_form" method="post">
-                                                <input type='hidden' name='chef_id' value='<?php if(!empty($chef_info)) {echo $chef_info[0]['chef_id']; }?>' ></input>
+						<input type='hidden' name='chef_id' value='<?php if(!empty($chef_info)) {echo $chef_info[0]['chef_id']; }?>' ></input>
 						<input style="display:none" type="text" name="user_id" value="<?php echo $user_id ?>">
-							<label for="about_chef">About yourself as a chef:</label> 
-                                                        <textarea style="width:400px; height: 100px;"  name="about_chef"><?php if(!empty($chef_info)) { echo $chef_info[0]['about_chef']; }?></textarea>
+						<label for="about_chef">About yourself as a chef:</label> 
+						<textarea style="width:400px; height: 100px;"  name="about_chef"><?php if(!empty($chef_info)) { echo $chef_info[0]['about_chef']; }?></textarea>
 					</div>
 						
 					<div class="update_chef_bl">
 						<label for="contact_hours">Contact Hours:</label> 
 						<select name="contact_time_preference" id="contact_time_preference">
-                                                        <option value="morning" <?php if(!empty($chef_info)) { if($chef_info[0]['contact_time_preference'] == "morning") echo "selected";}?>>Morning</option>
-                                                        <option value="noon" <?php if(!empty($chef_info)) {if($chef_info[0]['contact_time_preference'] == "noon") echo "selected";}?>>Noon</option>
-                                                        <option value="evening" <?php if(!empty($chef_info)) {if($chef_info[0]['contact_time_preference'] == "evening") echo "selected";}?>>Evening</option>
-                                                        <option value="anytime" <?php if(!empty($chef_info)) {if($chef_info[0]['contact_time_preference'] == "evening") echo "selected";}?>>Any time</option>
+							<option value="morning" <?php if(!empty($chef_info)) { if($chef_info[0]['contact_time_preference'] == "morning") echo "selected";}?>>Morning</option>
+							<option value="noon" <?php if(!empty($chef_info)) {if($chef_info[0]['contact_time_preference'] == "noon") echo "selected";}?>>Noon</option>
+							<option value="evening" <?php if(!empty($chef_info)) {if($chef_info[0]['contact_time_preference'] == "evening") echo "selected";}?>>Evening</option>
+							<option value="anytime" <?php if(!empty($chef_info)) {if($chef_info[0]['contact_time_preference'] == "evening") echo "selected";}?>>Any time</option>
 						</select>
 						
 						<label for="contact_hours">Payments Accepted:</label> 
 						<select name="payments_accepted" id="payments_accepted">
-                                                        <option value="cash" <?php if(!empty($chef_info)) { if($chef_info[0]['payments_accepted'] == "cash") echo "selected";}?>>Cash</option>
-                                                        <option value="check" <?php if(!empty($chef_info)) {if($chef_info[0]['payments_accepted'] == "Check") echo "selected";}?>>Check</option>
-                                                        <option value="cash or check" <?php if(!empty($chef_info)) { if($chef_info[0]['payments_accepted'] == "Cash or Check") echo "selected";}?>>Cash or Check</option>
+							<option value="cash" <?php if(!empty($chef_info)) { if($chef_info[0]['payments_accepted'] == "cash") echo "selected";}?>>Cash</option>
+							<option value="check" <?php if(!empty($chef_info)) {if($chef_info[0]['payments_accepted'] == "Check") echo "selected";}?>>Check</option>
+							<option value="cash or check" <?php if(!empty($chef_info)) { if($chef_info[0]['payments_accepted'] == "Cash or Check") echo "selected";}?>>Cash or Check</option>
 							<option value="paypal" <?php if(!empty($chef_info)) {if($chef_info[0]['payments_accepted'] == "Paypal") echo "selected";}?>>Paypal</option>
 							<option value="other" <?php if(!empty($chef_info)) { if($chef_info[0]['payments_accepted'] == "Other") echo "selected";}?>>Other</option>
 						</select>
@@ -474,11 +473,11 @@ include('includes/navigation.inc.php'); ?>
 					
 					<div class="update_chef_br">
 						<!-- marks these checkboxes as checked or unchecked based on what we find in the DB -->
-                                                <input style="width:20px; height: 20px;" type="checkbox" id="pickup" <?php if(!empty($chef_info)) {if($chef_info[0]['pickup_available'] == "Yes") echo "checked"; else echo "unchecked";}?>>Offer pickup?</input><br>
-						
-                                                <input style="width:20px; height: 20px;" type="checkbox" id="offline" <?php if(!empty($chef_info)) {if($chef_info[0]['taking_offline_order'] == "Yes") echo "checked"; else echo "unchecked";}?>>Take offline orders?</input><br>
-						
-                                                <input style="width:20px; height: 20px;" type="checkbox" id="delivery" <?php if(!empty($chef_info)) { if($chef_info[0]['delivery_available'] == "Yes") echo "checked"; else echo "unchecked";}?>>Offer delivery?</input><br>
+						<input style="width:20px; height: 20px;" type="checkbox" id="pickup" <?php if(!empty($chef_info)) {if($chef_info[0]['pickup_available'] == "Yes") echo "checked"; else echo "unchecked";}?>>Offer pickup?</input><br>
+
+						<input style="width:20px; height: 20px;" type="checkbox" id="offline" <?php if(!empty($chef_info)) {if($chef_info[0]['taking_offline_order'] == "Yes") echo "checked"; else echo "unchecked";}?>>Take offline orders?</input><br>
+
+						<input style="width:20px; height: 20px;" type="checkbox" id="delivery" <?php if(!empty($chef_info)) { if($chef_info[0]['delivery_available'] == "Yes") echo "checked"; else echo "unchecked";}?>>Offer delivery?</input><br>
 					</div>
 						
 						<button type="button" id="save_chef_updates" name="save_chef_updates" style="position: absolute; bottom: 1em; right: 10em;">Save</button>
