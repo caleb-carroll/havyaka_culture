@@ -1,22 +1,31 @@
-    Read the instruction before starting installing!.
+   
+	                     Community Connect
+
+Team:
+	Nivedita Bhat
+	Caleb Carroll
+
+
+		 Read the instruction before starting installing!.
           Steps to follow to install and test the Community Connect website
-1.	Unzip the havyaka_culture.zip into your www folder. If you are using WAMP: it will be in C: /wamp/www.
-2.	Open the Mozilla browser or Chrome.
-3.	Start your wamp server 
+
+1. Start your wamp server 
+2. Open the Mozilla browser or Chrome.
+
 
 To Install the tables and sample data:
 
 4.	Type in the URL : localhost/havyaka_culture/install.php
 5.	Click on the Install button to install all the required tables into HCI573 database.
 6.	Wait for few seconds so all the tables gets created into database.
-7.	Then, click on the button Sample Data to install the sample data into tables.
+7.	Then, click on the button dummy_data to install the sample data into tables.
 8.	Once all the data gets populated, then you are all set to test the website.
-9.	If you find, it did not load the data for all the tables then, click on Install button again and wait for few more seconds and then click the ‘Sample Data’ button.
+9.	If you find that sample data did not get loaded all, then, click on Install button again and wait for a minute or so and then click the 'dummy_Data’ button. It takes a while to isntall 14 tables into database.
 
               To start testing the website:
 
 1.	To register a new user:
-1.1.	Enter your first name, lastname, email address and the zipcode: (52402), username and password.
+1.1.	Enter your first name, lastname, valid email address and the zipcode: (52402), username and password.
 1.2.	Get the activation code from your email and activate your account.
 1.3.	Login to the site using this username/password.
 
