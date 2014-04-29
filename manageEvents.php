@@ -69,9 +69,6 @@ function compIsType(t, s) {
 
 $(function(){
 	$("#create_event_div").hide();
-	$("#saved_event_div").hide();
-	$("#saved_chef_div").hide();
-	$("#close_card_event_chef").hide();
 	$("#change_food_pic_form").hide();
 
 	// creates a jquery datepicker on all editable date areas
@@ -90,31 +87,9 @@ $(function(){
 		$('#create_event_div').hide('slide', {direction: "up"}, 900);
 	});
 
-	$("#saved_event_button").click(function() {
-		$("#saved_event_div").show();
-		$("#close_card_event_chef").show();
-	});
-
-	$("#saved_chef_button").click(function() {
-		$("#saved_chef_div").show();
-		$("#close_card_event_chef").show();
-	});
-
-	$("#close_card_event_chef").click(function() {
-		$("#saved_event_div").hide();
-		$("#saved_chef_div").hide();
-		$("#close_card_event_chef").hide();
-		$("#user_profile_div").hide();
-	});
-
 	$("#change_food_pic").click(function() {
 		$("#change_food_pic_form").show();
 		$("#change_food_pic").hide();
-	});
-
-	$("#user_profile_button").click(function() {
-		$("#user_profile_div").show();
-		$("#close_card_event_chef").show();
 	});
 
 	$('.delete_event_button').click(function() {
@@ -239,14 +214,14 @@ $(function(){
 
 <?php
 
-
 $msg = NULL;
 $err=NULL;
 
-if($_POST and $_GET){
+if($_POST and $_GET) {
 	// if the user is adding a picture, add it to the file system and reference in user table
+
 	if ($_GET['cmd'] == 'add_picture' || $_GET['cmd'] == 'add_event_picture'){
-		
+
 		if ($_FILES["file"]["error"] > 0) {
 			echo "Error with the file. please use different file: " . $_FILES["file"]["error"] . "<br>";
 		}
@@ -258,21 +233,18 @@ if($_POST and $_GET){
 				update_user_info($user_id, NULL, NULL, NULL, NULL, $profile_picture_loc);
 
 			}
-			elseif ($_GET['cmd'] == 'add_event_picture')
-			{
-				
+			elseif ($_GET['cmd'] == 'add_event_picture') {
 				$event_id = $_POST['event_id'];
-				if(update_event_picture($picture,$event_id))
-                                {
-                                    $msg="Event picture added";
-                                } else
-                                {
-                                    $err="Picture is not added. Try again";
-                                }
+				
+				if(update_event_picture($picture,$event_id)) {
+					$msg="Event picture added";
+				}
+				else {
+					$err="Picture is not added. Try again";
+				}
 			}
 		}
 	}
-
 }
 
 $user_info = get_user_info($user_id);
@@ -281,9 +253,7 @@ $profile_pic = $user_info[0]['profile_picture'];
 //get the event types
 $event_types = get_event_types();
 
-//$results = get_events($user_id);
 ?>
-
 
 <title>Manage Events</title>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
@@ -325,8 +295,8 @@ include('includes/navigation.inc.php'); ?>
 
 			<div id="event_holder">
 
-	<!-- begin add event card -->
 			<button name="create_event" id="create_event_button" style="display:block">Create an event</button>
+			<!-- begin add event card -->
 			<div class="card flipper" id="create_event_div" style="display:none">
 				<div class="back">
 					<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event" id="create_event_form" method="post">
@@ -355,8 +325,8 @@ include('includes/navigation.inc.php'); ?>
 								<label for="event_zipcode">Venue Zipcode</label>
 								<input type="text" name="event_zipcode" class="get_event_zipcode" value="" >
 							</div>
+							
 							<div class="event_edit_right">
-
 								<label for="event_type">Event Type</label>
 								<select name="event_type" class="get_event_type">
 								<?php
@@ -375,6 +345,7 @@ include('includes/navigation.inc.php'); ?>
 								<label for="event_desc">Event Description</label>
 								<textarea name="event_desc" class="get_event_desc" cols=20 rows=3></textarea>
 							</div>
+							
 							<div class="event_edit_bottom">
 								<button type="button" name="cancel_add" id="cancel_add_event">Cancel</button>
 								<button type="button" name="add_event" id="add_event">Add Event</button>
@@ -382,18 +353,17 @@ include('includes/navigation.inc.php'); ?>
 					</form>
 				</div>
 			</div>
-	<!-- END Add Events Card -->
+			<!-- END Add Events Card -->
 
-		<!-- begin existing events cards -->
+			<!-- BEGIN existing events cards -->
 			<?php
-				//Defined in card_print.php
-                                print_user_manage_events_card($user_id);
-
+				//Defined in includes/card_print.php
+				print_user_manage_events_card($user_id);
 			?>
 			</div>
-			<!-- Center column end -->
-
+			<!-- END existing events cards -->
 		</div>
+		<!-- Center column end -->
 	</div>
 </div>
 

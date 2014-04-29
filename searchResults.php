@@ -10,6 +10,7 @@
 <link rel="stylesheet" type="text/css" href="includes/styles/card_style.css"/>
 <link rel="stylesheet" type="text/css" href="includes/styles/chef_style.css"/>
 <script src="includes/js/jquery_custom_flip.js"></script>
+
 <?php
 require_once 'includes/constants/sql_constants.php';
 require_once 'includes/constants/card_print.php';
@@ -20,14 +21,13 @@ $user_id = $_SESSION['user_id'];
 
 
 <script>
-
-
+ 
 $(function() {
+	// saves a chef to the users profile when clicked
 	$(".save_chef").click(function() {
 		var chef_id = $(this).attr('rel');
 		var user_id = $('#user_id').val();
 		var datastring = "chef_id=" + chef_id + "&user_id=" + user_id;
-		console.log(datastring);
 		
 		$.ajax({
 			type: "POST",
@@ -41,17 +41,17 @@ $(function() {
 				$('.error').fadeOut(2000).hide(); //If showing error, fade out
 			}
 		});
-		
 		return false;
 	});
 });
-	
+
 </script>
 
 <title>Search Results</title>
 
 <?php
-	
+
+// if the user attempts to get to the search page without specifying a food type, an error is displayed
 if (isset($_GET['food_id'])){
 	$food_id = $_GET['food_id'];
 }
@@ -64,7 +64,6 @@ else{
 </head>
 
 <body>
-
 <div id="header">
 	<?php  
 	include_once ('includes/header.inc.php');
@@ -75,13 +74,14 @@ else{
 <div class="content leftmenu">
 	<div class="colright">
 		<div class="col1">
-			<!-- Left Column start -->
 			<?php include('includes/left_column.inc.php'); ?>
-			<!-- Left Column end -->
 		</div>
+		
 		<div class="col2">
 			<div>
-				<?php $food_info = get_food_info($food_id); ?>
+				<?php 
+				// fetches the food information from the database in order to print the name and picture
+				$food_info = get_food_info($food_id); ?>
 				<h1>Chefs that serve <?php echo $food_info['food_name']; ?></h1>
 				<img src="<?php echo PICTURE_LOCATION . $food_info['food_picture']; ?>" style="max-width:15em; max-height: 15em;">
 			</div>
@@ -104,8 +104,10 @@ else{
 		</div>
 	</div>
 </div>
- <div>
+
+<div>
 	<?php include('includes/footer.inc.php'); ?>
- </div>
+</div>
+
 </body>
 </html>

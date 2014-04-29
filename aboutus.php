@@ -19,7 +19,7 @@
 <?php 
 include_once ('includes/header.inc.php'); 
 session_start();
-if($_SESSION){
+if($_SESSION) {
 	 include('includes/navigation.inc.php');
 }
 ?>
@@ -28,12 +28,11 @@ if($_SESSION){
 	<div class="colright">
 		<div class="col1">
 			<!-- Left Column start -->
-                        
 			<?php 
-                        if($_SESSION){
-                        include('includes/left_column.inc.php'); 
-                        }
-                        ?>
+			if($_SESSION) {
+				include('includes/left_column.inc.php'); 
+			}
+			?>
 			<!-- Left Column end -->
 		</div>
 		
@@ -45,9 +44,8 @@ if($_SESSION){
 		elseif (isset($err)) {
 			echo '<div class="error">'.$err.'</div>';
 		}
-?>
-
-			<div class="card flipper" style="width: 40em;height: 45em;">
+		?>
+			<div class="card flipper" style="width: 40em;height: 42em;">
 				<div class="back">
 					<h2>What is Community Connect?</h2>
 					<p>
@@ -70,6 +68,7 @@ if($_SESSION){
 					</p>
 					<button class="flip">Who are we?</button>
 				</div>
+				
 				<div class="front">
 					<h2>Who are we?</h2>
 					<p>
@@ -87,7 +86,7 @@ if($_SESSION){
 						Thank you for visiting. Have fun!
 					</p>
 					<button class="flip">About this site</button>
-			   </div>
+				</div>
 			</div>
 		</div>
 	</div>
