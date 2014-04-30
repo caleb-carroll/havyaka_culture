@@ -295,11 +295,11 @@ include('includes/navigation.inc.php'); ?>
 
 			<div id="event_holder">
 
-			<button name="create_event" id="create_event_button" style="display:block">Create an event</button>
-			<!-- begin add event card -->
-			<div class="card flipper" id="create_event_div" style="display:none">
-				<div class="back">
-					<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event" id="create_event_form" method="post">
+				<button name="create_event" id="create_event_button" style="display:block">Create an event</button>
+				<!-- begin add event card -->
+				<div class="card flipper" id="create_event_div" style="display:none">
+					<div class="back">
+						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event" id="create_event_form" method="post">
 							<div class="event_edit_left">
 							<h3>Create a new event!</h3>
 								<input style="display:none" type="text" name="user_id" value="<?php echo $user_id ?>">
@@ -350,9 +350,9 @@ include('includes/navigation.inc.php'); ?>
 								<button type="button" name="cancel_add" id="cancel_add_event">Cancel</button>
 								<button type="button" name="add_event" id="add_event">Add Event</button>
 							</div>
-					</form>
+						</form>
+					</div>
 				</div>
-			</div>
 			<!-- END Add Events Card -->
 
 			<!-- BEGIN existing events cards -->

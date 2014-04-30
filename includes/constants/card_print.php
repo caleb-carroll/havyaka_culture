@@ -208,8 +208,6 @@ function print_event_card ($r) {
 				<button class="save_event" rel="<?php echo $event_id; ?>" id="<?php echo $save_event;?>" type="button" name="save_event">Save</button>
 			</div>
 			<button type="button" class="flip" style="position:absolute;bottom:1%;right:1%;">More Details</button>
-
-
 		</div>
 
 		<div class="front">
@@ -250,9 +248,9 @@ function print_event_card ($r) {
 			<!-- <div id="<?php echo $map_canvas;?>" rel="<?php echo $event_id; ?>" class = "map_canvas">
 			</div> -->
 			<div class="map_canvas"  style="background:lightgrey; position:absolute; top:7em; left:50%; right:1em; padding:.5em; margin:.25em;">
-                            Placeholder for Google Map
+				Placeholder for Google Map
 
-                        </div>
+			</div>
 
 			<button class="flip" type="button" style="position:absolute;bottom:0;right:0;">Event Info</button>
 		</div>
@@ -261,144 +259,141 @@ function print_event_card ($r) {
 
 } // end of event card function
 
-function print_user_manage_events_card($user_id)
-{
 
-    $results = get_events($user_id);
-    $event_types = get_event_types();
-    if($results) {
-            foreach ($results as $r) {
-                    //get event_picture
-                    $event_id = $r['event_id'];
-                    $event_name = $r['event_name'];
-                    $venue_name = $r['venue_name'];
-                    $venue_address = $r['venue_address'];
-                    $zip_code = $r['zipcode'];
-                    $event_date = $r['event_date'];
-                    $event_desc = $r['event_desc'];
-                    $city = $r['city'];
-                    $state = $r['state'];
-                    $zipcode = $r['zipcode'];
-                    $event_type = $r['event_type'];
-                    $event_scope = $r['event_scope'];
+// function to print the editable event cards for a certain user
+function print_user_manage_events_card($user_id) {
 
-                    $event_image = get_event_picture($event_id);
-                    $event_image_loc = htmlspecialchars($event_image);
-                    $event_image_loc = PICTURE_LOCATION . $event_image_loc;
+	$results = get_events($user_id);
+	$event_types = get_event_types();
+	if($results) {
+		foreach ($results as $r) {
+			//get event_picture
+			$event_id = $r['event_id'];
+			$event_name = $r['event_name'];
+			$venue_name = $r['venue_name'];
+			$venue_address = $r['venue_address'];
+			$zip_code = $r['zipcode'];
+			$event_date = $r['event_date'];
+			$event_desc = $r['event_desc'];
+			$city = $r['city'];
+			$state = $r['state'];
+			$zipcode = $r['zipcode'];
+			$event_type = $r['event_type'];
+			$event_scope = $r['event_scope'];
 
-                    // foreach of the event, get the number of attendance
+			$event_image = get_event_picture($event_id);
+			$event_image_loc = htmlspecialchars($event_image);
+			$event_image_loc = PICTURE_LOCATION . $event_image_loc;
 
-                    $event_attendance = get_attendance_count_list($event_id);
+			// foreach of the event, get the number of attendance
 
-                    if($event_attendance !=NULL) {
-                            $count=$event_attendance;
-                    }
-                    else {
-                            $count = "No attandance!";
-                    }
-                    ?>
+			$event_attendance = get_attendance_count_list($event_id);
 
-                    <div class="card flipper manage_event" id="event_<?php echo $event_id; ?>">
-    <!-- Event editing section below -->
-                            <div class="front">
-                                    <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=update_event" method="post" class='update_event_form'>
-                                    <div class="event_edit_left">
-                                            <input style="display:none" type="text" name="event_id" value="<?php echo $event_id ?>">
+			if($event_attendance !=NULL) {
+				$count=$event_attendance;
+			}
+			else {
+				$count = "No attandance!";
+			}
+			?>
 
-                                            <label for="event_name">Event Name</label>
-                                            <input type="text" name="event_name" class="get_event_name" value="<?php echo $event_name; ?>">
+			<div class="card flipper manage_event" id="event_<?php echo $event_id; ?>">
+		<!-- Event editing section below -->
+				<div class="front">
+					<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=update_event" method="post" class='update_event_form'>
+					<div class="event_edit_left">
+						<input style="display:none" type="text" name="event_id" value="<?php echo $event_id ?>">
 
-                                            <label for="event_date">Event Date</label>
-                                            <input type="text" class="datepicker" class="get_event_date" name="event_date" value="<?php echo $event_date ?>">
+						<label for="event_name">Event Name</label>
+						<input type="text" name="event_name" class="get_event_name" value="<?php echo $event_name; ?>">
 
-                                            <label for="venue_name">Venue Name</label>
-                                            <input type="text" name="venue_name" class="get_venue_name" value="<?php echo $venue_name ?>" >
+						<label for="event_date">Event Date</label>
+						<input type="text" class="datepicker" class="get_event_date" name="event_date" value="<?php echo $event_date ?>">
 
-                                            <label for="venue_address">Venue Street Address</label>
-                                            <input type="text" name="venue_address" class="get_venue_address" value="<?php echo $venue_address ?>">
+						<label for="venue_name">Venue Name</label>
+						<input type="text" name="venue_name" class="get_venue_name" value="<?php echo $venue_name ?>" >
 
-                                            <label for="venue_city">Venue City</label>
-                                            <input type="text" name="venue_city" class="get_venue_city" value="<?php echo $city ?>">
+						<label for="venue_address">Venue Street Address</label>
+						<input type="text" name="venue_address" class="get_venue_address" value="<?php echo $venue_address ?>">
 
-                                            <label for="venue_address">Venue State</label>
-                                            <input type="text" name="venue_state" class="get_venue_state" value="<?php echo $state ?>">
+						<label for="venue_city">Venue City</label>
+						<input type="text" name="venue_city" class="get_venue_city" value="<?php echo $city ?>">
 
-                                            <label for="event_zipcode">Venue Zipcode</label>
-                                            <input type="text" name="event_zipcode" class="get_event_zipcode" value="<?php echo $zipcode ?>" >
-                                    </div>
-                                    <div class="event_edit_right">   
-                                        <p class="image_holder"><img class="card_image" style="max-height:20%" src="<?php echo $event_image_loc; ?>" /></p>
-                                            <label for="event_type">Event Type</label>
-                                            <select name="event_type" class="get_event_type">
-                                            <?php
-                                                    foreach($event_types as $row) {
-                                                    echo $row['event_type'];
-                                                    ?>
-                                                    <option value="<?php echo $row['e_type_id']; ?>" ><?php echo $row['event_type']; ?></option>
-                                            <?php } ?>
-                                            </select>
+						<label for="venue_address">Venue State</label>
+						<input type="text" name="venue_state" class="get_venue_state" value="<?php echo $state ?>">
 
-                                            <label for="event_scope">Event Scope</label>
-                                            <select name="event_scope" id="get_event_scope">
-                                                    <option value="public">Public</option>
-                                                    <option value="private">Private</option>
-                                            </select>
-                                            <label for="event_desc">Event Description</label>
-                                            <textarea name="event_desc" class="get_event_desc" cols=20 rows=3><?php echo $event_desc ?></textarea>
-                                    </div>
-                                    <div class="event_edit_bottom">
-                                            <button type="button" class="delete_event_button">Delete Event</button>
-                                            <button type="button" class="update_event_button">Save Changes</button>
-                                            <button type="button" class="flip">Cancel</button>
-                                    </div>
-                                    </form>
-                                <div class="event_edit_right_picture" style="position: absolute; top: 5.7em; left: 76%; right: 0em; padding:.1em;margin:.1em;">
-                                    
-                                                    <form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event_picture" method="post" enctype="multipart/form-data">
-                                                            <input style="display:none" type="text" name="event_id" value="<?php echo $event_id ?>">
-                                                            <label for="file">Change picture:</label>
-                                                            <input type="file" name="file" id="file_event" style="max-width:100%">
-                                                            <input type="submit" name="submit" value="Update Image">
-                                                    </form>
+						<label for="event_zipcode">Venue Zipcode</label>
+						<input type="text" name="event_zipcode" class="get_event_zipcode" value="<?php echo $zipcode ?>" >
+					</div>
+					
+					<div class="event_edit_right">   
+						<p class="image_holder"><img class="card_image" style="max-height:20%" src="<?php echo $event_image_loc; ?>" /></p>
+						<label for="event_type">Event Type</label>
+						<select name="event_type" class="get_event_type">
+						<?php
+								foreach($event_types as $row) {
+								echo $row['event_type'];
+								?>
+								<option value="<?php echo $row['e_type_id']; ?>" ><?php echo $row['event_type']; ?></option>
+						<?php } ?>
+						</select>
 
-                                </div>
+						<label for="event_scope">Event Scope</label>
+						<select name="event_scope" id="get_event_scope">
+								<option value="public">Public</option>
+								<option value="private">Private</option>
+						</select>
+						<label for="event_desc">Event Description</label>
+						<textarea name="event_desc" class="get_event_desc" cols=20 rows=3><?php echo $event_desc ?></textarea>
+					</div>
+					<div class="event_edit_bottom">
+						<button type="button" class="delete_event_button">Delete Event</button>
+						<button type="button" class="update_event_button">Save Changes</button>
+						<button type="button" class="flip">Cancel</button>
+					</div>
+					</form>
+					<div class="event_edit_right_picture" style="position: absolute; top: 5.7em; left: 76%; right: 0em; padding:.1em;margin:.1em;">
+						<form action="<?php echo basename($_SERVER['PHP_SELF']);?>?cmd=add_event_picture" method="post" enctype="multipart/form-data">
+								<input style="display:none" type="text" name="event_id" value="<?php echo $event_id ?>">
+								<label for="file">Change picture:</label>
+								<input type="file" name="file" id="file_event" style="max-width:100%">
+								<input type="submit" name="submit" value="Update Image">
+						</form>
+					</div>
+				</div>
+		<!-- END Event editing section -->
 
-                            </div>
-    <!-- END Event editing section -->
+		<!-- Event information display section below -->
+				<div class="back">
+					<div class="event_tl">
+						<p class="card_name"><?php echo $event_name; ?></p>
+						<p class="event_date">on: <?php echo $event_date; ?></p>
 
-    <!-- Event information display section below -->
-                            <div class="back">
-                                    <div class="event_tl">
-                                            <p class="card_name"><?php echo $event_name; ?></p>
-                                            <p class="event_date">on: <?php echo $event_date; ?></p>
+						<p class="venue_location"><?php
+						echo $venue_name . "<br>";
+						echo $venue_address . "<br>";
+						echo $city . ", " . $state . " " . $zipcode; ?>
+						</p>
 
-                                            <p class="venue_location"><?php
-                                            echo $venue_name . "<br>";
-                                            echo $venue_address . "<br>";
-                                            echo $city . ", " . $state . " " . $zipcode; ?>
-                                            </p>
-
-                                            <p class="event_desc"><?php echo $event_desc; ?></p>
-                                    </div>
-                                    <div class="event_right">
-                                            <p class="image_holder"><img class="card_image" src="<?php echo $event_image_loc; ?>" /></p>
-                                            <p class="attendance_count">Attendance count:<br> <?php echo $count; ?></p>
-                                            <p class="event_type">Event Type: <?php echo $event_type; ?></p>
-                                            <p class="event_scope">Event Scope: <?php echo $event_scope; ?></p>
-                                    </div>
-                                    <div class="event_edit_bottom">
-                                            <button type="button" class="flip">Edit Event</button>
-                                    </div>
-
-                            </div>
-    <!-- END Event information display section -->
-                    </div>
-            <?php
-            }
-    }
-    else {
-            echo "<h2> No events found!. Add one now!</h2>";
-    }
-
+						<p class="event_desc"><?php echo $event_desc; ?></p>
+					</div>
+					<div class="event_right">
+						<p class="image_holder"><img class="card_image" src="<?php echo $event_image_loc; ?>" /></p>
+						<p class="attendance_count">Attendance count:<br> <?php echo $count; ?></p>
+						<p class="event_type">Event Type: <?php echo $event_type; ?></p>
+						<p class="event_scope">Event Scope: <?php echo $event_scope; ?></p>
+					</div>
+					<div class="event_edit_bottom">
+						<button type="button" class="flip">Edit Event</button>
+					</div>
+				</div>
+		<!-- END Event information display section -->
+			</div>
+		<?php
+		}
+	}
+	else {
+		echo "<h2> No events found!. Add one now!</h2>";
+	}
 }
 ?>

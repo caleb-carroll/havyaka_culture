@@ -7,7 +7,13 @@
 //Include the database
 require_once 'includes/constants/sql_constants.php';
 require_once 'includes/constants/card_print.php';
-secure_page();
+
+if(!isset($_SESSION)) {
+	secure_page();
+}
+else {
+	
+}
 $user_id = $_SESSION['user_id'];
  
 	

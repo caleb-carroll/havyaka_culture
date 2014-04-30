@@ -13,7 +13,6 @@ secure_page();
 <script>
 // function to delete a food from the food bucket
 function delete_food(handler){
-	console.log(handler);
 	var food_id = $(handler).attr('rel');
 	var chef_id = $(handler).attr('rel1');
 	var datastring = "food_id=" +food_id+ "&chef_id=" +chef_id;

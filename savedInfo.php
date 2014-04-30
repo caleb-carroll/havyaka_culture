@@ -140,7 +140,7 @@ $saved_chef = get_saved_chef($user_id);
 		//Check if the user has saved any chef details : the data pulled from the function 'get_saved_chef' defined in sql_constants.php
 		if(!empty($saved_chef)) {
 		?>
-			<div class="card" id='saved_chef_div'>
+			<div class="card" id='saved_chef_div' style="height:auto">
 				<div class="front">
 					<h2 style="margin-top: 1px;">&nbsp;&nbsp;Your Favorite Chef's details:</h2>
 					<table>

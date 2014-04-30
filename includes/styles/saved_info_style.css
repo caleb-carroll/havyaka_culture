@@ -3,36 +3,34 @@ table {
 	display: block;
 	width: 100%;
 	border-collapse: collapse;
-        table-layout:  fixed;
+	table-layout:  fixed;
 }
 
 table th {
-    font-size: 110%;
-    width: 100%;
-    font-style:  italic; 
-      border: 1px solid black;
-      color:brown;
+	font-size: 110%;
+	width: 100%;
+	font-style:  italic; 
+	border: 1px solid black;
+	color:brown;
 }
 table tr {
-    border: 1px solid black;
-    
+	border: 1px solid black;
 }
 table td {
-    border: 1px solid black;
-    table-layout:  fixed;
-    text-align: left;
+	border: 1px solid black;
+	table-layout:  fixed;
+	text-align: left;
 }
 .chef_event_name {
-    font-size: 120%;
-    font-variant-caps:  titling-caps;
+	font-size: 120%;
+	font-variant-caps:  titling-caps;
 }
 .desc {
-    font-family: serif;
-    font-style:  normal;
-    font-size: 115%;
-    color: blueviolet;
+	font-family: serif;
+	font-style:  normal;
+	font-size: 115%;
+	color: blueviolet;
 }
 .food_names {
-    font-size: 130%;
-    
+	font-size: 130%;
 }
